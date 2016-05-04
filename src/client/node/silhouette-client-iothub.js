@@ -11,6 +11,7 @@ function SilhouetteClientIoTHub()
 {
   client = Client.fromConnectionString(config.connectionString, Protocol);
   client.open(connectCallback);
+  // TODO: make sure the client object can be accessed from the caller
 }
 
 // Inherit from EventEmitter
@@ -22,10 +23,18 @@ util.inherits(SilhouetteClientIoTHub, EventEmitter);
 
 var connectCallback = function (err) {
   client.on('message', function(msg) {
-    // If this is a C2D_updateState message
-    // this.emit('C2D_updateState')
-    // If this is a C2D_getState message
-    // this.emit('C2D_getState')    
+    var msgType = msg.messageType;
+    var msgState = msg.state;
+    switch (msgType) {
+      case 'C2D_updateState':
+        this.emit('C2D_updateState', msgState)
+        break;
+      case 'C2D_getState':
+        this.emit('C2D_getState')    
+        break;
+      default:
+        // Do nothing
+    }
   });
 }
 
