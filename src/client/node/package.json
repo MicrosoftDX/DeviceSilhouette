@@ -1,0 +1,15 @@
+{
+  "name": "silhouette-node-sample",
+  "version": "0.0.1",
+  "description": "Silhouette Node.JS sample",
+  "main": "sample_client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Conté <tconte@microsoft.com>",
+  "license": "ISC",
+  "dependencies": {
+    "azure-iot-device": "^1.0.5",
+    "azure-iot-device-amqp": "^1.0.5"
+  }
+}
