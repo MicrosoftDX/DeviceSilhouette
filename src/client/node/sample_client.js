@@ -1,4 +1,4 @@
-var silhouette = require('./silhouette-client');
+var silhouetteClient = require('./silhouette-client');
 
 var my_state = {
   'temperature': 42, // this is a read-only value
@@ -26,19 +26,19 @@ function C2D_updateState(state)
 
 function C2D_getState()
 {
-  client.updateState(my_state);
+  silhouette.updateState(my_state);
 }
 
 /*
 ** Create the Silhouette client
 */
 
-var client = silhouette.create('iothub', {
+var silhouette = silhouetteClient.create('iothub', {
   connectionString: 'HostName=ciscohackhub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=XDtfQq9EB6uqVUfSWOwgktQe3L9O3DppNpOgv7s0OW4='
 });
 
-client.on('C2D_updateState', C2D_updateState);
-client.on('C2D_getState', C2D_getState);
+silhouette.on('C2D_updateState', C2D_updateState);
+silhouette.on('C2D_getState', C2D_getState);
 
 /*
 ** This could work in whatever way you want. We will just set a timer.
@@ -48,9 +48,11 @@ setInterval(doWork, 10*1000);
 
 function doWork()
 {
-  console.dir(client);
+  console.dir(silhouette);
   // Send our new state to the cloud service
-  client.updateState(my_state);
+  silhouette.updateState(my_state);
   // TODO: also get the state from the cloud service?
-  // check_state = client.getState();
+  // check_state = silhouette.getState();
+  // TODO: we can use the native client to do other stuff
+  // silhouette.client.on('someEvent', doSomething)
 }
