@@ -12,10 +12,13 @@ namespace StateManagementServiceWebAPI
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
 
+            //create the route for http://<endpoint>/devices/{DeviceId}
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+               // name: "DefaultApi",
+                name: "DevicesApi",
+                routeTemplate: "{controller}/{DeviceId}",
+                defaults: new { DeviceId = RouteParameter.Optional }
+                
             );
 
             appBuilder.UseWebApi(config);
