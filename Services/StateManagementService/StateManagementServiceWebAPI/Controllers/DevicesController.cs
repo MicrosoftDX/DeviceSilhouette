@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
 
 namespace StateManagementServiceWebAPI.Controllers
@@ -24,17 +25,21 @@ namespace StateManagementServiceWebAPI.Controllers
 
 
         // GET devices/{DeviceId}
-        public string Get([FromUri]string DeviceId)
+        public DeviceState Get([FromUri]string DeviceId)
         {
-        
-            return  DeviceId;        
+
+            // TODO: add error handling. return HttpResponseException is the deviceID does not exist
+
+            // return a fake response
+            Latitude state = new Latitude("100", "-100", "50");
+            DeviceState deviceState = new DeviceState(DeviceId, state);
+            deviceState.Timestamp = DateTime.Now;
+            deviceState.Version = "1.0.0";
+            deviceState.Status = "Reported";
+
+            return deviceState;      
 
         }
 
-       //  GET devices
-        public string Get()
-        {
-            return "DeviceId";
-        }
     }
 }
