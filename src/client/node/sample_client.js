@@ -16,6 +16,7 @@ function C2D_updateState(state)
   // - What if heaterOn has changed? How should I detect to take action?
   // - What if the cloud service wants to set the temperature? It makes no sense e.g. for a sensor.
   // - Do we get all the properties on update or just the ones changed? 
+  console.log("in C2D_updateState");
   my_state = state;
 }
 
@@ -26,6 +27,7 @@ function C2D_updateState(state)
 
 function C2D_getState()
 {
+  console.log("in C2D_getState");
   silhouette.updateState(my_state);
 }
 
@@ -48,7 +50,7 @@ setInterval(doWork, 10*1000);
 
 function doWork()
 {
-  console.dir(silhouette);
+  // console.dir(silhouette);
   // Send our new state to the cloud service
   silhouette.updateState(my_state);
   // TODO: also get the state from the cloud service?
