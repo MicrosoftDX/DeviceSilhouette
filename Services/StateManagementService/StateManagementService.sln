@@ -7,6 +7,8 @@ Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "StateManagementService", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateManagementServiceWebAPI", "StateManagementServiceWebAPI\StateManagementServiceWebAPI.csproj", "{064DE854-AC34-40A5-907B-7F6560E017F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateProcessorService", "StateProcessorService\StateProcessorService.csproj", "{39B6E54D-BA52-40E1-AD98-C7B69813799F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,6 +25,10 @@ Global
 		{064DE854-AC34-40A5-907B-7F6560E017F7}.Debug|x64.Build.0 = Debug|x64
 		{064DE854-AC34-40A5-907B-7F6560E017F7}.Release|x64.ActiveCfg = Release|x64
 		{064DE854-AC34-40A5-907B-7F6560E017F7}.Release|x64.Build.0 = Release|x64
+		{39B6E54D-BA52-40E1-AD98-C7B69813799F}.Debug|x64.ActiveCfg = Debug|x64
+		{39B6E54D-BA52-40E1-AD98-C7B69813799F}.Debug|x64.Build.0 = Debug|x64
+		{39B6E54D-BA52-40E1-AD98-C7B69813799F}.Release|x64.ActiveCfg = Release|x64
+		{39B6E54D-BA52-40E1-AD98-C7B69813799F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

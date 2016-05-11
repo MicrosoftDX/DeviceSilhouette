@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
+
+using StateProcessorService;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -36,6 +39,13 @@ namespace StateManagementServiceWebAPI.Controllers
             deviceState.Timestamp = DateTime.Now;
             deviceState.Version = "1.0.0";
             deviceState.Status = "Reported";
+
+            IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
+            var myTask = StateProcessorClient.GetState();
+            string message = myTask.Result; 
+                                          
+
+
 
             return deviceState;      
 
