@@ -39,11 +39,10 @@ function processMessage(msg)
   var msgType = getMessageType(msg.properties);
   // TODO: what if we can't find the messageType? i.e. it's not a Silhouette message?
   // TODO: should we forward the message to some other callback?
-  var msgState = msg.state;
   switch (msgType) {
     case 'C2D_UpdateState':
       console.log("C2D_UpdateState");
-      self.emit('C2D_updateState', msgState);
+      self.emit('C2D_updateState', JSON.parse(msg.data).state);
       break;
     case 'C2D_GetState':
       console.log("C2D_GetState");
@@ -51,7 +50,11 @@ function processMessage(msg)
       break;
     default:
       console.log("Unknown MessageType.");
+      break;
   }
+  client.complete(msg, function(err) {
+    // TODO: Handle errors
+  });
 }
 
 /*

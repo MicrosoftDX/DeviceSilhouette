@@ -16,7 +16,8 @@ function C2D_updateState(state)
   // - What if heaterOn has changed? How should I detect to take action?
   // - What if the cloud service wants to set the temperature? It makes no sense e.g. for a sensor.
   // - Do we get all the properties on update or just the ones changed? 
-  console.log("in C2D_updateState");
+  console.log("in C2D_updateState; new state:");
+  console.dir(state)
   my_state = state;
 }
 

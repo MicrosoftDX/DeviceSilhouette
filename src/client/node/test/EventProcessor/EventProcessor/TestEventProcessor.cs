@@ -29,8 +29,8 @@ namespace EventProcessor
                 string deviceId = eventData.SystemProperties["iothub-connection-device-id"].ToString();
                 string messageType = eventData.Properties.Keys.Contains("MessageType") ? eventData.Properties["MessageType"].ToString() : "null";
 
-                Console.WriteLine(string.Format("Message received.  Partition: '{0}', DeviceID: '{1}', MessageType: '{2}', Data: '{3}'",
-                    context.Lease.PartitionId, deviceId, messageType, Encoding.UTF8.GetString(data)));
+                Console.WriteLine(string.Format("Message received.  Partition: '{0}', DeviceID: '{1}', MessageType: '{2}'",
+                    context.Lease.PartitionId, deviceId, messageType));
 
                 // Dispatch message
                 switch (messageType)
@@ -46,11 +46,13 @@ namespace EventProcessor
                         break;
                 }
             }
+
+            await context.CheckpointAsync();
         }
 
         public async Task ProcessD2CUpdateState(string deviceId, string data)
         {
-            Console.WriteLine("Update State");
+            Console.WriteLine("Update State.  New state: {0}", data);
         }
 
         public async Task ProcessD2CGetState(string deviceId, string data)

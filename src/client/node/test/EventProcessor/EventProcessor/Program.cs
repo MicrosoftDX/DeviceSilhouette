@@ -38,19 +38,21 @@ namespace EventProcessor
                 if (cmd == "q")
                     break;
 
-                // Create message -- should not be empty! Otherwise does not trigger on Node.JS client side.
                 // TODO: request delivery feedback?
-                var commandMessage = new Message(Encoding.ASCII.GetBytes("{}"));
+                Message commandMessage;
 
                 switch (cmd)
                 {
                     case "g":
                         Console.WriteLine("Sending C2D_GetState...");
+                        // Message body should not be empty! Otherwise does not trigger on Node.JS client side.
+                        commandMessage = new Message(Encoding.ASCII.GetBytes("{}"));
                         commandMessage.Properties.Add("MessageType", "C2D_GetState");
                         serviceClient.SendAsync("silhouette1", commandMessage);
                         break;
                     case "u":
                         Console.WriteLine("Sending C2D_UpdateState...");
+                        commandMessage = new Message(Encoding.ASCII.GetBytes("{\"state\":{\"foo\":\"bar\"}}"));
                         commandMessage.Properties.Add("MessageType", "C2D_UpdateState");
                         serviceClient.SendAsync("silhouette1", commandMessage);
                         break;
