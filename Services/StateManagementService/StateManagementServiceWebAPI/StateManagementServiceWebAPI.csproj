@@ -98,8 +98,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\DeviceState.cs" />
-    <Compile Include="Controllers\IDeviceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\DevicesController.cs" />
     <Compile Include="OwinCommunicationListener.cs" />
@@ -115,6 +113,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeviceState\DeviceState.csproj">
+      <Project>{d6706cd2-adf0-4a40-ae5b-02827dde5316}</Project>
+      <Name>DeviceState</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StateProcessorService\StateProcessorService.csproj">
       <Project>{39b6e54d-ba52-40e1-ad98-c7b69813799f}</Project>
       <Name>StateProcessorService</Name>

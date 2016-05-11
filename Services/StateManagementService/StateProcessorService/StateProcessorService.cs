@@ -8,6 +8,8 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using DeviceStateNamespace;
+
 
 
 namespace StateProcessorService
@@ -15,7 +17,8 @@ namespace StateProcessorService
 
     public interface IStateProcessorRemoting : IService
     {
-        Task<string> GetState();
+ 
+        Task<DeviceState> GetState(string DeviceId);
     }
 
     /// <summary>
@@ -58,9 +61,14 @@ namespace StateProcessorService
             }
         }
 
-        public Task<string> GetState()
+        public Task<DeviceState> GetState(string DeviceId)
         {
-            return Task.FromResult("State");
+            Latitude state = new Latitude("100", "-100", "50");
+            DeviceState deviceState = new DeviceState(DeviceId, state);
+            deviceState.Timestamp = DateTime.Now;
+            deviceState.Version = "1.0.0";
+            deviceState.Status = "Reported";
+            return Task.FromResult(deviceState);
         }
 
     }
