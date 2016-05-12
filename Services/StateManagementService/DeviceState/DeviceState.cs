@@ -7,8 +7,10 @@ using System.Runtime.Serialization;
 
 namespace DeviceStateNamespace
 {
-    [DataContract]
-    public class Latitude : IState
+
+    [DataContract(Name = "Latitude")]
+    //public class Latitude : IState
+    public class Latitude : BaseCustomeState  
         {
             [DataMember]
             public string Xaxis { get; set; }
@@ -27,12 +29,14 @@ namespace DeviceStateNamespace
 
 
     [DataContract]
+    [KnownType(typeof(Latitude))]
+
     public class DeviceState : BaseDeviceState
         {
             public DeviceState(string deviceId, Latitude state)
             {
                 DeviceID = deviceId;
-                State = state;
+                customState = state;
             }
         }
     

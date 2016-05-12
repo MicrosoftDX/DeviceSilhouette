@@ -19,6 +19,12 @@ namespace DeviceStateNamespace
     }
 
     [DataContract]
+    public abstract class BaseCustomeState
+    {
+
+    }
+
+    [DataContract]
    // [KnownType(typeof(IState))]
     public abstract class BaseDeviceState : IDeviceState
     {
@@ -32,8 +38,8 @@ namespace DeviceStateNamespace
         public string Version { get; set; }
         [DataMember]
         public string Status { get; set; }
-       // [DataMember]
-        public IState State { get; set; }
+        [DataMember]
+        public BaseCustomeState customState { get; set; }
     }
 
 }
