@@ -11,7 +11,6 @@ using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using DeviceStateNamespace;
 
 
-
 namespace StateProcessorService
 {
 
@@ -64,7 +63,10 @@ namespace StateProcessorService
         public Task<DeviceState> GetState(string DeviceId)
         {
             Latitude state = new Latitude("100", "-100", "50");
-            DeviceState deviceState = new DeviceState(DeviceId, state);
+            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string jsonString = javaScriptSerializer.Serialize(state);
+
+            DeviceState deviceState = new DeviceState(DeviceId, jsonString);
             deviceState.Timestamp = DateTime.Now;
             deviceState.Version = "1.0.0";
             deviceState.Status = "Reported";

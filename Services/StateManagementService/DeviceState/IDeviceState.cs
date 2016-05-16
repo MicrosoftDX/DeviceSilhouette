@@ -11,25 +11,11 @@ namespace DeviceStateNamespace
     public interface IDeviceState
     {
     }
-
- 
-    public interface IState
-    {
-
-    }
+   
 
     [DataContract]
-    public abstract class BaseCustomeState
-    {
-
-    }
-
-    [DataContract]
-   // [KnownType(typeof(IState))]
     public abstract class BaseDeviceState : IDeviceState
-    {
-        //TODO: how to serlize the Istate
-
+    {        
         [DataMember]
         public string DeviceID { get; set; }
         [DataMember]
@@ -39,7 +25,7 @@ namespace DeviceStateNamespace
         [DataMember]
         public string Status { get; set; }
         [DataMember]
-        public BaseCustomeState customState { get; set; }
+        public string CustomState { get; set; }
     }
 
 }
