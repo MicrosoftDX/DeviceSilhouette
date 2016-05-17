@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StateManagementServiceWebAPI.Controllers
+namespace StateProcessorService
 {
-    public class Latitude : IState
-    {
-        public string Xaxis { get; set; }
+  
+    public class Latitude 
+    {     
+        public string Xaxis { get; set; }    
         public string Yaxis { get; set; }
         public string Zaxis { get; set; }
 
@@ -17,15 +18,6 @@ namespace StateManagementServiceWebAPI.Controllers
             this.Xaxis = x;
             this.Yaxis = y;
             this.Zaxis = z;
-        }       
-    }
-
-    public class DeviceState : BaseDeviceState
-    {
-        public DeviceState(string deviceId, Latitude state)
-        {
-            DeviceID = deviceId;
-            State = state;
-        }        
+        }
     }
 }

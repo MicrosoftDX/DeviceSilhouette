@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
+using DeviceStateNamespace;
+
+using StateProcessorService;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -30,16 +34,25 @@ namespace StateManagementServiceWebAPI.Controllers
 
             // TODO: add error handling. return HttpResponseException is the deviceID does not exist
 
-            // return a fake response
-            Latitude state = new Latitude("100", "-100", "50");
-            DeviceState deviceState = new DeviceState(DeviceId, state);
-            deviceState.Timestamp = DateTime.Now;
-            deviceState.Version = "1.0.0";
-            deviceState.Status = "Reported";
+            //// return a fake response
+            //Latitude state = new Latitude("100", "-100", "50");
+            //DeviceState deviceState = new DeviceState(DeviceId, state);
+            //deviceState.Timestamp = DateTime.Now;
+            //deviceState.Version = "1.0.0";
+            //deviceState.Status = "Reported";
+            //return deviceState;
 
+            IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
+            var myTask = StateProcessorClient.GetState(DeviceId);
+            //myTask.Wait();
+
+
+            DeviceState deviceState = myTask.Result;                             
             return deviceState;      
 
         }
+
+
 
     }
 }
