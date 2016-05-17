@@ -99,7 +99,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestEventProcessor.cs" />
+    <Compile Include="SilhouetteEventProcessor.cs" />
+    <Compile Include="SilhouetteEventProcessorFactory.cs" />
+    <Compile Include="SilhouetteStateProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

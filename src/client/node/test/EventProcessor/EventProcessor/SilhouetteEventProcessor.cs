@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace EventProcessor
 {
-    class TestEventProcessor : IEventProcessor
+    class SilhouetteEventProcessor : IEventProcessor
     {
         public static string StorageConnectionString;
+        SilhouetteStateProcessor _processor;
+
+        public SilhouetteEventProcessor(SilhouetteStateProcessor processor)
+        {
+            _processor = processor;
+        }
 
         public async Task CloseAsync(PartitionContext context, CloseReason reason)
         {
@@ -36,10 +42,10 @@ namespace EventProcessor
                 switch (messageType)
                 {
                     case "D2C_UpdateState":
-                        await ProcessD2CUpdateState(deviceId, Encoding.UTF8.GetString(data));
+                        await _processor.ProcessD2CUpdateState(deviceId, Encoding.UTF8.GetString(data));
                         break;
                     case "D2C_GetState":
-                        await ProcessD2CGetState(deviceId, Encoding.UTF8.GetString(data));
+                        await _processor.ProcessD2CGetState(deviceId, Encoding.UTF8.GetString(data));
                         break;
                     default:
                         Console.WriteLine("Unknown MessageType.");
@@ -49,16 +55,5 @@ namespace EventProcessor
 
             await context.CheckpointAsync();
         }
-
-        public async Task ProcessD2CUpdateState(string deviceId, string data)
-        {
-            Console.WriteLine("Update State.  New state: {0}", data);
-        }
-
-        public async Task ProcessD2CGetState(string deviceId, string data)
-        {
-            Console.WriteLine("Get State");
-        }
-
     }
 }
