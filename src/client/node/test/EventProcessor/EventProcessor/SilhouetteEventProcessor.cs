@@ -45,7 +45,7 @@ namespace EventProcessor
                         await _processor.ProcessD2CUpdateState(deviceId, Encoding.UTF8.GetString(data));
                         break;
                     case "D2C_GetState":
-                        await _processor.ProcessD2CGetState(deviceId, Encoding.UTF8.GetString(data));
+                        await _processor.ProcessD2CGetState(deviceId);
                         break;
                     default:
                         Console.WriteLine("Unknown MessageType.");

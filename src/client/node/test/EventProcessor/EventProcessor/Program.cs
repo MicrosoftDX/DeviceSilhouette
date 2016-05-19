@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Devices;
 using Microsoft.ServiceBus.Messaging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,8 @@ namespace EventProcessor
 
             Console.WriteLine("Receiving. q to quit, g to get state, u to update state");
 
+            string state = null;
+
             while (true)
             {
                 var cmd = Console.ReadLine();
@@ -42,15 +45,24 @@ namespace EventProcessor
                 if (cmd == "q")
                     break;
 
+                // Poor man's arg parsing...
+                string[] cmdargs = cmd.Split(' ');
+                cmd = cmdargs[0];
+                string arg = null;
+                if (cmdargs.Length > 1)
+                    arg = cmdargs[1];
+
                 switch (cmd)
                 {
                     case "g":
-                        Console.WriteLine("Sending C2D_GetState...");
-                        stateProcessor.SendC2DGetState("silhouette1").Wait();
+                        state = stateProcessor.GetState("silhouette1");
+                        Console.WriteLine("State: " + state);
                         break;
                     case "u":
-                        Console.WriteLine("Sending C2D_UpdateState...");
-                        stateProcessor.SendC2DUpdateState("silhouette1").Wait();
+                        dynamic d = JObject.Parse(state);
+                        d.state.temperature = arg;
+                        state = JObject.FromObject(d).ToString();
+                        stateProcessor.UpdateState("silhouette1", state);
                         break;
                     default:
                         Console.WriteLine("Unknown command.");
