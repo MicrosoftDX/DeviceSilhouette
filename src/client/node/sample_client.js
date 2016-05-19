@@ -1,8 +1,10 @@
 var silhouetteClient = require('./silhouette-client');
 
 var my_state = {
-  'temperature': 42, // this is a read-only value
-  'heaterOn': false // this is a read/write value
+  'led1': false,
+  'led1_level': 0,
+  'led2': false,
+  'led2_level': 0
 };
 
 /*

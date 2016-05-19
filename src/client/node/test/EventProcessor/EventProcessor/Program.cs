@@ -59,9 +59,12 @@ namespace EventProcessor
                         Console.WriteLine("State: " + state);
                         break;
                     case "u":
+                        // Example: switch led on/off and set brightness
                         dynamic d = JObject.Parse(state);
-                        d.state.temperature = arg;
+                        d.state.led1 = (bool)(d.state.led1) ? false : true;
+                        d.state.led1_level = int.Parse(arg);
                         state = JObject.FromObject(d).ToString();
+                        // Update the state
                         stateProcessor.UpdateState("silhouette1", state);
                         break;
                     default:
