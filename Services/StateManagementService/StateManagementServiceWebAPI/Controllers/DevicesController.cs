@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using DeviceStateNamespace;
+using Newtonsoft.Json.Linq;
 
 using StateProcessorService;
 
@@ -12,20 +13,20 @@ namespace StateManagementServiceWebAPI.Controllers
     {
 
 
-        //// POST devices/{DeviceId} 
-        //public void Post([FromUri]string DeviceId, [FromBody]string value)
-        //{
-        //}
+        // POST devices/{DeviceId} 
+        public void Post([FromUri]string DeviceId, [FromBody]JToken value)
+        {
+        }
 
-        //// PUT devices/{DeviceId} 
-        //public void Put([FromUri]string DeviceId, [FromBody]string value)
-        //{
-        //}
+        // PUT devices/{DeviceId} 
+        public void Put([FromUri]string DeviceId, [FromBody]JToken value)
+        {
+        }
 
-        //// DELETE devices/{DeviceId}  
-        //public void Delete([FromUri]string DeviceId)
-        //{
-        //}
+        // DELETE devices/{DeviceId}  
+        public void Delete([FromUri]string DeviceId)
+        {
+        }
 
 
         // GET devices/{DeviceId}
