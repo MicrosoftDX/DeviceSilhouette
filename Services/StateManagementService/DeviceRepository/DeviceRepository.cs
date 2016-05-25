@@ -29,6 +29,7 @@ namespace DeviceRepository
 
         public Task SetDeviceStateAsync(DeviceState state)
         {
+            // TODO: increase DeviceState.version ++1 upon calling
             return this.StateManager.SetStateAsync("silhouette", state);
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Net.Http;
+using System.Net;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using DeviceStateNamespace;
 using Newtonsoft.Json.Linq;
@@ -19,6 +21,7 @@ namespace StateManagementServiceWebAPI.Controllers
         // POST devices/{DeviceId} 
         public void Post([FromUri]string DeviceId, [FromBody]JToken StateValue)
         {
+            //TODO: implement
         }
 
         // PUT devices/{DeviceId} 
@@ -37,6 +40,9 @@ namespace StateManagementServiceWebAPI.Controllers
         // }
         public DeviceState Put([FromUri]string DeviceId, [FromBody]JToken StateValue)
         {
+
+            // TODO: add error handling. return HttpResponseException if the deviceID already exist or StateValue is null (not well formated JSON)
+
             var myTask = StateProcessorClient.CreateState(DeviceId, StateValue.ToString());
             DeviceState deviceState = myTask.Result;
             return deviceState;
@@ -45,6 +51,7 @@ namespace StateManagementServiceWebAPI.Controllers
         // DELETE devices/{DeviceId}  
         public void Delete([FromUri]string DeviceId)
         {
+            //TODO: implement
         }
 
 
@@ -52,11 +59,18 @@ namespace StateManagementServiceWebAPI.Controllers
         public DeviceState Get([FromUri]string DeviceId)
         {
 
-            // TODO: add error handling. return HttpResponseException is the deviceID does not exist
 
             var myTask = StateProcessorClient.GetState(DeviceId);
             DeviceState deviceState = myTask.Result;                             
-            return deviceState;      
+            return deviceState;
+
+            // TODO: add error handling. return HttpResponseException if the deviceID does not exist
+            //var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+            //{
+            //    Content = new StringContent(string.Format("No DeviceId = {0}", DeviceId)),
+            //    ReasonPhrase = "DeviceId Not Found"
+            //};
+            //throw new HttpResponseException(resp);
 
         }
 

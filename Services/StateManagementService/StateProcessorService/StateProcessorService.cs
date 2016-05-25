@@ -82,6 +82,8 @@ namespace StateProcessorService
 
         public Task<DeviceState> GetState(string DeviceId)
         {
+            //TODO: error handling
+            //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
             var newState = silhouette.GetDeviceStateAsync();
@@ -93,6 +95,7 @@ namespace StateProcessorService
         // TODO: Implement get the state from the device itself
         public Task<DeviceState> CreateState(string DeviceId, string StateValue)
         { 
+            //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
             DeviceState deviceState = new DeviceState(actorId.GetStringId(), StateValue);
