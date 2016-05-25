@@ -11,6 +11,10 @@ namespace DeviceStateNamespace
     [DataContract]
     public class DeviceState : BaseDeviceState
         {
+            public DeviceState()
+            {
+            }
+
             public DeviceState(string deviceId, string state)
             {
                 DeviceID = deviceId;
