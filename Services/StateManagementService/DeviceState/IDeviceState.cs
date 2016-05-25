@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
+
 namespace DeviceStateNamespace
 {
  
@@ -21,11 +22,12 @@ namespace DeviceStateNamespace
         [DataMember]
         public DateTime Timestamp { get; set; }
         [DataMember]
-        public string Version { get; set; }
+        public int Version { get; set; }
         [DataMember]
         public string Status { get; set; }
         [DataMember]
         public string CustomState { get; set; }
+
     }
 
 }

@@ -17,18 +17,27 @@ namespace StateManagementServiceWebAPI.Controllers
 
 
         // POST devices/{DeviceId} 
-        public void Post([FromUri]string DeviceId, [FromBody]JToken value)
+        public void Post([FromUri]string DeviceId, [FromBody]JToken StateValue)
         {
         }
 
         // PUT devices/{DeviceId} 
-        // http://localhost:9013/devices/{DeviceId}
-        //User-Agent: Fiddler
-        //Host: localhost:9013
-        //Content-type: application/json
-        public DeviceState Put([FromUri]string DeviceId, [FromBody]JToken value)
+        // To call from fiddler:
+        // Method: PUT
+        // Host: http://localhost:9013/devices/{DeviceId}
+        // Headers:
+        // User-Agent: Fiddler
+        // Host: localhost:9013
+        // Content-type: application/json
+        // Body:
+        // {
+        //"Xaxis" : "1" ,
+        //"Yaxis : "2" ,
+        //"Zaxis" : "3"
+        // }
+        public DeviceState Put([FromUri]string DeviceId, [FromBody]JToken StateValue)
         {
-            var myTask = StateProcessorClient.CreateState(DeviceId);
+            var myTask = StateProcessorClient.CreateState(DeviceId, StateValue.ToString());
             DeviceState deviceState = myTask.Result;
             return deviceState;
         }

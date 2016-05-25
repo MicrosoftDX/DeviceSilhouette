@@ -8,6 +8,7 @@ using Microsoft.ServiceFabric.Actors;
 using DeviceRepository.Interfaces;
 using DeviceStateNamespace;
 
+
 namespace ActorTestConsoleApplication
 {
     class Program
@@ -20,6 +21,7 @@ namespace ActorTestConsoleApplication
 
             ActorId actorId = new ActorId("Device1");
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, serviceUri);
+
 
             //use interface?
             DeviceState state = new DeviceState(actorId.GetStringId(), "test");
