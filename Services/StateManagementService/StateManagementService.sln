@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceRepository.Interfaces
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorTestConsoleApplication", "ActorTestConsoleApplication\ActorTestConsoleApplication.csproj", "{4F7F2FDF-F42F-474B-A0E2-CBBC9CF2AFB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationProviders", "CommunicationProviders\CommunicationProviders.csproj", "{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,14 @@ Global
 		{4F7F2FDF-F42F-474B-A0E2-CBBC9CF2AFB9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F7F2FDF-F42F-474B-A0E2-CBBC9CF2AFB9}.Release|x64.ActiveCfg = Release|Any CPU
 		{4F7F2FDF-F42F-474B-A0E2-CBBC9CF2AFB9}.Release|x64.Build.0 = Release|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Debug|x64.Build.0 = Debug|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Release|x64.ActiveCfg = Release|Any CPU
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
