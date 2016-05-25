@@ -12,6 +12,9 @@ namespace StateManagementServiceWebAPI.Controllers
     public class DevicesController : ApiController
     {
 
+        private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
+
+
 
         // POST devices/{DeviceId} 
         public void Post([FromUri]string DeviceId, [FromBody]JToken value)
@@ -19,8 +22,15 @@ namespace StateManagementServiceWebAPI.Controllers
         }
 
         // PUT devices/{DeviceId} 
-        public void Put([FromUri]string DeviceId, [FromBody]JToken value)
+        // http://localhost:9013/devices/{DeviceId}
+        //User-Agent: Fiddler
+        //Host: localhost:9013
+        //Content-type: application/json
+        public DeviceState Put([FromUri]string DeviceId, [FromBody]JToken value)
         {
+            var myTask = StateProcessorClient.CreateState(DeviceId);
+            DeviceState deviceState = myTask.Result;
+            return deviceState;
         }
 
         // DELETE devices/{DeviceId}  
@@ -35,19 +45,7 @@ namespace StateManagementServiceWebAPI.Controllers
 
             // TODO: add error handling. return HttpResponseException is the deviceID does not exist
 
-            //// return a fake response
-            //Latitude state = new Latitude("100", "-100", "50");
-            //DeviceState deviceState = new DeviceState(DeviceId, state);
-            //deviceState.Timestamp = DateTime.Now;
-            //deviceState.Version = "1.0.0";
-            //deviceState.Status = "Reported";
-            //return deviceState;
-
-            IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
             var myTask = StateProcessorClient.GetState(DeviceId);
-            //myTask.Wait();
-
-
             DeviceState deviceState = myTask.Result;                             
             return deviceState;      
 

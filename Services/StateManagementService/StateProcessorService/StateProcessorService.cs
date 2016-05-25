@@ -9,6 +9,10 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using DeviceStateNamespace;
+using DeviceRepository.Interfaces;
+using Microsoft.ServiceFabric.Actors.Client;
+using Microsoft.ServiceFabric.Actors;
+
 
 
 namespace StateProcessorService
@@ -18,6 +22,7 @@ namespace StateProcessorService
     {
  
         Task<DeviceState> GetState(string DeviceId);
+        Task<DeviceState> CreateState(string DeviceId);
     }
 
     /// <summary>
@@ -25,6 +30,8 @@ namespace StateProcessorService
     /// </summary>
     internal sealed class StateProcessorService : StatelessService, IStateProcessorRemoting
     {
+        private static Uri RepositoriUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");
+
         public StateProcessorService(StatelessServiceContext context)
             : base(context)
         { }
@@ -71,6 +78,26 @@ namespace StateProcessorService
             deviceState.Version = "1.0.0";
             deviceState.Status = "Reported";
             return Task.FromResult(deviceState);
+        }
+
+        public Task<DeviceState> CreateState(string DeviceId)
+        {
+            Latitude state = new Latitude("100", "-100", "50");
+            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string jsonString = javaScriptSerializer.Serialize(state); 
+
+
+            ActorId actorId = new ActorId(DeviceId);
+            IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
+
+            DeviceState deviceState = new DeviceState(actorId.GetStringId(), jsonString);
+            deviceState.Timestamp = DateTime.Now;
+            deviceState.Version = "1.0.0";
+            deviceState.Status = "Reported";
+
+            silhouette.SetDeviceStateAsync(deviceState);
+            var newState = silhouette.GetDeviceStateAsync();
+            return newState;
         }
 
     }
