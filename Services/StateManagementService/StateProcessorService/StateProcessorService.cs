@@ -22,8 +22,8 @@ namespace StateProcessorService
     public interface IStateProcessorRemoting : IService
     {
  
-        Task<DeviceState> GetState(string DeviceId);
-        Task<DeviceState> CreateState(string DeviceId, string StateValue);
+        Task<DeviceState> GetStateAsync(string DeviceId);
+        Task<DeviceState> CreateStateAsync(string DeviceId, string StateValue);
     }
 
     /// <summary>
@@ -80,20 +80,20 @@ namespace StateProcessorService
         //    return Task.FromResult(deviceState);
         //}
 
-        public Task<DeviceState> GetState(string DeviceId)
+        public async Task<DeviceState> GetStateAsync(string DeviceId)
         {
             //TODO: error handling
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
-            var newState = silhouette.GetDeviceStateAsync();
+            var newState = await silhouette.GetDeviceStateAsync();
             return newState;
         }
 
 
         // For now it just create an actor in the repository with the DeviceID
         // TODO: Implement get the state from the device itself
-        public Task<DeviceState> CreateState(string DeviceId, string StateValue)
+        public async Task<DeviceState> CreateStateAsync(string DeviceId, string StateValue)
         { 
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
@@ -103,8 +103,8 @@ namespace StateProcessorService
             deviceState.Version = 0;
             deviceState.Status = "Registered";
 
-            Task.WaitAll(silhouette.SetDeviceStateAsync(deviceState));
-            var newState = silhouette.GetDeviceStateAsync();
+            await silhouette.SetDeviceStateAsync(deviceState);
+            var newState = await silhouette.GetDeviceStateAsync();
             return newState;
         }
 

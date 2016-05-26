@@ -8,15 +8,13 @@ using DeviceStateNamespace;
 using Newtonsoft.Json.Linq;
 
 using StateProcessorService;
+using System.Threading.Tasks;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
     public class DevicesController : ApiController
     {
-
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
-
-
 
         // POST devices/{DeviceId} 
         public void Post([FromUri]string DeviceId, [FromBody]JToken StateValue)
@@ -38,13 +36,10 @@ namespace StateManagementServiceWebAPI.Controllers
         //"Yaxis : "2" ,
         //"Zaxis" : "3"
         // }
-        public DeviceState Put([FromUri]string DeviceId, [FromBody]JToken StateValue)
+        public async Task<DeviceState> Put([FromUri]string DeviceId, [FromBody]JToken StateValue)
         {
-
             // TODO: add error handling. return HttpResponseException if the deviceID already exist or StateValue is null (not well formated JSON)
-
-            var myTask = StateProcessorClient.CreateState(DeviceId, StateValue.ToString());
-            DeviceState deviceState = myTask.Result;
+            var deviceState = await StateProcessorClient.CreateStateAsync(DeviceId, StateValue.ToString());
             return deviceState;
         }
 
@@ -56,12 +51,9 @@ namespace StateManagementServiceWebAPI.Controllers
 
 
         // GET devices/{DeviceId}
-        public DeviceState Get([FromUri]string DeviceId)
+        public async Task<DeviceState> Get([FromUri]string DeviceId)
         {
-
-
-            var myTask = StateProcessorClient.GetState(DeviceId);
-            DeviceState deviceState = myTask.Result;                             
+            var deviceState = await StateProcessorClient.GetStateAsync(DeviceId);
             return deviceState;
 
             // TODO: add error handling. return HttpResponseException if the deviceID does not exist
@@ -71,10 +63,6 @@ namespace StateManagementServiceWebAPI.Controllers
             //    ReasonPhrase = "DeviceId Not Found"
             //};
             //throw new HttpResponseException(resp);
-
         }
-
-
-
     }
 }
