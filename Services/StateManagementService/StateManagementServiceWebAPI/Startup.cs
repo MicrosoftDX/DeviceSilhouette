@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using Owin;
+using Swashbuckle.Application;
 
 namespace StateManagementServiceWebAPI
 {
@@ -20,6 +21,14 @@ namespace StateManagementServiceWebAPI
                 defaults: new { DeviceId = RouteParameter.Optional }
                 
             );
+            config.MapHttpAttributeRoutes();
+
+            config.EnableSwagger(c =>
+            {
+                //c.IncludeXmlComments("docs.xml");
+                c.SingleApiVersion("1.0", "StateManagementService");
+            }).EnableSwaggerUi();
+
 
             appBuilder.UseWebApi(config);
         }
