@@ -12,18 +12,28 @@ using System.Threading.Tasks;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
+    [RoutePrefix("devices")]
     public class DevicesController : ApiController
     {
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
 
-        // POST devices/{DeviceId} 
-        public void Post([FromUri]string DeviceId, [FromBody]JToken StateValue)
+        [Route("{deviceId}")]
+        public async Task<IHttpActionResult> Get([FromUri]string deviceId)
         {
-            //TODO: implement
+            var deviceState = await StateProcessorClient.GetStateAsync(deviceId);
+
+            // When no state the DeviceRepository returns an instance with default values
+            // use the DeviceID to test if we have an actual result as that should always be set
+            if (deviceState.DeviceID == null)
+            {
+                return NotFound();
+            }
+            return Ok(deviceState);
         }
 
         // PUT devices/{DeviceId} 
-        // To call from fiddler:
+        // To call using Swagger UI: http://localhost:9013/swagger/ui/index
+        // Or to call from fiddler:
         // Method: PUT
         // Host: http://localhost:9013/devices/{DeviceId}
         // Headers:
@@ -36,33 +46,14 @@ namespace StateManagementServiceWebAPI.Controllers
         //"Yaxis : "2" ,
         //"Zaxis" : "3"
         // }
-        public async Task<DeviceState> Put([FromUri]string DeviceId, [FromBody]JToken StateValue)
+        [Route("{deviceId}")]
+        public async Task<DeviceState> Put([FromUri]string deviceId, [FromBody]JToken stateValue)
         {
-            // TODO: add error handling. return HttpResponseException if the deviceID already exist or StateValue is null (not well formated JSON)
-            var deviceState = await StateProcessorClient.CreateStateAsync(DeviceId, StateValue.ToString());
+            // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
+            var deviceState = await StateProcessorClient.CreateStateAsync(deviceId, stateValue.ToString());
             return deviceState;
         }
 
-        // DELETE devices/{DeviceId}  
-        public void Delete([FromUri]string DeviceId)
-        {
-            //TODO: implement
-        }
 
-
-        // GET devices/{DeviceId}
-        public async Task<DeviceState> Get([FromUri]string DeviceId)
-        {
-            var deviceState = await StateProcessorClient.GetStateAsync(DeviceId);
-            return deviceState;
-
-            // TODO: add error handling. return HttpResponseException if the deviceID does not exist
-            //var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-            //{
-            //    Content = new StringContent(string.Format("No DeviceId = {0}", DeviceId)),
-            //    ReasonPhrase = "DeviceId Not Found"
-            //};
-            //throw new HttpResponseException(resp);
-        }
     }
 }
