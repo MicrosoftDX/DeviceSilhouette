@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 
 using StateProcessorService;
 using System.Threading.Tasks;
+using Swashbuckle.Swagger.Annotations;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -18,6 +19,8 @@ namespace StateManagementServiceWebAPI.Controllers
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
 
         [Route("{deviceId}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceState))]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
         public async Task<IHttpActionResult> Get([FromUri]string deviceId)
         {
             var deviceState = await StateProcessorClient.GetStateAsync(deviceId);
@@ -47,6 +50,7 @@ namespace StateManagementServiceWebAPI.Controllers
         //"Zaxis" : "3"
         // }
         [Route("{deviceId}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceState))]
         public async Task<DeviceState> Put([FromUri]string deviceId, [FromBody]JToken stateValue)
         {
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
