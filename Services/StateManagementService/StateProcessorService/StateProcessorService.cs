@@ -9,6 +9,11 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using DeviceStateNamespace;
+using DeviceRepository.Interfaces;
+using Microsoft.ServiceFabric.Actors.Client;
+using Microsoft.ServiceFabric.Actors;
+using Newtonsoft.Json.Linq;
+
 
 
 namespace StateProcessorService
@@ -17,7 +22,8 @@ namespace StateProcessorService
     public interface IStateProcessorRemoting : IService
     {
  
-        Task<DeviceState> GetState(string DeviceId);
+        Task<DeviceState> GetStateAsync(string DeviceId);
+        Task<DeviceState> CreateStateAsync(string DeviceId, string StateValue);
     }
 
     /// <summary>
@@ -25,6 +31,8 @@ namespace StateProcessorService
     /// </summary>
     internal sealed class StateProcessorService : StatelessService, IStateProcessorRemoting
     {
+        private static Uri RepositoriUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");
+
         public StateProcessorService(StatelessServiceContext context)
             : base(context)
         { }
@@ -60,18 +68,47 @@ namespace StateProcessorService
             }
         }
 
-        public Task<DeviceState> GetState(string DeviceId)
-        {
-            Latitude state = new Latitude("100", "-100", "50");
-            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            string jsonString = javaScriptSerializer.Serialize(state);
+        //public Task<DeviceState> GetState(string DeviceId)
+        //{
+        //    Latitude state = new Latitude("100", "-100", "50");
+        //    JObject jsonState = JObject.FromObject(state);
 
-            DeviceState deviceState = new DeviceState(DeviceId, jsonString);
-            deviceState.Timestamp = DateTime.Now;
-            deviceState.Version = "1.0.0";
-            deviceState.Status = "Reported";
-            return Task.FromResult(deviceState);
+        //    DeviceState deviceState = new DeviceState(DeviceId, jsonState.ToString());
+        //    deviceState.Timestamp = DateTime.Now;
+        //    deviceState.Version = "1.0.0";
+        //    deviceState.Status = "Reported";
+        //    return Task.FromResult(deviceState);
+        //}
+
+        public async Task<DeviceState> GetStateAsync(string DeviceId)
+        {
+            //TODO: error handling
+            //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
+            ActorId actorId = new ActorId(DeviceId);
+            IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
+            var newState = await silhouette.GetDeviceStateAsync();
+            return newState;
         }
+
+
+        // For now it just create an actor in the repository with the DeviceID
+        // TODO: Implement get the state from the device itself
+        public async Task<DeviceState> CreateStateAsync(string DeviceId, string StateValue)
+        { 
+            //TODO: error handling
+            ActorId actorId = new ActorId(DeviceId);
+            IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
+            DeviceState deviceState = new DeviceState(actorId.GetStringId(), StateValue);
+            deviceState.Timestamp = DateTime.Now;
+            deviceState.Version = 0;
+            deviceState.Status = "Registered";
+
+            await silhouette.SetDeviceStateAsync(deviceState);
+            var newState = await silhouette.GetDeviceStateAsync();
+            return newState;
+        }
+
+
 
     }
 }
