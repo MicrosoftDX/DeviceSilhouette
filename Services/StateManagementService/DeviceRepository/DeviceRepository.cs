@@ -37,13 +37,13 @@ namespace DeviceRepository
         {
             var lastState = this.StateManager.GetStateAsync<DeviceState>("silhouette").Result;
 
-            if (Convert.ToUInt64(lastState.Version) < Int64.MaxValue)
+            if (lastState.Version < Int32.MaxValue)
             {
-                state.Version = (Convert.ToInt64(lastState.Version) + 1).ToString();
+                state.Version = lastState.Version++;
             }
             else
             {
-                state.Version = "1";
+                state.Version = 1;
             }
             state.Timestamp = DateTime.Now;
             state.DeviceID = this.GetActorId().ToString();
