@@ -24,18 +24,17 @@ namespace DeviceRepository
     {
         public Task<DeviceState> GetDeviceStateAsync()
         {
-           return this.StateManager.GetStateAsync<DeviceState>("silhouette");
+           return StateManager.GetStateAsync<DeviceState>("silhouette");
         }
 
         public Task<List<DeviceState>> GetDeviceStateMessagesAsync()
         {
-
             return StateManager.GetStateAsync<List<DeviceState>>("silhouetteMessages");
         }
 
-        public Task SetDeviceStateAsync(DeviceState state)
+        public async Task SetDeviceStateAsync(DeviceState state)
         {
-            var lastState = this.StateManager.GetStateAsync<DeviceState>("silhouette").Result;
+            var lastState = await StateManager.GetStateAsync<DeviceState>("silhouette");
 
             if (lastState.Version < Int32.MaxValue)
             {
@@ -48,28 +47,27 @@ namespace DeviceRepository
             state.Timestamp = DateTime.Now;
             state.DeviceID = this.GetActorId().ToString();
 
-            AddDeviceMessageAsync(state);
-            
-            return this.StateManager.SetStateAsync("silhouette", state);
+            await AddDeviceMessageAsync(state);
+
+            await StateManager.SetStateAsync("silhouette", state);
         }
 
-        Task AddDeviceMessageAsync(DeviceState state)
+        async Task AddDeviceMessageAsync(DeviceState state)
         {
             List<DeviceState> messages = new List<DeviceState>();
             Microsoft.ServiceFabric.Data.ConditionalValue<List<DeviceState>> _messages;
-            _messages = StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages").Result;
+            _messages = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
             if (_messages.HasValue) { messages = _messages.Value; };
 
             messages.Add(state);
-            return StateManager.SetStateAsync<List<DeviceState>>("silhouetteMessages", messages);
-
+            await StateManager.SetStateAsync<List<DeviceState>>("silhouetteMessages", messages);
         }
 
         /// <summary>
         /// This method is called whenever an actor is activated.
         /// An actor is activated the first time any of its methods are invoked.
         /// </summary>
-        protected override Task OnActivateAsync()
+        protected override async Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
 
@@ -78,7 +76,7 @@ namespace DeviceRepository
             // Any serializable object can be saved in the StateManager.
             // For more information, see http://aka.ms/servicefabricactorsstateserialization
 
-            return this.StateManager.TryAddStateAsync("silhouette", new DeviceState());
+            await StateManager.TryAddStateAsync("silhouette", new DeviceState());
         }
 
     }
