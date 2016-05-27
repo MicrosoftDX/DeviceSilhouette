@@ -24,12 +24,45 @@ namespace DeviceRepository
     {
         public Task<DeviceState> GetDeviceStateAsync()
         {
-            return this.StateManager.GetStateAsync<DeviceState>("silhouette");
+           return this.StateManager.GetStateAsync<DeviceState>("silhouette");
+        }
+
+        public Task<List<DeviceState>> GetDeviceStateMessagesAsync()
+        {
+
+            return StateManager.GetStateAsync<List<DeviceState>>("silhouetteMessages");
         }
 
         public Task SetDeviceStateAsync(DeviceState state)
         {
+            var lastState = this.StateManager.GetStateAsync<DeviceState>("silhouette").Result;
+
+            if (Convert.ToUInt64(lastState.Version) < Int64.MaxValue)
+            {
+                state.Version = (Convert.ToInt64(lastState.Version) + 1).ToString();
+            }
+            else
+            {
+                state.Version = "1";
+            }
+            state.Timestamp = DateTime.Now;
+            state.DeviceID = this.GetActorId().ToString();
+
+            AddDeviceMessageAsync(state);
+            
             return this.StateManager.SetStateAsync("silhouette", state);
+        }
+
+        Task AddDeviceMessageAsync(DeviceState state)
+        {
+            List<DeviceState> messages = new List<DeviceState>();
+            Microsoft.ServiceFabric.Data.ConditionalValue<List<DeviceState>> _messages;
+            _messages = StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages").Result;
+            if (_messages.HasValue) { messages = _messages.Value; };
+
+            messages.Add(state);
+            return StateManager.SetStateAsync<List<DeviceState>>("silhouetteMessages", messages);
+
         }
 
         /// <summary>

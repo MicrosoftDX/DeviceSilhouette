@@ -17,14 +17,20 @@ namespace DeviceRepository.Interfaces
         /// <summary>
         /// This method reads the current state from the Silhouette
         /// </summary>
-        /// <returns>JSON string that contains the stored requested or reported device state</returns>
+        /// <returns>Object that contains the stored requested or reported device state</returns>
         Task<DeviceState> GetDeviceStateAsync();
 
         /// <summary>
         /// This method sets the current state of the Silhouette
         /// </summary>
-        /// <param name="state">JSON string that contains the requested or reported device state</param>
+        /// <param name="state">Object that contains the requested or reported device state</param>
         /// <returns></returns>
         Task SetDeviceStateAsync(DeviceState state);
+
+        /// <summary>
+        /// This method reads the available state history from the Silhouette
+        /// </summary>
+        /// <returns>List of DeviceState objects</returns>
+        Task<List<DeviceState>> GetDeviceStateMessagesAsync();
     }
 }
