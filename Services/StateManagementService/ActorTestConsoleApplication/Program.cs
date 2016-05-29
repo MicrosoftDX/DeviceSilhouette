@@ -49,7 +49,7 @@ namespace ActorTestConsoleApplication
                     Console.WriteLine("Device : {0}", currentstate.DeviceID);
                     Console.WriteLine("Data version : {0}", currentstate.Version);
                     Console.WriteLine("Data timestamp : {0}", currentstate.Timestamp);
-                    Console.WriteLine("Custom data : {0}", currentstate.CustomState);
+                    Console.WriteLine("Custom data : {0}", currentstate.State);
 
                     if (method == "Get")
                     {

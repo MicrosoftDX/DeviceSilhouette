@@ -20,7 +20,7 @@ namespace DeviceStateNamespace
             public DeviceState(string deviceId, string state)
             {
                 DeviceID = deviceId;
-                CustomState = state;
+                State = state;
             }
         }
     

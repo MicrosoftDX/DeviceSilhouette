@@ -26,7 +26,7 @@ namespace DeviceStateNamespace
         [DataMember]
         public string Status { get; set; }
         [DataMember]
-        public string CustomState { get; set; }
+        public string State { get; set; }
 
     }
 
