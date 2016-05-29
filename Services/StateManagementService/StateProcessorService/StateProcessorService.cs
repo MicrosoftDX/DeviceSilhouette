@@ -15,6 +15,8 @@ using Microsoft.ServiceFabric.Actors;
 using Newtonsoft.Json.Linq;
 using CommunicationProviders;
 using CommunicationProviders.IoTHub;
+using StateProcessorService.Utils;
+using System.Web.Script.Serialization;
 
 namespace StateProcessorService
 {
@@ -61,29 +63,36 @@ namespace StateProcessorService
           
             while (true)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                                
-                // get message from comm provider
-                string message = hub.ReceiveDeviceToCloudAsync().Result;                
-                
-                
+                cancellationToken.ThrowIfCancellationRequested();                                                              
                 ServiceEventSource.Current.ServiceMessage(this, "Working-{0}", ++iterations);
+
+                // get message from comm provider                
+                await prcoessIoTHubMessages(hub);
 
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
         }
 
-        //public Task<DeviceState> GetState(string DeviceId)
-        //{
-        //    Latitude state = new Latitude("100", "-100", "50");
-        //    JObject jsonState = JObject.FromObject(state);
-
-        //    DeviceState deviceState = new DeviceState(DeviceId, jsonState.ToString());
-        //    deviceState.Timestamp = DateTime.Now;
-        //    deviceState.Version = "1.0.0";
-        //    deviceState.Status = "Reported";
-        //    return Task.FromResult(deviceState);
-        //}
+        private async Task prcoessIoTHubMessages(CommProviderIoTHub hub)
+        {
+            string message = hub.ReceiveDeviceToCloudAsync().Result;
+            if (!String.IsNullOrEmpty(message))
+            {
+                JsonParser device = new JsonParser(message);
+                switch (device.Status())
+                {
+                    case "Reported":
+                        await CreateStateAsync(device.DeviceID(), message);
+                        break;
+                    case "Get":
+                        DeviceState deviceState = await GetStateAsync(device.DeviceID());
+                        var json = new JavaScriptSerializer().Serialize(deviceState);
+                        await hub.SendCloudToDeviceAsync(json, deviceState.DeviceID);
+                        break;
+                }
+            }        
+        }
+       
 
         public async Task<DeviceState> GetStateAsync(string DeviceId)
         {
