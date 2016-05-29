@@ -1,5 +1,6 @@
 const EventEmitter = require('events');
 const util = require('util');
+const datetime = require('node-datetime');
 
 
 
@@ -81,13 +82,16 @@ function getMessageType(properties)
 
 SilhouetteClientIoTHub.prototype.updateState = function(state)
 {
-	
 
-var timestamp = Date.now();
+// TODO: Make sure timestamp in UTC and not in local computer timezone	
+var dt = datetime.create();
+var formattedDate = dt.format('Y-m-dTH:M:S');
+
+//var timestamp = Date.now();
 var full_state =
 {
  "DeviceID" : "silhouette1",
- "Timestamp" : timestamp,
+ "Timestamp" : formattedDate,
  "Status" : "Reported",
  "State" : state
 };
@@ -95,7 +99,7 @@ var full_state =
   var data = JSON.stringify(full_state);
   var message = new Message(data);
   message.properties.add('MessageType', 'State:Set');
-  console.log(message);
+  //console.log(message);
   client.sendEvent(message, function(err) {
     // TODO: what if we have an error here ?
   });
