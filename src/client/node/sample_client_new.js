@@ -38,12 +38,16 @@ function C2D_getState()
 */
 
 var silhouette = silhouetteClient.create('iothub', {
-  connectionString: 'HostName=SilhouetteHub.azure-devices.net;SharedAccessKeyName=device;SharedAccessKey=5l0nsPi3d8ggCdEeYTQi5YkWWuYKsUxSEPEpJMBslqA='
+  connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
+  //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKeyName=device;SharedAccessKey=5l0nsPi3d8ggCdEeYTQi5YkWWuYKsUxSEPEpJMBslqA='
+  
+  
   
 });
 
 silhouette.on('C2D_updateState', C2D_updateState);
 silhouette.on('C2D_getState', C2D_getState);
+//silhouette.on('error', error_handle);
 
 /*
 ** This could work in whatever way you want. We will just set a timer.

@@ -1,6 +1,8 @@
 const EventEmitter = require('events');
 const util = require('util');
 
+
+
 // Convenience variable so I can get to "this"
 var self;
 
@@ -79,9 +81,21 @@ function getMessageType(properties)
 
 SilhouetteClientIoTHub.prototype.updateState = function(state)
 {
-  var data = JSON.stringify({ state: state });
+	
+
+var timestamp = Date.now();
+var full_state =
+{
+ "DeviceID" : "silhouette1",
+ "Timestamp" : timestamp,
+ "Status" : "Reported",
+ "State" : state
+};
+	
+  var data = JSON.stringify(full_state);
   var message = new Message(data);
-  message.properties.add('MessageType', 'State:Update');
+  message.properties.add('MessageType', 'State:Set');
+  console.log(message);
   client.sendEvent(message, function(err) {
     // TODO: what if we have an error here ?
   });
