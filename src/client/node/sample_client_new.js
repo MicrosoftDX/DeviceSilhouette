@@ -1,9 +1,9 @@
 var silhouetteClient = require('./silhouette-client-new');
 
 var my_state = {
-  'Xaxis': 0,
-  'Yaxis': 0,
-  'Zaxis': 0
+  'Xaxis': "0",
+  'Yaxis': "0",
+  'Zaxis': "0"
 };
 
 /*
