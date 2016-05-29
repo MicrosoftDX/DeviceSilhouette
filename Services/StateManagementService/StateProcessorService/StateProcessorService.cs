@@ -13,8 +13,8 @@ using DeviceRepository.Interfaces;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors;
 using Newtonsoft.Json.Linq;
-
-
+using CommunicationProviders;
+using CommunicationProviders.IoTHub;
 
 namespace StateProcessorService
 {
@@ -53,15 +53,20 @@ namespace StateProcessorService
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following sample code with your own logic 
-            //       or remove this RunAsync override if it's not needed in your service.
+
+            // init communicaition provider
+            CommProviderIoTHub hub = new CommProviderIoTHub();
 
             long iterations = 0;
-
+          
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-
+                                
+                // get message from comm provider
+                string message = hub.ReceiveDeviceToCloudAsync().Result;                
+                
+                
                 ServiceEventSource.Current.ServiceMessage(this, "Working-{0}", ++iterations);
 
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
