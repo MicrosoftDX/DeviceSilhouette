@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace CommunicationProviders
 {
-
-    public interface IMessage
-    {
-    }
+    
     public interface ICommunicationProvider
     {
  
-        Task<IMessage> ReceiveDeviceToCloudAsync();
+        Task<string> ReceiveDeviceToCloudAsync();
 
-        Task SendCloudToDeviceAsync(IMessage message, string DeviceID);
+        Task SendCloudToDeviceAsync(string message, string DeviceID);
     }
 }

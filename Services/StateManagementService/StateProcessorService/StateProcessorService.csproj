@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StateProcessorService</RootNamespace>
     <AssemblyName>StateProcessorService</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,6 +91,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommunicationProviders\CommunicationProviders.csproj">
+      <Project>{091b2a18-ab32-44c6-acdb-e15cf2a2e846}</Project>
+      <Name>CommunicationProviders</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeviceRepository.Interfaces\DeviceRepository.Interfaces.csproj">
       <Project>{dfd18739-57ce-4786-8f69-eae4765be373}</Project>
       <Name>DeviceRepository.Interfaces</Name>
