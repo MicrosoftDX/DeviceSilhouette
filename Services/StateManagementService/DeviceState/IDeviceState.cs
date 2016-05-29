@@ -20,7 +20,7 @@ namespace DeviceStateNamespace
         [DataMember]
         public string DeviceID { get; set; }
         [DataMember]
-        public DateTime Timestamp { get; set; }
+        public long Timestamp { get; set; }
         [DataMember]
         public int Version { get; set; }
         [DataMember]

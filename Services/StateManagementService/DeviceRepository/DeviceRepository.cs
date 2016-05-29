@@ -44,7 +44,7 @@ namespace DeviceRepository
             {
                 state.Version = 1;
             }
-            state.Timestamp = DateTime.Now;
+            state.Timestamp = DateTime.Now.Millisecond;
             state.DeviceID = this.GetActorId().ToString();
 
             await AddDeviceMessageAsync(state);

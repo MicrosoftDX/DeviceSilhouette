@@ -82,6 +82,7 @@ namespace StateProcessorService
                 switch (device.Status())
                 {
                     case "Reported":
+                        // TODO - add assert if device id exist. Create if not?
                         await UpdateStateAsync(device.DeviceID(), message);
                         break;
                     case "Get":
@@ -114,7 +115,7 @@ namespace StateProcessorService
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
             DeviceState deviceState = new DeviceState(actorId.GetStringId(), StateValue);
-            deviceState.Timestamp = DateTime.Now;
+            deviceState.Timestamp = DateTime.Now.Millisecond;
             deviceState.Version = 0;
             deviceState.Status = "Registered";
 
@@ -128,23 +129,28 @@ namespace StateProcessorService
         public async Task<DeviceState> UpdateStateAsync(string DeviceId, string StateMessage)
         {
             JObject StateMessageJSON = JObject.Parse(StateMessage);
-            var deviceState = StateMessageJSON.ToObject(typeof(DeviceState));
-
+            JsonState jsonState = (JsonState) StateMessageJSON.ToObject(typeof(JsonState));
 
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
-            //DeviceState deviceState = new DeviceState(actorId.GetStringId(), StateMessage);
-            //deviceState.Timestamp = StateMessageJSON["Timestamp"];
-            //deviceState.Version = 0;
-            //deviceState.Status = StateMessageJSON.GetValue("Status");
+
+            DeviceState deviceState = new DeviceState(DeviceId, jsonState.State.ToString());
+            deviceState.Status = jsonState.Status;
+            deviceState.Timestamp = jsonState.Timestamp;            
 
             await silhouette.SetDeviceStateAsync(deviceState);
             var newState = await silhouette.GetDeviceStateAsync();
             return newState;
         }
 
-
-
+        private class JsonState
+        {
+            public string DeviceID { get; set; }
+            public long Timestamp { get; set; }
+            public int Version { get; set; }
+            public string Status { get; set; }
+            public Object State { get; set; }
+        }
     }
 }
