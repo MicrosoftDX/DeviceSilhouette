@@ -38,7 +38,7 @@ namespace DeviceRepository
 
             if (lastState.Version < Int32.MaxValue)
             {
-                state.Version = lastState.Version++;
+                state.Version = lastState.Version + 1; //latest.Version++ increase the number in the lastState object and not in the state object
             }
             else
             {
