@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "StateManagementService", "StateManagementService\StateManagementService.sfproj", "{2C5B36CA-FB8B-4BD9-B88D-A3F842D002BA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{091B2A18-AB32-44C6-ACDB-E15CF2A2E846} = {091B2A18-AB32-44C6-ACDB-E15CF2A2E846}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateManagementServiceWebAPI", "StateManagementServiceWebAPI\StateManagementServiceWebAPI.csproj", "{064DE854-AC34-40A5-907B-7F6560E017F7}"
 EndProject
