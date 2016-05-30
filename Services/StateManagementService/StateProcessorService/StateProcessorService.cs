@@ -13,9 +13,7 @@ using DeviceRepository.Interfaces;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors;
 using Newtonsoft.Json.Linq;
-using CommunicationProviders;
 using CommunicationProviders.IoTHub;
-using StateProcessorService.Utils;
 using System.Web.Script.Serialization;
 
 namespace StateProcessorService
@@ -26,6 +24,7 @@ namespace StateProcessorService
  
         Task<DeviceState> GetStateAsync(string DeviceId);
         Task<DeviceState> CreateStateAsync(string DeviceId, string StateValue);
+        Task<DeviceState> UpdateStateAsync(string DeviceId, string DevicState);
     }
 
     /// <summary>
@@ -78,15 +77,17 @@ namespace StateProcessorService
             string message = hub.ReceiveDeviceToCloudAsync().Result;
             if (!String.IsNullOrEmpty(message))
             {
-                JsonParser device = new JsonParser(message);
-                switch (device.Status())
+                JObject StateMessageJSON = JObject.Parse(message);
+                JsonState jsonState = (JsonState)StateMessageJSON.ToObject(typeof(JsonState));
+                
+                switch (jsonState.Status)
                 {
                     case "Reported":
                         // TODO - add assert if device id exist. Create if not?
-                        await UpdateStateAsync(device.DeviceID(), message);
+                        await internalUpdateState(jsonState.DeviceID, jsonState);
                         break;
                     case "Get":
-                        DeviceState deviceState = await GetStateAsync(device.DeviceID());
+                        DeviceState deviceState = await GetStateAsync(jsonState.DeviceID);
                         var json = new JavaScriptSerializer().Serialize(deviceState);
                         await hub.SendCloudToDeviceAsync(json, deviceState.DeviceID);
                         break;
@@ -126,11 +127,16 @@ namespace StateProcessorService
         }
 
         // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}} 
-        public async Task<DeviceState> UpdateStateAsync(string DeviceId, string StateMessage)
+        public async Task<DeviceState> UpdateStateAsync(string DeviceId, string DeviceState)
         {
-            JObject StateMessageJSON = JObject.Parse(StateMessage);
+            JObject StateMessageJSON = JObject.Parse(DeviceState);
             JsonState jsonState = (JsonState)StateMessageJSON.ToObject(typeof(JsonState));
 
+            return await internalUpdateState(DeviceId, jsonState);            
+        }
+
+        private async Task<DeviceState> internalUpdateState(string DeviceId, JsonState jsonState)
+        {
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
