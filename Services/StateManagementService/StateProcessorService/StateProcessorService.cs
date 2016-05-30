@@ -116,10 +116,9 @@ namespace StateProcessorService
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
             DeviceState deviceState = new DeviceState(actorId.GetStringId(), StateValue);
-            //deviceState.Timestamp = DateTime.Now.Millisecond;
             deviceState.Timestamp = DateTime.UtcNow;
-            deviceState.Version = 0;
-            deviceState.Status = "Registered";
+            //deviceState.Version = 0;
+            deviceState.Status = "Requested";
 
             await silhouette.SetDeviceStateAsync(deviceState);
             var newState = await silhouette.GetDeviceStateAsync();
