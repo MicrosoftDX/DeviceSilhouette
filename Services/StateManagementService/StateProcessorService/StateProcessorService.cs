@@ -23,8 +23,8 @@ namespace StateProcessorService
     {
  
         Task<DeviceState> GetStateAsync(string DeviceId);
-        Task<DeviceState> CreateStateAsync(string DeviceId, string StateValue);
-        Task<DeviceState> UpdateStateAsync(string DeviceId, string DevicState);
+        Task<DeviceState> SetStateValueAsync(string DeviceId, string StateValue);
+        Task<DeviceState> SetStateObjectAsync(string DeviceId, string DevicState);
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ namespace StateProcessorService
                 {
                     case "Reported":
                         // TODO - add assert if device id exist. Create if not?
-                        await internalUpdateState(jsonState.DeviceID, jsonState);
+                        await internalSetStateObject(jsonState.DeviceID, jsonState);
                         break;
                     case "Get":
                         DeviceState deviceState = await GetStateAsync(jsonState.DeviceID);
@@ -110,7 +110,7 @@ namespace StateProcessorService
         // For now it just create an actor in the repository with the DeviceID
         // TODO: Implement get the state from the device itself
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
-        public async Task<DeviceState> CreateStateAsync(string DeviceId, string StateValue)
+        public async Task<DeviceState> SetStateValueAsync(string DeviceId, string StateValue)
         { 
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
@@ -127,15 +127,15 @@ namespace StateProcessorService
         }
 
         // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}} 
-        public async Task<DeviceState> UpdateStateAsync(string DeviceId, string DeviceState)
+        public async Task<DeviceState> SetStateObjectAsync(string DeviceId, string DeviceState)
         {
             JObject StateMessageJSON = JObject.Parse(DeviceState);
             JsonState jsonState = (JsonState)StateMessageJSON.ToObject(typeof(JsonState));
 
-            return await internalUpdateState(DeviceId, jsonState);            
+            return await internalSetStateObject(DeviceId, jsonState);            
         }
 
-        private async Task<DeviceState> internalUpdateState(string DeviceId, JsonState jsonState)
+        private async Task<DeviceState> internalSetStateObject(string DeviceId, JsonState jsonState)
         {
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);

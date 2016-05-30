@@ -54,7 +54,7 @@ namespace StateManagementServiceWebAPI.Controllers
         public async Task<DeviceState> Put([FromUri]string deviceId, [FromBody]JToken stateValue)
         {
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
-            var deviceState = await StateProcessorClient.CreateStateAsync(deviceId, stateValue.ToString());
+            var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, stateValue.ToString());
             return deviceState;
         }
 
