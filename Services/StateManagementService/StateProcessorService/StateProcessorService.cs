@@ -124,20 +124,29 @@ namespace StateProcessorService
             return newState;
         }
 
-   
+        /// This methode causes an exeption in the parsing - Replace with Nava implementation (should be synced)
         // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}} 
         public async Task<DeviceState> UpdateStateAsync(string DeviceId, string StateMessage)
         {
             JObject StateMessageJSON = JObject.Parse(StateMessage);
+<<<<<<< HEAD
             JsonState jsonState = (JsonState) StateMessageJSON.ToObject(typeof(JsonState));
+=======
+            DeviceState deviceState = (DeviceState)StateMessageJSON.ToObject(typeof(DeviceState));
+
+   
+>>>>>>> origin/master
 
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
+<<<<<<< HEAD
 
             DeviceState deviceState = new DeviceState(DeviceId, jsonState.State.ToString());
             deviceState.Status = jsonState.Status;
             deviceState.Timestamp = jsonState.Timestamp;            
+=======
+>>>>>>> origin/master
 
             await silhouette.SetDeviceStateAsync(deviceState);
             var newState = await silhouette.GetDeviceStateAsync();
