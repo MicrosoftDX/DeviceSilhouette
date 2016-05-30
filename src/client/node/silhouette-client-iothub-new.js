@@ -1,8 +1,5 @@
 const EventEmitter = require('events');
 const util = require('util');
-const datetime = require('node-datetime');
-
-
 
 // Convenience variable so I can get to "this"
 var self;
@@ -36,7 +33,7 @@ util.inherits(SilhouetteClientIoTHub, EventEmitter);
 
 function processMessage(msg)
 {
-  console.log("message");
+  console.log("INCOMING message");
   // With AMQP, use this trick
   // var msgType = msg.transportObj.applicationProperties.MessageType;
   var msgType = getMessageType(msg.properties);
@@ -82,24 +79,23 @@ function getMessageType(properties)
 
 SilhouetteClientIoTHub.prototype.updateState = function(state)
 {
+  // TODO: Make sure timestamp in UTC and not in local computer timezone	
+  var formattedDate = new Date().toISOString();
 
-// TODO: Make sure timestamp in UTC and not in local computer timezone	
-var dt = datetime.create();
-var formattedDate = dt.format('Y-m-dTH:M:S');
-
-//var timestamp = Date.now();
-var full_state =
-{
- "DeviceID" : "silhouette1",
- "Timestamp" : formattedDate,
- "Status" : "Reported",
- "State" : state
-};
+  //var timestamp = Date.now();
+  var full_state =
+  {
+  "DeviceID" : "silhouette1",
+  "Timestamp" : formattedDate,
+  "Status" : "Reported",
+  "State" : state
+  };
 	
   var data = JSON.stringify(full_state);
   var message = new Message(data);
   message.properties.add('MessageType', 'State:Set');
-  console.log(message);
+  //console.log("outgoing message:");
+  //console.log(message);
   client.sendEvent(message, function(err) {
     // TODO: what if we have an error here ?
   });
@@ -111,8 +107,7 @@ var full_state =
 
 SilhouetteClientIoTHub.prototype.getState = function(state)
 {
-  var data = JSON.stringify({ state: state });
-  var message = new Message(data);
+  var message = new Message();
   message.properties.add('MessageType', 'State:Get');
   client.sendEvent(message, function(err) {
     // TODO: what if we have an error here ?

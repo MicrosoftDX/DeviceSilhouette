@@ -1,9 +1,9 @@
 var silhouetteClient = require('./silhouette-client-new');
 
 var my_state = {
-  'Xaxis': "0",
-  'Yaxis': "0",
-  'Zaxis': "0"
+  Xaxis: 0,
+  Yaxis: 0,
+  Zaxis: 0
 };
 
 /*
@@ -17,9 +17,9 @@ function C2D_updateState(state)
   // - What if heaterOn has changed? How should I detect to take action?
   // - What if the cloud service wants to set the temperature? It makes no sense e.g. for a sensor.
   // - Do we get all the properties on update or just the ones changed? 
-  console.log("in C2D_updateState; new state:");
+  console.log("in C2D_updateState; message:");
   console.dir(state)
-  my_state = state;
+  my_state = state.data.State;
 }
 
 /*
@@ -40,9 +40,6 @@ function C2D_getState()
 var silhouette = silhouetteClient.create('iothub', {
   connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
   //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKeyName=device;SharedAccessKey=5l0nsPi3d8ggCdEeYTQi5YkWWuYKsUxSEPEpJMBslqA='
-  
-  
-  
 });
 
 silhouette.on('C2D_updateState', C2D_updateState);
@@ -59,7 +56,10 @@ function doWork()
 {
   // console.dir(silhouette);
   // Send our new state to the cloud service
+  console.log('sending updated state:');
+  console.dir(my_state);
   silhouette.updateState(my_state);
+  ++my_state.Xaxis;
   // TODO: also get the state from the cloud service?
   // check_state = silhouette.getState();
   // TODO: we can use the native client to do other stuff
