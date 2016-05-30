@@ -15,6 +15,7 @@ using Microsoft.ServiceFabric.Actors;
 using Newtonsoft.Json.Linq;
 using CommunicationProviders.IoTHub;
 using System.Web.Script.Serialization;
+using CommunicationProviders;
 
 namespace StateProcessorService
 {
@@ -23,8 +24,7 @@ namespace StateProcessorService
     {
  
         Task<DeviceState> GetStateAsync(string DeviceId);
-        Task<DeviceState> SetStateValueAsync(string DeviceId, string StateValue);
-        Task<DeviceState> SetStateObjectAsync(string DeviceId, string DevicState);
+        Task<DeviceState> SetStateValueAsync(string DeviceId, string StateValue);        
     }
 
     /// <summary>
@@ -34,9 +34,14 @@ namespace StateProcessorService
     {
         private static Uri RepositoriUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");
 
+        ICommunicationProvider commProvider;
+
         public StateProcessorService(StatelessServiceContext context)
             : base(context)
-        { }
+        {
+            // init communicaition provider for Azure IoTHub
+            commProvider = new CommProviderIoTHub();
+        }
 
         /// <summary>
         /// Override to create listeners (e.g., TCP, HTTP) for this service replica to handle client or user requests.
@@ -53,10 +58,7 @@ namespace StateProcessorService
         /// </summary>
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
-        {
-
-            // init communicaition provider
-            CommProviderIoTHub hub = new CommProviderIoTHub();
+        {            
 
             long iterations = 0;
           
@@ -66,15 +68,16 @@ namespace StateProcessorService
                 ServiceEventSource.Current.ServiceMessage(this, "Working-{0}", ++iterations);
 
                 // get message from comm provider                
-                await prcoessIoTHubMessages(hub);
+                await prcoessCommunicationProviderMessages();
 
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
-        }
-
-        private async Task prcoessIoTHubMessages(CommProviderIoTHub hub)
+        }        
+        
+        // process messages from communication provider - D2C endpoint 
+        private async Task prcoessCommunicationProviderMessages()
         {
-            string message = hub.ReceiveDeviceToCloudAsync().Result;
+            string message = commProvider.ReceiveDeviceToCloudAsync().Result;
             if (!String.IsNullOrEmpty(message))
             {
                 JObject StateMessageJSON = JObject.Parse(message);
@@ -82,59 +85,61 @@ namespace StateProcessorService
                 
                 switch (jsonState.Status)
                 {
-                    case "Reported":
+                    case "Reported": // device reporting a state update
                         // TODO - add assert if device id exist. Create if not?
-                        await internalSetStateObject(jsonState.DeviceID, jsonState);
+                        await internalUpdateDeviceState(jsonState.DeviceID, jsonState);
                         break;
-                    case "Get":
+                    case "Get": // device requesting last stored state
                         DeviceState deviceState = await GetStateAsync(jsonState.DeviceID);
                         var json = new JavaScriptSerializer().Serialize(deviceState);
-                        await hub.SendCloudToDeviceAsync(json, deviceState.DeviceID);
+                        await commProvider.SendCloudToDeviceAsync(jsonState.State.ToString(), deviceState.DeviceID);
                         break;
                 }
             }        
         }
-       
 
+        // This API is used by the REST call
         public async Task<DeviceState> GetStateAsync(string DeviceId)
         {
             //TODO: error handling
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
-            var newState = await silhouette.GetDeviceStateAsync();
+            var newState = await silhouette.GetDeviceStateAsync();            
             return newState;
         }
 
 
         // For now it just create an actor in the repository with the DeviceID
         // TODO: Implement get the state from the device itself
+        // This API is used by the REST call
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
         public async Task<DeviceState> SetStateValueAsync(string DeviceId, string StateValue)
-        { 
-            //TODO: error handling
+        {
+            //TODO: error handling - assert device id is not found
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
             DeviceState deviceState = new DeviceState(actorId.GetStringId(), StateValue);
             deviceState.Timestamp = DateTime.UtcNow;
-            //deviceState.Version = 0;
             deviceState.Status = "Requested";
 
+            // update device with the new state (C2D endpoint)
+            string json = new JavaScriptSerializer().Serialize(deviceState);
+            await commProvider.SendCloudToDeviceAsync(json, DeviceId);
+            // update device repository
+            return await updateRepository(silhouette, deviceState);
+        }
+
+        private static async Task<DeviceState> updateRepository(IDeviceRepositoryActor silhouette, DeviceState deviceState)
+        {
             await silhouette.SetDeviceStateAsync(deviceState);
             var newState = await silhouette.GetDeviceStateAsync();
             return newState;
         }
 
-        // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}} 
-        public async Task<DeviceState> SetStateObjectAsync(string DeviceId, string DeviceState)
-        {
-            JObject StateMessageJSON = JObject.Parse(DeviceState);
-            JsonState jsonState = (JsonState)StateMessageJSON.ToObject(typeof(JsonState));
-
-            return await internalSetStateObject(DeviceId, jsonState);            
-        }
-
-        private async Task<DeviceState> internalSetStateObject(string DeviceId, JsonState jsonState)
+        // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}}
+        // update the device state in the repository. This is called by the Communication provider (the device is reporting a state update)  
+        private async Task<DeviceState> internalUpdateDeviceState(string DeviceId, JsonState jsonState)
         {
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
@@ -144,9 +149,8 @@ namespace StateProcessorService
             deviceState.Status = jsonState.Status;
             deviceState.Timestamp = jsonState.Timestamp;
 
-            await silhouette.SetDeviceStateAsync(deviceState);
-            var newState = await silhouette.GetDeviceStateAsync();
-            return newState;
+            // update device repository
+            return await updateRepository(silhouette, deviceState);
         }
 
         private class JsonState
