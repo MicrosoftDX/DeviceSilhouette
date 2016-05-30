@@ -99,7 +99,7 @@ var full_state =
   var data = JSON.stringify(full_state);
   var message = new Message(data);
   message.properties.add('MessageType', 'State:Set');
-  //console.log(message);
+  console.log(message);
   client.sendEvent(message, function(err) {
     // TODO: what if we have an error here ?
   });

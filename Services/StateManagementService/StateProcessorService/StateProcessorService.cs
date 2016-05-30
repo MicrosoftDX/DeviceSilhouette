@@ -115,7 +115,8 @@ namespace StateProcessorService
             ActorId actorId = new ActorId(DeviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoriUri);
             DeviceState deviceState = new DeviceState(actorId.GetStringId(), StateValue);
-            deviceState.Timestamp = DateTime.Now.Millisecond;
+            //deviceState.Timestamp = DateTime.Now.Millisecond;
+            deviceState.Timestamp = DateTime.UtcNow;
             deviceState.Version = 0;
             deviceState.Status = "Registered";
 
@@ -146,7 +147,7 @@ namespace StateProcessorService
         private class JsonState
         {
             public string DeviceID { get; set; }
-            public long Timestamp { get; set; }
+            public DateTime Timestamp { get; set; }
             public int Version { get; set; }
             public string Status { get; set; }
             public Object State { get; set; }
