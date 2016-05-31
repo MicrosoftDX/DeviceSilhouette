@@ -16,6 +16,7 @@ using Newtonsoft.Json.Linq;
 using CommunicationProviders.IoTHub;
 using System.Web.Script.Serialization;
 using CommunicationProviders;
+using System.Configuration;
 
 namespace StateProcessorService
 {
@@ -32,7 +33,7 @@ namespace StateProcessorService
     /// </summary>
     internal sealed class StateProcessorService : StatelessService, IStateProcessorRemoting
     {
-        private static Uri RepositoriUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");
+        private static Uri RepositoriUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");       
 
         ICommunicationProvider commProvider;
 
@@ -40,7 +41,9 @@ namespace StateProcessorService
             : base(context)
         {
             // init communicaition provider for Azure IoTHub
-            commProvider = new CommProviderIoTHub();
+            string iotHubConnectionString = ConfigurationManager.AppSettings["iotHubConnectionString"];
+            string storageConnectionString = ConfigurationManager.AppSettings["storageConnectionString"];
+            commProvider = new CommProviderIoTHub(iotHubConnectionString, storageConnectionString);
         }
 
         /// <summary>

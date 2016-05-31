@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 namespace CommunicationProviders.IoTHub
 {
     public class CommProviderIoTHub: ICommunicationProvider
-    {
-        // TODO: export configuration. all configuration is hard codded for now
-        string iotHubConnectionString = "HostName=SilhouetteHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=VJJSbrsOPUx9oOklDs2iQGNx6rpG62wyIyGQ5wLO+6c=";
-        //string iotHubConnectionString = "HostName=silhouette-tests.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=3GP77YoaR0+OXw8WX8DLKJiHUfbmr27XcSVSRi7Qi3s=";
+    {        
+        string iotHubConnectionString;         
         string iotHubD2cEndpoint = "messages/events";
-        string storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=silhouetteiotstore;AccountKey=Kqs/iRhopvVwfzIJ4+J6koASVAKPxx4dvRXCxqe3cqhHdlEQEWzRTZuSIRSDNubjH/sIm+Ym92iOgTYpbbCD7Q==";
-        //string storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=iotteststore;AccountKey=q+DEpESjnsfza7umztyEVfgUU54RpHCn6uowWYzo78cjEugjCplAjPuKeMYS5AnlDKAZ0Q/ic8ImEGSQw54TKg==";
+        string storageConnectionString;
         string container = "silhouette-events";
 
         private IoTStateProcessor stateProcessor;
 
-        public CommProviderIoTHub()
-        {            
+        public CommProviderIoTHub(string IoTHubConnectionString, string StorageConnectionString)
+        {
+            iotHubConnectionString = IoTHubConnectionString;
+            storageConnectionString = StorageConnectionString;
+
             stateProcessor = new IoTStateProcessor(iotHubConnectionString);
 
             string eventProcessorHostName = Guid.NewGuid().ToString();
