@@ -33,7 +33,6 @@ util.inherits(SilhouetteClientIoTHub, EventEmitter);
 
 function processMessage(msg)
 {
-  console.log("INCOMING message");
   // With AMQP, use this trick
   // var msgType = msg.transportObj.applicationProperties.MessageType;
   var msgType = getMessageType(msg.properties);
@@ -42,7 +41,7 @@ function processMessage(msg)
   switch (msgType) {
     case 'State:Set':
       console.log("C2D_UpdateState");
-      self.emit('C2D_updateState', JSON.parse(msg.data).state);
+      self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
       break;
     case 'State:Get':
       console.log("C2D_GetState");
