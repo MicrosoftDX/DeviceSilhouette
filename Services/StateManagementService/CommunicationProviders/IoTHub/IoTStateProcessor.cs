@@ -32,6 +32,7 @@ namespace CommunicationProviders.IoTHub
         {
             Message commandMessage;
             commandMessage = new Message(System.Text.Encoding.ASCII.GetBytes(message));
+            // TODO: check the message and send messagetype according to it. Now it always sends State:Set
             commandMessage.Properties.Add("MessageType", "State:Set");
             await serviceClient.SendAsync(deviceID, commandMessage);
         }
