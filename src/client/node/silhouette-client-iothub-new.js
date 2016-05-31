@@ -40,7 +40,7 @@ function processMessage(msg)
   // TODO: what if we can't find the messageType? i.e. it's not a Silhouette message?
   // TODO: should we forward the message to some other callback?
   switch (msgType) {
-    case 'State:Update':
+    case 'State:Set':
       console.log("C2D_UpdateState");
       self.emit('C2D_updateState', JSON.parse(msg.data).state);
       break;
