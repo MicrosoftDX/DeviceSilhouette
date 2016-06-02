@@ -10,14 +10,14 @@ There are 2 channels to communicate with the Device Silhouette:
 1. Direct REST API
 2. Messaging Communication Provider -currently implemented only IoTHub.
 
-Setup the folliwng Azure Services and take a note of their connection string:
+Setup the following Azure Services and take a note of their connection string:
 1. Azure IoTHub
 2. Azure Storage Account
 
 Clone this repository, and compile the Visual Studio solution under [Services/StateManagementService](Services/StateManagementService). 
 Update the connection strings for IoTHub and storage in the StateProcessorService app.config file
 
-The Device Silhuette is a Service Fabric application. You can run the solution on your local machine (set the StateManagementService as the startup project), using a local cluster of Service Fabric, or deploy it to Azure Service Fabric cluster. 
+The Device Silhouette is a Service Fabric application. You can run the solution on your local machine (set the StateManagementService as the startup project), using a local cluster of Service Fabric, or deploy it to Azure Service Fabric cluster. 
  
 ## Testing IoTHub communicator using a node.js client
 Add a device to the IoTHub and take a note of its name and connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases).
@@ -27,14 +27,14 @@ The node.js client is located under [src/client/node](src/client/node). Edit the
 - sample_client_new.js
 - silhouette-client-iothub-new.js
 
-And replace connectionString with the device conection string, and DeviceID with the device name.   
+And replace connectionString with the device connection string, and DeviceID with the device name.   
 
-Run sample_client_name.js - it will send messages to IoTHub Device2Cloud endpoint for Device Silhouette to capture and process. The same client will read mesages from the Cloud2Device endpoint. 
+Run sample_client_name.js - it will send messages to IoTHub Device2Cloud endpoint for Device Silhouette to capture and process. The same client will read messages from the Cloud2Device endpoint. 
 
 ## Testing REST APIs using Swagger
 The visual studio solution contains a swagger UI for the REST APIs. 
 
-If run locally, can be accessed via [http://localhost:9013/swagger/ui/index](http://localhost:9013/swagger/ui/index). Alternativly, if a Service Fabric cluster is deployed in Azure, the swagger UI can be accessed at [<cluster url>:9013/swagger/ui/index](<cluster url>:9013/swagger/ui/index).
+If run locally, can be accessed via [http://localhost:9013/swagger/ui/index](http://localhost:9013/swagger/ui/index). Alternatively, if a Service Fabric cluster is deployed in Azure, the swagger UI can be accessed at [<cluster url>:9013/swagger/ui/index](<cluster url>:9013/swagger/ui/index).
 
 
 
