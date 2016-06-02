@@ -6,6 +6,7 @@ This project creates a virtual version or actor (“silhouette”) of each devic
 
 ## Setting up the project
 There are 2 channels to communicate with the Device Silhouette:
+
 1. Direct REST API
 2. Messaging Communication Provider -currently implemented only IoTHub.
 
