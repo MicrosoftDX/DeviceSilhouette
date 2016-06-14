@@ -18,6 +18,8 @@ Clone this repository, and compile the Visual Studio solution under [Services/St
 Update the connection strings for IoTHub and storage in the StateProcessorService app.config file
 
 The Device Silhouette is a Service Fabric application. You can run the solution on your local machine (set the StateManagementService as the startup project), using a local cluster of Service Fabric, or deploy it to Azure Service Fabric cluster. 
+
+[Prepare your development environment](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-get-started/)
  
 ## Testing IoTHub communicator using a node.js client
 Add a device to the IoTHub and take a note of its name and connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases).
