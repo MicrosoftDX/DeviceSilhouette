@@ -29,7 +29,11 @@ The node.js client is located under [src/client/node](src/client/node). Edit the
 
 And replace connectionString with the device connection string, and DeviceID with the device name.   
 
-Run sample_client_name.js - it will send messages to IoTHub Device2Cloud endpoint for Device Silhouette to capture and process. The same client will read messages from the Cloud2Device endpoint. 
+Run sample_client_new.js - it will send messages to IoTHub Device2Cloud endpoint for Device Silhouette to capture and process. The same client will read messages from the Cloud2Device endpoint. 
+
+```node
+node sample_client_new.js
+```
 
 ## Testing REST APIs using Swagger
 The visual studio solution contains a swagger UI for the REST APIs. 
