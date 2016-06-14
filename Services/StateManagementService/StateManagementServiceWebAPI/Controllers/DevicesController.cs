@@ -46,7 +46,7 @@ namespace StateManagementServiceWebAPI.Controllers
         // Body:
         // {
         //"Xaxis" : "1" ,
-        //"Yaxis : "2" ,
+        //"Yaxis" : "2" ,
         //"Zaxis" : "3"
         // }
         [Route("{deviceId}")]
