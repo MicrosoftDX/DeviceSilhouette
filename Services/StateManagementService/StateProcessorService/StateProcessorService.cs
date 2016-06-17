@@ -35,7 +35,7 @@ namespace StateProcessorService
     {
         private static Uri RepositoriUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");       
 
-        ICommunicationProvider commProvider;
+        ICommunicationProvider _communicationProvider;
 
         public StateProcessorService(StatelessServiceContext context)
             : base(context)
@@ -43,7 +43,7 @@ namespace StateProcessorService
             // init communicaition provider for Azure IoTHub
             string iotHubConnectionString = ConfigurationManager.AppSettings["iotHubConnectionString"];
             string storageConnectionString = ConfigurationManager.AppSettings["storageConnectionString"];
-            commProvider = new IoTHubCommunicationProvider(iotHubConnectionString, storageConnectionString);
+            _communicationProvider = new IoTHubCommunicationProvider(iotHubConnectionString, storageConnectionString);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace StateProcessorService
         // process messages from communication provider - D2C endpoint 
         private async Task ProcessCommunicationProviderMessagesAsync() 
         {
-            string message = await commProvider.ReceiveDeviceToCloudAsync();
+            string message = await _communicationProvider.ReceiveDeviceToCloudAsync();
             if (!String.IsNullOrEmpty(message))
             {
                 JObject StateMessageJSON = JObject.Parse(message);
@@ -95,7 +95,7 @@ namespace StateProcessorService
                     case "Get": // device requesting last stored state
                         DeviceState deviceState = await GetStateAsync(jsonState.DeviceID);
                         var json = new JavaScriptSerializer().Serialize(deviceState);
-                        await commProvider.SendCloudToDeviceAsync(jsonState.State.ToString(), deviceState.DeviceID);
+                        await _communicationProvider.SendCloudToDeviceAsync(jsonState.State.ToString(), deviceState.DeviceID);
                         break;
                 }
             }        
@@ -128,7 +128,7 @@ namespace StateProcessorService
 
             // update device with the new state (C2D endpoint)
             string json = new JavaScriptSerializer().Serialize(deviceState);
-            await commProvider.SendCloudToDeviceAsync(json, DeviceId);
+            await _communicationProvider.SendCloudToDeviceAsync(json, DeviceId);
             // update device repository
             return await UpdateRepositoryAsync(silhouette, deviceState);
         }
