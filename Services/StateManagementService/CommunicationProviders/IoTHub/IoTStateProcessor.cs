@@ -31,7 +31,7 @@ namespace CommunicationProviders.IoTHub
         internal async Task updateDevice(string deviceID, string message)
         {
             Message commandMessage;
-            commandMessage = new Message(System.Text.Encoding.ASCII.GetBytes(message));
+            commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(message));
             // TODO: check the message and send messagetype according to it. Now it always sends State:Set
             commandMessage.Properties.Add("MessageType", "State:Set");
             await _serviceClient.SendAsync(deviceID, commandMessage);
