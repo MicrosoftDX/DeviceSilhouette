@@ -8,23 +8,23 @@ namespace CommunicationProviders.IoTHub
     internal class IoTStateProcessor
     {        
         // TODO: replace with service bus queue 
-        private ConcurrentQueue<string> d2cMessages = new ConcurrentQueue<string>();
-        private ServiceClient serviceClient;
+        private ConcurrentQueue<string> _d2cMessages = new ConcurrentQueue<string>();
+        private ServiceClient _serviceClient;
        
         public IoTStateProcessor(string iotHubConnectionString)
         {
-            serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
+            _serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
         }
 
         internal void processMessage(string message)
         {
-            d2cMessages.Enqueue(message);
+            _d2cMessages.Enqueue(message);
         }
 
         internal string getMessage()
         {
             string message;
-            d2cMessages.TryDequeue(out message);
+            _d2cMessages.TryDequeue(out message);
             return message;
         }
 
@@ -34,7 +34,7 @@ namespace CommunicationProviders.IoTHub
             commandMessage = new Message(System.Text.Encoding.ASCII.GetBytes(message));
             // TODO: check the message and send messagetype according to it. Now it always sends State:Set
             commandMessage.Properties.Add("MessageType", "State:Set");
-            await serviceClient.SendAsync(deviceID, commandMessage);
+            await _serviceClient.SendAsync(deviceID, commandMessage);
         }
     }
 }

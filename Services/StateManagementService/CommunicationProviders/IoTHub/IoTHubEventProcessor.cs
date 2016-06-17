@@ -17,14 +17,16 @@ namespace CommunicationProviders.IoTHub
             state = _state;
         }
 
-        public async Task CloseAsync(PartitionContext context, CloseReason reason)
+        public Task CloseAsync(PartitionContext context, CloseReason reason)
         {
             Console.WriteLine("Processor Shutting Down. Partition '{0}', Reason: '{1}'.", context.Lease.PartitionId, reason);
+            return Task.FromResult((object)null);
         }
 
-        public async Task OpenAsync(PartitionContext context)
+        public Task OpenAsync(PartitionContext context)
         {
             Console.WriteLine("EventProcessor initialized.  Partition: '{0}', Offset: '{1}'", context.Lease.PartitionId, context.Lease.Offset);
+            return Task.FromResult((object)null);
         }
 
         public async Task ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)

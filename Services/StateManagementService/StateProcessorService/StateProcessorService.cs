@@ -43,7 +43,7 @@ namespace StateProcessorService
             // init communicaition provider for Azure IoTHub
             string iotHubConnectionString = ConfigurationManager.AppSettings["iotHubConnectionString"];
             string storageConnectionString = ConfigurationManager.AppSettings["storageConnectionString"];
-            commProvider = new CommProviderIoTHub(iotHubConnectionString, storageConnectionString);
+            commProvider = new IoTHubCommunicationProvider(iotHubConnectionString, storageConnectionString);
         }
 
         /// <summary>
@@ -71,16 +71,16 @@ namespace StateProcessorService
                 ServiceEventSource.Current.ServiceMessage(this, "Working-{0}", ++iterations);
 
                 // get message from comm provider                
-                await prcoessCommunicationProviderMessages();
+                await ProcessCommunicationProviderMessagesAsync(); 
 
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
         }        
         
         // process messages from communication provider - D2C endpoint 
-        private async Task prcoessCommunicationProviderMessages()
+        private async Task ProcessCommunicationProviderMessagesAsync() 
         {
-            string message = commProvider.ReceiveDeviceToCloudAsync().Result;
+            string message = await commProvider.ReceiveDeviceToCloudAsync();
             if (!String.IsNullOrEmpty(message))
             {
                 JObject StateMessageJSON = JObject.Parse(message);
@@ -90,7 +90,7 @@ namespace StateProcessorService
                 {
                     case "Reported": // device reporting a state update
                         // TODO - add assert if device id exist. Create if not?
-                        await internalUpdateDeviceState(jsonState.DeviceID, jsonState);
+                        await InternalUpdateDeviceStateAsync(jsonState.DeviceID, jsonState);
                         break;
                     case "Get": // device requesting last stored state
                         DeviceState deviceState = await GetStateAsync(jsonState.DeviceID);
@@ -130,10 +130,10 @@ namespace StateProcessorService
             string json = new JavaScriptSerializer().Serialize(deviceState);
             await commProvider.SendCloudToDeviceAsync(json, DeviceId);
             // update device repository
-            return await updateRepository(silhouette, deviceState);
+            return await UpdateRepositoryAsync(silhouette, deviceState);
         }
 
-        private static async Task<DeviceState> updateRepository(IDeviceRepositoryActor silhouette, DeviceState deviceState)
+        private static async Task<DeviceState> UpdateRepositoryAsync(IDeviceRepositoryActor silhouette, DeviceState deviceState)
         {
             await silhouette.SetDeviceStateAsync(deviceState);
             var newState = await silhouette.GetDeviceStateAsync();
@@ -142,7 +142,7 @@ namespace StateProcessorService
 
         // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}}
         // update the device state in the repository. This is called by the Communication provider (the device is reporting a state update)  
-        private async Task<DeviceState> internalUpdateDeviceState(string DeviceId, JsonState jsonState)
+        private async Task<DeviceState> InternalUpdateDeviceStateAsync(string DeviceId, JsonState jsonState)
         {
             //TODO: error handling
             ActorId actorId = new ActorId(DeviceId);
@@ -153,7 +153,7 @@ namespace StateProcessorService
             deviceState.Timestamp = jsonState.Timestamp;
 
             // update device repository
-            return await updateRepository(silhouette, deviceState);
+            return await UpdateRepositoryAsync(silhouette, deviceState);
         }
 
         private class JsonState
