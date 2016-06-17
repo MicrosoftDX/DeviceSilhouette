@@ -8,6 +8,7 @@ using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
 using DeviceRepository.Interfaces;
 using DeviceStateNamespace;
+using Microsoft.ServiceFabric.Data;
 
 namespace DeviceRepository
 {
@@ -54,13 +55,13 @@ namespace DeviceRepository
 
         async Task AddDeviceMessageAsync(DeviceState state)
         {
-            List<DeviceState> messages = new List<DeviceState>();
-            Microsoft.ServiceFabric.Data.ConditionalValue<List<DeviceState>> _messages;
-            _messages = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
-            if (_messages.HasValue) { messages = _messages.Value; };
+            ConditionalValue<List<DeviceState>> messagesInState = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
+            List<DeviceState> messages = messagesInState.HasValue 
+                                ? messagesInState.Value
+                                : new List<DeviceState>();
 
             messages.Add(state);
-            await StateManager.SetStateAsync<List<DeviceState>>("silhouetteMessages", messages);
+            await StateManager.SetStateAsync("silhouetteMessages", messages);
         }
 
         /// <summary>
