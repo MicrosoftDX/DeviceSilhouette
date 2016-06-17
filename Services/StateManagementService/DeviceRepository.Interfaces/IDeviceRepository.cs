@@ -25,7 +25,7 @@ namespace DeviceRepository.Interfaces
         /// </summary>
         /// <param name="state">Object that contains the requested or reported device state</param>
         /// <returns></returns>
-        Task SetDeviceStateAsync(DeviceState state);
+        Task<DeviceState> SetDeviceStateAsync(DeviceState state);
 
         /// <summary>
         /// This method reads the available state history from the Silhouette

@@ -33,7 +33,7 @@ namespace DeviceRepository
             return StateManager.GetStateAsync<List<DeviceState>>("silhouetteMessages");
         }
 
-        public async Task SetDeviceStateAsync(DeviceState state)
+        public async Task<DeviceState> SetDeviceStateAsync(DeviceState state)
         {
             var lastState = await StateManager.GetStateAsync<DeviceState>("silhouette");
 
@@ -51,6 +51,7 @@ namespace DeviceRepository
             await AddDeviceMessageAsync(state);
 
             await StateManager.SetStateAsync("silhouette", state);
+            return state;
         }
 
         async Task AddDeviceMessageAsync(DeviceState state)

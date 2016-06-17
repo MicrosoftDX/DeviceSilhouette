@@ -130,7 +130,7 @@ namespace StateProcessorService
             string json = new JavaScriptSerializer().Serialize(deviceState);
             await _communicationProvider.SendCloudToDeviceAsync(json, DeviceId);
             // update device repository
-            return await UpdateRepositoryAsync(silhouette, deviceState);
+            return await silhouette.SetDeviceStateAsync(deviceState);
         }
 
         private static async Task<DeviceState> UpdateRepositoryAsync(IDeviceRepositoryActor silhouette, DeviceState deviceState)
@@ -153,7 +153,7 @@ namespace StateProcessorService
             deviceState.Timestamp = jsonState.Timestamp;
 
             // update device repository
-            return await UpdateRepositoryAsync(silhouette, deviceState);
+            return await silhouette.SetDeviceStateAsync(deviceState);
         }
 
         private class JsonState
