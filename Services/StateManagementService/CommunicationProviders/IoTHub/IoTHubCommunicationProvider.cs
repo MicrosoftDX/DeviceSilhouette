@@ -32,12 +32,11 @@ namespace CommunicationProviders.IoTHub
         public Task<string> ReceiveDeviceToCloudAsync()
         {
             return Task.FromResult(_stateProcessor.getMessage());
-        }
+        }        
 
-        public Task SendCloudToDeviceAsync(string Message, string DeviceID)
+        public Task SendCloudToDeviceAsync(string DeviceId, string MessageType, string Message)
         {
-            return _stateProcessor.updateDevice(DeviceID, Message);
+            return _stateProcessor.updateDevice(DeviceId, MessageType, Message);
         }
-
     }
 }

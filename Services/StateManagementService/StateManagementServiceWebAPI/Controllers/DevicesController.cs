@@ -34,6 +34,12 @@ namespace StateManagementServiceWebAPI.Controllers
             return Ok(deviceState);
         }
 
+        [Route("{deviceId}")]      
+        public async Task DeepGet([FromUri]string deviceId)
+        {
+            await StateProcessorClient.DeepGetStateAsync(deviceId);          
+        }
+
         // PUT devices/{DeviceId} 
         // To call using Swagger UI: http://localhost:9013/swagger/ui/index
         // Or to call from fiddler:

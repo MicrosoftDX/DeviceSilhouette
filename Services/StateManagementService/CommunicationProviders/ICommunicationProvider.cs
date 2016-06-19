@@ -12,6 +12,6 @@ namespace CommunicationProviders
  
         Task<string> ReceiveDeviceToCloudAsync();
 
-        Task SendCloudToDeviceAsync(string message, string DeviceID);
+        Task SendCloudToDeviceAsync(string DeviceId, string MessageType, string Message);
     }
 }

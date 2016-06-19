@@ -24,6 +24,7 @@ namespace StateProcessorService
     {
 
         Task<DeviceState> GetStateAsync(string DeviceId);
+        Task DeepGetStateAsync(string DeviceId);
         Task<DeviceState> SetStateValueAsync(string DeviceId, string StateValue);
     }
 
@@ -102,16 +103,34 @@ namespace StateProcessorService
                     case "Get": // device requesting last stored state
                         DeviceState deviceState = await GetStateAsync(jsonState.DeviceId);
                         if (! String.IsNullOrEmpty(deviceState.DeviceID)) 
-                            await _communicationProvider.SendCloudToDeviceAsync(deviceState.State, deviceState.DeviceID);
+                            await _communicationProvider.SendCloudToDeviceAsync(deviceState.State, "State:Get", deviceState.DeviceID);
                         break;
                 }
                 }
                 catch (Exception e)
                 {
-                    // TODO: better error handling
-                    throw e;
+                    // TODO: better error handling                    
                 }
             }
+        }
+
+        // Send a get request directly from the device, not going through the device repository
+        // The device with send the state in a sepetate call
+        // message example:
+        //{
+            //"DeviceID" : "Device1",
+            //"Timestamp" : "2009-06-15T13:45:30",
+            //"Status" : "GetInfo" 
+        //}
+        public async Task DeepGetStateAsync(string DeviceId)
+        {
+            JsonState state = new JsonState();
+            state.DeviceId = DeviceId;
+            state.Timestamp = DateTime.Now;
+            state.Status = "GetInfo";
+            string message = _jsonSerializer.Serialize(state);            
+
+            await _communicationProvider.SendCloudToDeviceAsync(DeviceId, "State:Get", message);                        
         }
 
         // This API is used by the REST call
@@ -141,7 +160,7 @@ namespace StateProcessorService
 
             // update device with the new state (C2D endpoint)
             string json = _jsonSerializer.Serialize(deviceState);
-            await _communicationProvider.SendCloudToDeviceAsync(json, deviceId);
+            await _communicationProvider.SendCloudToDeviceAsync(json, "State:Set", deviceId);
             // update device repository
             return await silhouette.SetDeviceStateAsync(deviceState);
         }
