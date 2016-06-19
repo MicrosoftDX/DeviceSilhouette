@@ -84,7 +84,7 @@ SilhouetteClientIoTHub.prototype.updateState = function(state)
   //var timestamp = Date.now();
   var full_state =
   {
-  "DeviceID" : "silhouette1",
+  "DeviceID" : "device1",
   "Timestamp" : formattedDate,
   "Status" : "Reported",
   "State" : state
@@ -105,11 +105,20 @@ SilhouetteClientIoTHub.prototype.updateState = function(state)
 */
 
 SilhouetteClientIoTHub.prototype.getState = function(state)
-{
-  var message = new Message();
+{	
+  var formattedDate = new Date().toISOString();
+  var getStateMsg = 
+  {
+	"DeviceID" : "device1",
+	"Timestamp" : formattedDate,
+	"Status" : "Get"   
+  };  
+  var data = JSON.stringify(getStateMsg);
+  
+  var message = new Message(data);
   message.properties.add('MessageType', 'State:Get');
   client.sendEvent(message, function(err) {
-    // TODO: what if we have an error here ?
+    console.log("failed to get state with error: " + err);
   });
 }
 
