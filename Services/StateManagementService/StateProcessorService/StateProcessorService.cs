@@ -15,6 +15,7 @@ using CommunicationProviders.IoTHub;
 using CommunicationProviders;
 using System.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace StateProcessorService
 {
@@ -88,18 +89,27 @@ namespace StateProcessorService
             string message = await _communicationProvider.ReceiveDeviceToCloudAsync();
             if (!String.IsNullOrEmpty(message))
             {
-                JsonState jsonState = _jsonSerializer.Deserialize<JsonState>(message);
-
-                switch (jsonState.Status)
+                try
                 {
+                    JsonState jsonState = _jsonSerializer.Deserialize<JsonState>(message);
+
+                    switch (jsonState.Status)
+                    {
                     case "Reported": // device reporting a state update
                         // TODO - add assert if device id exist. Create if not?
                         await InternalUpdateDeviceStateAsync(jsonState);
                         break;
                     case "Get": // device requesting last stored state
                         DeviceState deviceState = await GetStateAsync(jsonState.DeviceId);
-                        await _communicationProvider.SendCloudToDeviceAsync(jsonState.State.ToString(), deviceState.DeviceID);
+                        if (! String.IsNullOrEmpty(deviceState.DeviceID)) 
+                            await _communicationProvider.SendCloudToDeviceAsync(deviceState.State, deviceState.DeviceID);
                         break;
+                }
+                }
+                catch (Exception e)
+                {
+                    // TODO: better error handling
+                    throw e;
                 }
             }
         }
@@ -151,7 +161,7 @@ namespace StateProcessorService
             var deviceId = jsonState.DeviceId;
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
 
-            DeviceState deviceState = new DeviceState(deviceId, jsonState.State)
+            DeviceState deviceState = new DeviceState(deviceId, jsonState.State.ToString())
             {
                 Status = jsonState.Status,
                 Timestamp = jsonState.Timestamp,
@@ -174,7 +184,7 @@ namespace StateProcessorService
             public DateTime Timestamp { get; set; }
             public int Version { get; set; }
             public string Status { get; set; }
-            public string State { get; set; }
+            public Object State { get; set; }
         }
     }
 }
