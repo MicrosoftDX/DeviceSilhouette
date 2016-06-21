@@ -1,12 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="StateManagementServiceType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
+    <Parameter Name="CommunicationProviderService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="StateProcessorService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="StateManagementServiceWebAPI_InstanceCount" DefaultValue="-1" />
     <Parameter Name="DeviceRepositoryActorService_PartitionCount" DefaultValue="10" />
     <Parameter Name="DeviceRepositoryActorService_MinReplicaSetSize" DefaultValue="2" />
     <Parameter Name="DeviceRepositoryActorService_TargetReplicaSetSize" DefaultValue="3" />
   </Parameters>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="CommunicationProviderServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="DeviceRepositoryPkg" ServiceManifestVersion="1.0.0" />
   </ServiceManifestImport>
@@ -19,6 +24,11 @@
     <ConfigOverrides />
   </ServiceManifestImport>
   <DefaultServices>
+    <Service Name="CommunicationProviderService">
+      <StatelessService ServiceTypeName="CommunicationProviderServiceType" InstanceCount="[CommunicationProviderService_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
     <Service Name="StateProcessorService">
       <StatelessService ServiceTypeName="StateProcessorServiceType" InstanceCount="[StateProcessorService_InstanceCount]">
         <SingletonPartition />

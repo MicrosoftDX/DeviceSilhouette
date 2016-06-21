@@ -87,7 +87,6 @@
     <Reference Include="System.Web.Extensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JsonSerializerExtensions.cs" />
     <Compile Include="Latitude.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateProcessorService.cs" />
@@ -101,6 +100,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommunicationProviderService\CommunicationProviderService.csproj">
+      <Project>{18f7db3a-4ab9-4279-8160-bb7004373129}</Project>
+      <Name>CommunicationProviderService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CommunicationProviders\CommunicationProviders.csproj">
       <Project>{091b2a18-ab32-44c6-acdb-e15cf2a2e846}</Project>
       <Name>CommunicationProviders</Name>

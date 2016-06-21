@@ -84,7 +84,7 @@ SilhouetteClientIoTHub.prototype.updateState = function(state)
   //var timestamp = Date.now();
   var full_state =
   {
-  "DeviceID" : "device1",
+  "DeviceID" : "silhouette1",
   "Timestamp" : formattedDate,
   "Status" : "Reported",
   "State" : state
@@ -109,7 +109,7 @@ SilhouetteClientIoTHub.prototype.getState = function(state)
   var formattedDate = new Date().toISOString();
   var getStateMsg = 
   {
-	"DeviceID" : "device1",
+	"DeviceID" : "silhouette1",
 	"Timestamp" : formattedDate,
 	"Status" : "Get"   
   };  

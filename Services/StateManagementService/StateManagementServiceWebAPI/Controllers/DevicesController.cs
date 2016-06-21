@@ -10,13 +10,15 @@ using Newtonsoft.Json.Linq;
 using StateProcessorService;
 using System.Threading.Tasks;
 using Swashbuckle.Swagger.Annotations;
+using CommunicationProviderService;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
     [RoutePrefix("devices")]
     public class DevicesController : ApiController
-    {
+    {        
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
+        private ICommunicationProviderRemoting CommunicationProviderServiceClient = ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"));
 
         [Route("{deviceId}")]
         [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceState))]
@@ -37,7 +39,7 @@ namespace StateManagementServiceWebAPI.Controllers
         [Route("{deviceId}")]      
         public async Task DeepGet([FromUri]string deviceId)
         {
-            await StateProcessorClient.DeepGetStateAsync(deviceId);          
+            await CommunicationProviderServiceClient.DeepGetStateAsync(deviceId);          
         }
 
         // PUT devices/{DeviceId} 
@@ -60,8 +62,16 @@ namespace StateManagementServiceWebAPI.Controllers
         public async Task<DeviceState> Put([FromUri]string deviceId, [FromBody]JToken stateValue)
         {
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
-            var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, stateValue.ToString(Newtonsoft.Json.Formatting.None));
-            return deviceState;
+            try
+            {
+                var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, stateValue.ToString(Newtonsoft.Json.Formatting.None));
+                return deviceState;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
         }
 
 

@@ -38,10 +38,10 @@ function C2D_getState()
 */
 
 var silhouette = silhouetteClient.create('iothub', {
-  //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
+  connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
   //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKeyName=device;SharedAccessKey=5l0nsPi3d8ggCdEeYTQi5YkWWuYKsUxSEPEpJMBslqA='
   //connectionString: 'HostName=iothubfordm.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=SBiISDWpfQqWtJ6ciq/149ixstSMa6rJw05KG+3tA8k='
-  connectionString: 'HostName=silhouette-tests.azure-devices.net;DeviceId=device1;SharedAccessKey=PWb2zbcIRvWTxpLeqYqJh2xDOZmXm1/FOv02l160BpU='
+  //connectionString: 'HostName=silhouette-tests.azure-devices.net;DeviceId=device1;SharedAccessKey=PWb2zbcIRvWTxpLeqYqJh2xDOZmXm1/FOv02l160BpU='
 });
 
 silhouette.on('C2D_updateState', C2D_updateState);
@@ -64,9 +64,9 @@ function doWork()
   ++my_state.Xaxis;
   
   // get the state from the cloud service
-  console.log('sending get state');
-  check_state = silhouette.getState();
-  console.log(check_state);
+  //console.log('sending get state');
+  //check_state = silhouette.getState();
+  //console.log(check_state);
   // TODO: we can use the native client to do other stuff
   // silhouette.client.on('someEvent', doSomething)
 }

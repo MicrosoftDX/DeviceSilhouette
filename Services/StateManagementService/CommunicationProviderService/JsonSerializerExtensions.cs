@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StateProcessorService
+namespace CommunicationProviderService
 {
     public static class JsonSerializerExtensions
     {
