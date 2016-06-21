@@ -9,8 +9,14 @@ Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "StateManagementService", "S
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateManagementServiceWebAPI", "StateManagementServiceWebAPI\StateManagementServiceWebAPI.csproj", "{064DE854-AC34-40A5-907B-7F6560E017F7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18F7DB3A-4AB9-4279-8160-BB7004373129} = {18F7DB3A-4AB9-4279-8160-BB7004373129}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateProcessorService", "StateProcessorService\StateProcessorService.csproj", "{39B6E54D-BA52-40E1-AD98-C7B69813799F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18F7DB3A-4AB9-4279-8160-BB7004373129} = {18F7DB3A-4AB9-4279-8160-BB7004373129}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceState", "DeviceState\DeviceState.csproj", "{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}"
 EndProject
