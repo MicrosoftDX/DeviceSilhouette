@@ -8,10 +8,22 @@
     <Parameter Name="DeviceRepositoryActorService_PartitionCount" DefaultValue="10" />
     <Parameter Name="DeviceRepositoryActorService_MinReplicaSetSize" DefaultValue="2" />
     <Parameter Name="DeviceRepositoryActorService_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="CommunicationProviderService_IotHubConnectionString" DefaultValue="dsa" />
+    <Parameter Name="CommunicationProviderService_StorageConnectionString" DefaultValue="ewq" />
   </Parameters>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="CommunicationProviderServicePkg" ServiceManifestVersion="1.0.0" />
-    <ConfigOverrides />
+    <!--<ConfigOverrides />-->
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="CommunicationProviderServiceSettings">
+            <Parameter Name="IotHubConnectionString" Value="[CommunicationProviderService_IotHubConnectionString]" />
+            <Parameter Name="StorageConnectionString" Value="[CommunicationProviderService_StorageConnectionString]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="IoTHubFeedbackServicePkg" ServiceManifestVersion="1.0.0" />
