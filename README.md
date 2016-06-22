@@ -22,7 +22,7 @@ The Device Silhouette is a Service Fabric application. You can run the solution 
 [Prepare your development environment](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-get-started/)
  
 ## Testing IoTHub communicator using a node.js client
-Add a device to the IoTHub and take a note of its name and connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases).
+Add a device to the IoTHub and take a note of its name and connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases/download/2016-02-03/SetupDeviceExplorer.msi).
 
 The node.js client is located under [src/client/node](src/client/node). Edit the files:
 
