@@ -29,7 +29,13 @@ The node.js client is located under [src/client/node](src/client/node). Edit the
 - sample_client_new.js
 - silhouette-client-iothub-new.js
 
-And replace connectionString with the device connection string, and DeviceID with the device name.   
+And replace connectionString with the device connection string, and DeviceID with the device name.
+
+Install the IOT modules needed
+
+```modules
+npm install azure-iot-device azure-iot-device-http
+```
 
 Run sample_client_new.js - it will send messages to IoTHub Device2Cloud endpoint for Device Silhouette to capture and process. The same client will read messages from the Cloud2Device endpoint. 
 
