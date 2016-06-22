@@ -4,11 +4,24 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using System.Collections.ObjectModel;
+using System.Fabric.Description;
 
 namespace CommunicationProviderService
 {
     internal static class Program
     {
+        private static CommunicationProviderService CreateCommuncationProviderService(StatelessServiceContext context)
+        {
+            var configurationPackage = context.CodePackageActivationContext.GetConfigurationPackageObject("Config");
+            KeyedCollection<string, ConfigurationProperty> clusterConfigParameters = configurationPackage.Settings.Sections["CommunicationProviderServiceSettings"].Parameters;
+
+            string iotHubConnectionString = clusterConfigParameters["IotHubConnectionString"].Value;
+            string storageConnectionString = clusterConfigParameters["StorageConnectionString"].Value;
+
+            return new CommunicationProviderService(context, iotHubConnectionString, storageConnectionString);
+        }
+
         /// <summary>
         /// This is the entry point of the service host process.
         /// </summary>
@@ -21,8 +34,9 @@ namespace CommunicationProviderService
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
+
                 ServiceRuntime.RegisterServiceAsync("CommunicationProviderServiceType",
-                    context => new CommunicationProviderService(context)).GetAwaiter().GetResult();
+                    context => CreateCommuncationProviderService(context)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(CommunicationProviderService).Name);
 

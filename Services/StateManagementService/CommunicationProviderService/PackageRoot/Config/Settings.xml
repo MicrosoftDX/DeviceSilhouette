@@ -6,4 +6,8 @@
     <Parameter Name="MyParameter" Value="Value1" />
   </Section>
   -->
+  <Section Name="CommunicationProviderServiceSettings">
+    <Parameter Name="IotHubConnectionString" Value="abc"/>
+    <Parameter Name="StorageConnectionString" Value="qwe"/>
+  </Section>
 </Settings>

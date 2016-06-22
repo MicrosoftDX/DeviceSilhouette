@@ -34,12 +34,12 @@ namespace CommunicationProviderService
         private readonly IMessageReceiver _messageReceiver;
         private readonly IotHubMessageSender _messageSender;
 
-        public CommunicationProviderService(StatelessServiceContext context)
+        public CommunicationProviderService(StatelessServiceContext context,
+            string iotHubConnectionString,
+            string storageConnectionString)
             : base(context)
         {
             // init communicaition provider for Azure IoTHub
-            string iotHubConnectionString = ConfigurationManager.AppSettings["iotHubConnectionString"];
-            string storageConnectionString = ConfigurationManager.AppSettings["storageConnectionString"];
             _messageReceiver = new IoTHubMessageReceiver(
                 iotHubConnectionString, 
                 storageConnectionString,
