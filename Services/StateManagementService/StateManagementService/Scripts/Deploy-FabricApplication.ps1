@@ -95,6 +95,9 @@ Param
     $SecurityToken 
 )
 
+Write-Host "$PSScriptRoot"
+. "$PSScriptRoot\Override-Parameters.ps1"
+
 function Read-XmlElementAsHashtable
 {
     Param (
@@ -164,6 +167,10 @@ if (!$ApplicationPackagePath)
 $ApplicationPackagePath = Resolve-Path $ApplicationPackagePath
 
 $publishProfile = Read-PublishProfile $PublishProfileFile
+$projectParameterFile = $publishProfile.ApplicationParameterFile
+Write-Host "** Old parameter file $projectParameterFile"
+$publishProfile.ApplicationParameterFile = CreateParametersFileWithEnvironmentOverrides $projectParameterFile
+Write-Host "Temp parameter file $($publishProfile.ApplicationParameterFile)"
 
 if (-not $UseExistingClusterConnection)
 {
