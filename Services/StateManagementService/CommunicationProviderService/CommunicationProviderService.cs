@@ -31,7 +31,8 @@ namespace CommunicationProviderService
     {
         private static Uri RepositoryUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");
         private readonly JsonSerializer _jsonSerializer;
-        ICommunicationProvider _communicationProvider;
+        private readonly IMessageReceiver _messageReceiver;
+        private readonly IotHubMessageSender _messageSender;
 
         public CommunicationProviderService(StatelessServiceContext context)
             : base(context)
@@ -39,7 +40,13 @@ namespace CommunicationProviderService
             // init communicaition provider for Azure IoTHub
             string iotHubConnectionString = ConfigurationManager.AppSettings["iotHubConnectionString"];
             string storageConnectionString = ConfigurationManager.AppSettings["storageConnectionString"];
-            _communicationProvider = new IoTHubCommunicationProvider(iotHubConnectionString, storageConnectionString);
+            _messageReceiver = new IoTHubMessageReceiver(
+                iotHubConnectionString, 
+                storageConnectionString,
+                ProcessCommunicationProviderMessageAsync
+                );
+
+            _messageSender = new IotHubMessageSender(iotHubConnectionString);
 
             _jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings
             {
@@ -66,26 +73,12 @@ namespace CommunicationProviderService
         {
             // TODO: Replace the following sample code with your own logic 
             //       or remove this RunAsync override if it's not needed in your service.
-
-            long iterations = 0;
-
-            while (true)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                ServiceEventSource.Current.ServiceMessage(this, "Working-{0}", ++iterations);
-
-                // get message from comm provider                
-                await ProcessCommunicationProviderMessagesAsync();
-
-                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
-            }
+            await _messageReceiver.RunAsync(cancellationToken);
         }
 
         // process messages from communication provider - D2C endpoint 
-        private async Task ProcessCommunicationProviderMessagesAsync()
+        private async Task ProcessCommunicationProviderMessageAsync(string message)
         {
-            string message = await _communicationProvider.ReceiveDeviceToCloudAsync();
             if (!String.IsNullOrEmpty(message))
             {
                 try
@@ -99,7 +92,7 @@ namespace CommunicationProviderService
                             await UpdateDeviceSilhouetteAsync(jsonState);
                             break;
                         case "Get": // device requesting last stored state
-                            await UpdateDeviceStateAsync(jsonState);                             
+                            await UpdateDeviceStateAsync(jsonState);
                             break;
                     }
                 }
@@ -116,7 +109,7 @@ namespace CommunicationProviderService
             IDeviceRepositoryActor silhouette = GetDeviceActor(jsonState.DeviceId);
             DeviceState deviceState = await silhouette.GetDeviceStateAsync();
             if (!String.IsNullOrEmpty(deviceState.DeviceID))
-                await _communicationProvider.SendCloudToDeviceAsync(deviceState.State, "State:Get", deviceState.DeviceID);
+                await _messageSender.SendCloudToDeviceAsync(deviceState.State, "State:Get", deviceState.DeviceID);
         }
 
         // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}}
@@ -160,14 +153,14 @@ namespace CommunicationProviderService
             state.Status = "GetInfo";
             string message = _jsonSerializer.Serialize(state);
 
-            await _communicationProvider.SendCloudToDeviceAsync(DeviceId, "State:Get", message);
+            await _messageSender.SendCloudToDeviceAsync(DeviceId, "State:Get", message);
         }
 
         public async Task SendCloudToDeviceAsync(DeviceState DeviceState, string MessageType)
         {
             // update device with the new state (C2D endpoint)
             string json = _jsonSerializer.Serialize(DeviceState);
-            await _communicationProvider.SendCloudToDeviceAsync(DeviceState.DeviceID, MessageType, json);
+            await _messageSender.SendCloudToDeviceAsync(DeviceState.DeviceID, MessageType, json);
         }
 
         private class JsonState
@@ -178,5 +171,5 @@ namespace CommunicationProviderService
             public string Status { get; set; }
             public Object State { get; set; }
         }
-    }    
+    }
 }

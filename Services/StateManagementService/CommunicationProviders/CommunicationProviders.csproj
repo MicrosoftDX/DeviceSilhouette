@@ -99,7 +99,6 @@
     <Compile Include="ICommunicationProvider.cs" />
     <Compile Include="IoTHub\IoTHubEventProcessor.cs" />
     <Compile Include="IoTHub\IoTHubEventProcessorFactory.cs" />
-    <Compile Include="IoTHub\IoTStateProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

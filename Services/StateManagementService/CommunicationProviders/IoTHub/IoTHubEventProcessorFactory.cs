@@ -9,16 +9,16 @@ namespace CommunicationProviders.IoTHub
 {
     class IoTHubEventProcessorFactory : IEventProcessorFactory
     {
-        IoTStateProcessor state;
+        private readonly Func<string, Task> _messageHandler;
 
-        public IoTHubEventProcessorFactory(IoTStateProcessor _state)
+        public IoTHubEventProcessorFactory(Func<string, Task> messageHandler)
         {
-            state = _state;
+            _messageHandler = messageHandler;
         }
 
         public IEventProcessor CreateEventProcessor(PartitionContext context)
         {
-            return new IoTHubEventProcessor(state);
+            return new IoTHubEventProcessor(_messageHandler);
         }
     }
 }
