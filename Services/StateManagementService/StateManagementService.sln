@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationProviders", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationProviderService", "CommunicationProviderService\CommunicationProviderService.csproj", "{18F7DB3A-4AB9-4279-8160-BB7004373129}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceRichState", "DeviceRichState\DeviceRichState.csproj", "{6E768642-EFC3-4A83-B497-2D6D149A1D4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,14 @@ Global
 		{18F7DB3A-4AB9-4279-8160-BB7004373129}.Release|Any CPU.ActiveCfg = Release|x64
 		{18F7DB3A-4AB9-4279-8160-BB7004373129}.Release|x64.ActiveCfg = Release|x64
 		{18F7DB3A-4AB9-4279-8160-BB7004373129}.Release|x64.Build.0 = Release|x64
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Debug|x64.Build.0 = Debug|Any CPU
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Release|x64.ActiveCfg = Release|Any CPU
+		{6E768642-EFC3-4A83-B497-2D6D149A1D4A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
