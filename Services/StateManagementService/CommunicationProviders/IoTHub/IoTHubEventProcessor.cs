@@ -10,11 +10,11 @@ namespace CommunicationProviders.IoTHub
 {
     class IoTHubEventProcessor : IEventProcessor
     {
-        IoTStateProcessor state;
+        private readonly Func<string, Task> _messageHandler;
 
-        public IoTHubEventProcessor(IoTStateProcessor _state)
+        public IoTHubEventProcessor(Func<string, Task> messageHandler)
         {
-            state = _state;
+            _messageHandler = messageHandler;
         }
 
         public Task CloseAsync(PartitionContext context, CloseReason reason)
@@ -31,30 +31,20 @@ namespace CommunicationProviders.IoTHub
 
         public async Task ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)
         {
-            foreach (EventData eventData in messages)
-            {
-                byte[] data = eventData.GetBytes();
-                string message = Encoding.UTF8.GetString(data);
-                string messageType = eventData.Properties.Keys.Contains("MessageType") ? eventData.Properties["MessageType"].ToString() : "null";
+            var processingTasks = messages
+                .Select(GetMessageStringFromEvent)
+                .Select(_messageHandler);
 
-                Console.WriteLine(string.Format("Message received.  Partition: '{0}', MessageType: '{1}'", context.Lease.PartitionId, messageType));
-
-                // Dispatch message
-                switch (messageType)
-                {
-                    case "State:Set":
-                        state.processMessage(message);
-                        break;
-                    case "State:Get":
-                        state.processMessage(message);
-                        break;
-                    default:
-                        Console.WriteLine("Unknown MessageType.");
-                        break;
-                }
-            }
+            await Task.WhenAll(processingTasks);
 
             await context.CheckpointAsync();
+        }
+
+        private static string GetMessageStringFromEvent(EventData eventData)
+        {
+            byte[] data = eventData.GetBytes();
+            string message = Encoding.UTF8.GetString(data);
+            return message;
         }
     }
 }

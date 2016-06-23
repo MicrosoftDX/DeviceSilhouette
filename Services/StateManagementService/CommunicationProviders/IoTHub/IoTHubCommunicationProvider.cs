@@ -1,42 +1,61 @@
-﻿using Microsoft.ServiceBus.Messaging;
+﻿using Microsoft.Azure.Devices;
+using Microsoft.ServiceBus.Messaging;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommunicationProviders.IoTHub
 {
-    public class IoTHubCommunicationProvider: ICommunicationProvider
-    {        
-        string _iotHubConnectionString;         
+    public class IoTHubMessageReceiver : IMessageReceiver
+    {
+        string _iotHubConnectionString;
         const string _iotHubD2cEndpoint = "messages/events";
         string _storageConnectionString;
         const string _container = "silhouette-events";
 
-        private IoTStateProcessor _stateProcessor;
+        private readonly Func<string, Task> _messageHandler;
+        private readonly EventProcessorHost _eventProcessorHost;
+        private readonly IoTHubEventProcessorFactory _factory;
 
-        public IoTHubCommunicationProvider(string IoTHubConnectionString, string StorageConnectionString)
+        public IoTHubMessageReceiver(
+            string IoTHubConnectionString,
+            string StorageConnectionString,
+            Func<string, Task> messageHandler)
         {
             _iotHubConnectionString = IoTHubConnectionString;
             _storageConnectionString = StorageConnectionString;
-
-            _stateProcessor = new IoTStateProcessor(_iotHubConnectionString);
+            _messageHandler = messageHandler;
 
             string eventProcessorHostName = Guid.NewGuid().ToString();
             // Start the Event Processor Host to receive messages from the devices (D2C)
-            EventProcessorHost eventProcessorHost = new EventProcessorHost(eventProcessorHostName, _iotHubD2cEndpoint,
+            _eventProcessorHost = new EventProcessorHost(eventProcessorHostName, _iotHubD2cEndpoint,
                 EventHubConsumerGroup.DefaultGroupName, _iotHubConnectionString, _storageConnectionString, _container);
-            
-            var factory = new IoTHubEventProcessorFactory(_stateProcessor);
-            eventProcessorHost.RegisterEventProcessorFactoryAsync(factory).Wait();
+
+            _factory = new IoTHubEventProcessorFactory(messageHandler);
         }
 
-        public Task<string> ReceiveDeviceToCloudAsync()
+        public async Task RunAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult(_stateProcessor.getMessage());
-        }        
+            await _eventProcessorHost.RegisterEventProcessorFactoryAsync(_factory);
 
-        public Task SendCloudToDeviceAsync(string DeviceId, string MessageType, string Message)
+            cancellationToken.WaitHandle.WaitOne();
+        }
+    }
+
+    public class IotHubMessageSender : IMessageSender
+    {
+        private readonly ServiceClient _serviceClient;
+
+        public IotHubMessageSender(string iotHubConnectionString)
         {
-            return _stateProcessor.updateDevice(DeviceId, MessageType, Message);
+            _serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
+        }
+        public async Task SendCloudToDeviceAsync(string DeviceId, string MessageType, string Message)
+        {
+            Message commandMessage;
+            commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(Message));
+            commandMessage.Properties.Add("MessageType", MessageType);
+            await _serviceClient.SendAsync(DeviceId, commandMessage);
         }
     }
 }
