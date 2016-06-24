@@ -80,6 +80,6 @@ namespace DeviceRichState
     public enum Types
     {
         reported,
-        requested;
+        requested
     }
 }
