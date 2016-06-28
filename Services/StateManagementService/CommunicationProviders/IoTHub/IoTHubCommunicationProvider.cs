@@ -55,6 +55,8 @@ namespace CommunicationProviders.IoTHub
             Message commandMessage;
             commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(Message));
             commandMessage.Properties.Add("MessageType", MessageType);
+            // get full acknowledgement on message delivery
+            commandMessage.Ack = DeliveryAcknowledgement.Full;            
             await _serviceClient.SendAsync(DeviceId, commandMessage);
         }
     }
