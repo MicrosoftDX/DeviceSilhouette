@@ -50,14 +50,16 @@ namespace CommunicationProviders.IoTHub
         {
             _serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
         }
-        public async Task SendCloudToDeviceAsync(string DeviceId, string MessageType, string Message)
+        public async Task SendCloudToDeviceAsync(string deviceId, string messageType, string message, double timeToLive)
         {
             Message commandMessage;
-            commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(Message));
-            commandMessage.Properties.Add("MessageType", MessageType);
+            commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(message));
+            commandMessage.Properties.Add("MessageType", messageType);
             // get full acknowledgement on message delivery
-            commandMessage.Ack = DeliveryAcknowledgement.Full;            
-            await _serviceClient.SendAsync(DeviceId, commandMessage);
+            commandMessage.Ack = DeliveryAcknowledgement.Full;
+            // set message expiry time
+            commandMessage.ExpiryTimeUtc = DateTime.UtcNow.AddMilliseconds(timeToLive);
+            await _serviceClient.SendAsync(deviceId, commandMessage);
         }
     }
 }

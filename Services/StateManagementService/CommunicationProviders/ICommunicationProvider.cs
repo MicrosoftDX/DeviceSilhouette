@@ -19,7 +19,7 @@ namespace CommunicationProviders
          * MessageType - State:Set or State:Get
          * Meesage - message json string         
         */
-        Task SendCloudToDeviceAsync(string DeviceId, string MessageType, string Message);
+        Task SendCloudToDeviceAsync(string deviceId, string messageType, string message, double timeToLive);
     }
 
     public interface IFeedbackReceiver

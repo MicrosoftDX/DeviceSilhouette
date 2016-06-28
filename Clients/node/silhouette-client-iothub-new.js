@@ -111,7 +111,8 @@ SilhouetteClientIoTHub.prototype.getState = function(state)
   {
 	"DeviceID" : "device1",
 	"Timestamp" : formattedDate,
-	"Status" : "Get"   
+	"Status" : "Get",  
+	"MessageTTL" : "5000"	
   };  
   var data = JSON.stringify(getStateMsg);
   
