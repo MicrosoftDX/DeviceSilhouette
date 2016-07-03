@@ -20,8 +20,8 @@ namespace CommunicationProviderService
 {
     public interface ICommunicationProviderRemoting : IService
     {
-        Task DeepGetStateAsync(string DeviceId);
-        Task SendCloudToDeviceAsync(DeviceState DeviceState, string MessageType);
+        Task DeepGetStateAsync(string deviceId, double timeToLive);
+        Task SendCloudToDeviceAsync(DeviceState deviceState, string messageType, double timeToLive);
     }
 
     /// <summary>
@@ -103,13 +103,15 @@ namespace CommunicationProviderService
             }
         }
 
-        // send a message to the device using the C2D endpoint
+        // send a message to the device using the C2D endpoint. called when a device is requesting the last stored state
         private async Task UpdateDeviceStateAsync(JsonState jsonState)
         {
             IDeviceRepositoryActor silhouette = GetDeviceActor(jsonState.DeviceId);
             DeviceState deviceState = await silhouette.GetDeviceStateAsync();
-            if (!String.IsNullOrEmpty(deviceState.DeviceId))
-                await _messageSender.SendCloudToDeviceAsync(deviceState.Values, "State:Get", deviceState.DeviceId);
+            if (!String.IsNullOrEmpty(deviceState.DeviceID))
+            {                
+                await _messageSender.SendCloudToDeviceAsync(deviceState.State, "State:Get", deviceState.DeviceID, jsonState.MessageTTL);
+            }
         }
 
         // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}}
@@ -146,22 +148,22 @@ namespace CommunicationProviderService
         //"Timestamp" : "2009-06-15T13:45:30",
         //"Status" : "GetInfo" 
         //}
-        public async Task DeepGetStateAsync(string DeviceId)
+        public async Task DeepGetStateAsync(string deviceId, double timeToLive)
         {
             JsonState state = new JsonState();
-            state.DeviceId = DeviceId;
+            state.DeviceId = deviceId;
             state.Timestamp = DateTime.Now;
             state.Status = "GetInfo";
             string message = _jsonSerializer.Serialize(state);
 
-            await _messageSender.SendCloudToDeviceAsync(DeviceId, "State:Get", message);
+            await _messageSender.SendCloudToDeviceAsync(deviceId, "State:Get", message, timeToLive);
         }
 
-        public async Task SendCloudToDeviceAsync(DeviceState DeviceState, string MessageType)
+        public async Task SendCloudToDeviceAsync(DeviceState deviceState, string messageType, double timeToLive)
         {
             // update device with the new state (C2D endpoint)
-            string json = _jsonSerializer.Serialize(DeviceState);
-            await _messageSender.SendCloudToDeviceAsync(DeviceState.DeviceId, MessageType, json);
+            string json = _jsonSerializer.Serialize(deviceState);
+            await _messageSender.SendCloudToDeviceAsync(deviceState.DeviceID, messageType, json, timeToLive);
         }
 
         private class JsonState
@@ -171,6 +173,7 @@ namespace CommunicationProviderService
             public int Version { get; set; }
             public string Status { get; set; }
             public Object State { get; set; }
+            public double MessageTTL {get; set; }
         }
     }
 }

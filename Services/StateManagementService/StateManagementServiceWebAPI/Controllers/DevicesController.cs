@@ -37,9 +37,9 @@ namespace StateManagementServiceWebAPI.Controllers
         }
 
         [Route("{deviceId}")]      
-        public async Task DeepGet([FromUri]string deviceId)
-        {
-            await CommunicationProviderServiceClient.DeepGetStateAsync(deviceId);          
+        public async Task DeepGet([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
+        {            
+            await CommunicationProviderServiceClient.DeepGetStateAsync(deviceId, timeToLiveMilliSec);          
         }
 
         // PUT devices/{DeviceId} 
@@ -59,12 +59,12 @@ namespace StateManagementServiceWebAPI.Controllers
         // }
         [Route("{deviceId}")]
         [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceState))]
-        public async Task<DeviceState> Put([FromUri]string deviceId, [FromBody]JToken stateValue)
+        public async Task<DeviceState> Put([FromUri]string deviceId, [FromUri]double timeToLiveMilliSec, [FromBody]JToken stateValue)
         {
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
             try
-            {
-                var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, stateValue.ToString(Newtonsoft.Json.Formatting.None));
+            {                
+                var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, stateValue.ToString(Newtonsoft.Json.Formatting.None), timeToLiveMilliSec);
                 return deviceState;
             }
             catch (Exception e)

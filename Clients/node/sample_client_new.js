@@ -38,10 +38,10 @@ function C2D_getState()
 */
 
 var silhouette = silhouetteClient.create('iothub', {
-  connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
+  //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
   //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKeyName=device;SharedAccessKey=5l0nsPi3d8ggCdEeYTQi5YkWWuYKsUxSEPEpJMBslqA='
   //connectionString: 'HostName=iothubfordm.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=SBiISDWpfQqWtJ6ciq/149ixstSMa6rJw05KG+3tA8k='
-  //connectionString: 'HostName=silhouette-tests.azure-devices.net;DeviceId=device1;SharedAccessKey=PWb2zbcIRvWTxpLeqYqJh2xDOZmXm1/FOv02l160BpU='
+  connectionString: 'HostName=silhouette-tests.azure-devices.net;DeviceId=device1;SharedAccessKey=PWb2zbcIRvWTxpLeqYqJh2xDOZmXm1/FOv02l160BpU='
 });
 
 silhouette.on('C2D_updateState', C2D_updateState);
@@ -52,7 +52,7 @@ silhouette.on('C2D_getState', C2D_getState);
 ** This could work in whatever way you want. We will just set a timer.
 */
 
-setInterval(doWork, 10*1000);
+setInterval(doWork, 60*1000);
 
 function doWork()
 {

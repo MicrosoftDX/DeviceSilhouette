@@ -20,8 +20,8 @@ namespace StateProcessorService
     public interface IStateProcessorRemoting : IService
     {
 
-        Task<DeviceState> GetStateAsync(string DeviceId);        
-        Task<DeviceState> SetStateValueAsync(string DeviceId, string StateValue);
+        Task<DeviceState> GetStateAsync(string deviceId);        
+        Task<DeviceState> SetStateValueAsync(string deviceId, string stateValue, double timeToLive);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ namespace StateProcessorService
         // TODO: Implement get the state from the device itself
         // This API is used by the REST call
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
-        public async Task<DeviceState> SetStateValueAsync(string deviceId, string stateValue)
+        public async Task<DeviceState> SetStateValueAsync(string deviceId, string stateValue, double timeToLive)
         {
             //TODO: error handling - assert device id is not found
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
@@ -91,7 +91,7 @@ namespace StateProcessorService
             };
 
             // update device with the new state (C2D endpoint)           
-            await CommunicationProviderServiceClient.SendCloudToDeviceAsync(deviceState, "State:Set");
+            await CommunicationProviderServiceClient.SendCloudToDeviceAsync(deviceState, "State:Set", timeToLive);
             // update device repository
             return await silhouette.SetDeviceStateAsync(deviceState);
         }
