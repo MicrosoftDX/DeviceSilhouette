@@ -25,9 +25,9 @@ namespace DeviceRepository
     {
         public Task<string> GetDeviceStatus()
         {
-            var knowsStatus = StateManager.TryGetStateAsync<string>("deviceStatus").Result;
-            if (knowsStatus.HasValue)
-                return Task.FromResult(knowsStatus.Value);
+            var conStatus = StateManager.TryGetStateAsync<string>("deviceStatus").Result;
+            if (conStatus.HasValue)
+                return Task.FromResult(conStatus.Value);
             else
                 return Task.FromResult(String.Empty);
         }
