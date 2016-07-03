@@ -108,9 +108,9 @@ namespace CommunicationProviderService
         {
             IDeviceRepositoryActor silhouette = GetDeviceActor(jsonState.DeviceId);
             DeviceState deviceState = await silhouette.GetDeviceStateAsync();
-            if (!String.IsNullOrEmpty(deviceState.DeviceID))
+            if (!String.IsNullOrEmpty(deviceState.DeviceId))
             {                
-                await _messageSender.SendCloudToDeviceAsync(deviceState.State, "State:Get", deviceState.DeviceID, jsonState.MessageTTL);
+                await _messageSender.SendCloudToDeviceAsync(deviceState.Values, "State:Get", deviceState.DeviceId, jsonState.MessageTTL);
             }
         }
 
@@ -163,7 +163,7 @@ namespace CommunicationProviderService
         {
             // update device with the new state (C2D endpoint)
             string json = _jsonSerializer.Serialize(deviceState);
-            await _messageSender.SendCloudToDeviceAsync(deviceState.DeviceID, messageType, json, timeToLive);
+            await _messageSender.SendCloudToDeviceAsync(deviceState.DeviceId, messageType, json, timeToLive);
         }
 
         private class JsonState

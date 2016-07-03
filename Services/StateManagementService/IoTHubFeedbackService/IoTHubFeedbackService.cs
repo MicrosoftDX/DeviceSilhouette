@@ -11,7 +11,7 @@ using Microsoft.Azure.Devices;
 using DeviceRepository.Interfaces;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
-using DeviceStateNamespace;
+using DeviceRichState;
 
 namespace IoTHubFeedbackService
 {
@@ -35,7 +35,8 @@ namespace IoTHubFeedbackService
             // TODO - handle actor not found for deviceID exception
             IDeviceRepositoryActor silhouette = GetDeviceActor(feedbackRecord.DeviceId);
             // TODO - use rich state instead of updating the device state
-            DeviceState state = new DeviceState(feedbackRecord.DeviceId, feedbackRecord.Description);
+            // TODO AH - Check if this is "Requested" state
+            DeviceState state = new DeviceState(feedbackRecord.DeviceId, feedbackRecord.Description, Types.Requested);
             await silhouette.SetDeviceStateAsync(state);
         }
 

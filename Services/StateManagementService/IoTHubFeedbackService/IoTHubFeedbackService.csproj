@@ -74,8 +74,8 @@
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ServiceFabricServiceModel, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
@@ -129,9 +129,9 @@
       <Project>{42ca8e4e-4488-4e3f-9a4a-cf8bd2e262f1}</Project>
       <Name>DeviceRepository</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DeviceState\DeviceState.csproj">
-      <Project>{d6706cd2-adf0-4a40-ae5b-02827dde5316}</Project>
-      <Name>DeviceState</Name>
+    <ProjectReference Include="..\DeviceRichState\DeviceRichState.csproj">
+      <Project>{6e768642-efc3-4a83-b497-2d6d149a1d4a}</Project>
+      <Name>DeviceRichState</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
