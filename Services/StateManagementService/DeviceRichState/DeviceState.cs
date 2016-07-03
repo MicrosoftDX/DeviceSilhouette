@@ -4,82 +4,106 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DeviceRichState
 {
     [DataContract]
     public class DeviceState
     {
+
         [DataMember]
-        public string DeviceID { get; set; }
+        private string _deviceId;
+        [DataMember]
+        private string _correlationId;
+        [DataMember]
+        private DateTime _timestamp;
+        [DataMember]
+        private Types _messageType; 
 
         /// <summary>
-        /// Timestamp is UTC time
+        /// Can only be set at DeviceState instantiation
         /// </summary>
         [DataMember]
-        public DateTime Timestamp { get; set; }
+        public string DeviceId { get { return _deviceId; } set {;} }
+
+        /// <summary>
+        /// Timestamp is UTC time, set automatically on creation
+        /// </summary>
+        [DataMember]
+        public DateTime Timestamp { get { return _timestamp; } set {;} }
+
+        /// <summary>
+        /// Version is set by silhouette actor, auto increment
+        /// </summary>
+        [DataMember]
+        public int Version { get; set; }
 
         [DataMember]
-        public int SequenceNumber { get; set; }
+        public string CorrelationId { get { return _correlationId; } set {;} }
 
         [DataMember]
-        public string MessageId { get; set; }
+        public Types MessageType { get { return _messageType; } set {;}  }
 
         [DataMember]
-        public Types MessageType { get; set; }
+        public Status MessageStatus { get; set; }
 
-        [DataMember]
-        public string Status { get; set; }
-
+        /// <summary>
+        /// Part of the state message that contains Application specific data
+        /// </summary>
         [DataMember]
         public string AppMetadata { get; set; }
 
        /// <summary>
-       /// 
+       /// Part of the state message that contains device metrics
        /// </summary>
        [DataMember]
         public string Values { get; set; }
 
-        public DeviceState()
-        {
-        }
-
-        //TODO: add enums for messageType and Status
 
         /// <summary>
-        /// 
+        /// Holds the RichState of a device based on the state message and 
         /// </summary>
-        /// <param name="deviceId"></param>
-        /// <param name="state"></param>
-        /// <param name="messageType">Allowed values : reported | requested</param>
-        /// <param name="status">Allowed values : ACK | NACK | </param>
-        public DeviceState(string deviceId, string state, Types messageType, string status = null)
+        /// <param name="deviceId">Unique indentifier of the device</param>
+        /// <param name="state">Actual device and application data</param>
+        /// <param name="messageType">Who send the message; reported == device, requested == application</param>
+        /// <param name="messageStatus">Indication of the status of this message instance</param>
+        public DeviceState(string deviceId, string state, Types messageType, Status messageStatus = Status.Unknown, string correlationId = null)
         {
-            DeviceID = deviceId;
-            Timestamp = DateTime.UtcNow;
-            MessageId = Guid.NewGuid().ToString();
-            MessageType = messageType;
+            // To make these values immutable they are set through private field and get through public property
+            // It is not possible to make the setter readonly because of [DataMember]
+            _deviceId = deviceId;
+            _timestamp = DateTime.UtcNow;
+            _messageType = messageType;
 
-            if (status == null)
+            if (messageStatus == Status.Unknown)
             {
+                _correlationId = Guid.NewGuid().ToString();
 
-                if (messageType == Types.reported)
-                    Status = "received";
+                if (messageType == Types.Reported)
+                    MessageStatus = Status.Received;
 
-                if (messageType == Types.requested)
-                    Status = "new";
+                if (messageType == Types.Requested)
+                    MessageStatus = Status.New;
             }
+            else
+                _correlationId = String.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
+                MessageStatus = messageStatus;
 
+            // Split state in metadata and values
+            var jState = Newtonsoft.Json.Linq.JObject.Parse(state);
+            JToken jsonOut;
 
+            if (jState.TryGetValue("appMetadata", out jsonOut))
+                AppMetadata = jsonOut.ToString();
 
-            //split state in metadata and values
-            //State = state;
+            if (jState.TryGetValue("deviceValues", out jsonOut))
+                Values = jsonOut.ToString();
         }
     }
 
-    public enum Types
-    {
-        reported,
-        requested;
-    }
+    public enum Types { Reported, Requested }
+
+    public enum Status { Acknowledged, Enqueued, Expired, New, NotAcknowledged, Received, Unknown }
 }

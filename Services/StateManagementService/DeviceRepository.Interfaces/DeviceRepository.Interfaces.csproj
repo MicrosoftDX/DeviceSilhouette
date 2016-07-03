@@ -75,13 +75,13 @@
     <Compile Include="IDeviceRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeviceState\DeviceState.csproj">
-      <Project>{d6706cd2-adf0-4a40-ae5b-02827dde5316}</Project>
-      <Name>DeviceState</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\DeviceRichState\DeviceRichState.csproj">
+      <Project>{6e768642-efc3-4a83-b497-2d6d149a1d4a}</Project>
+      <Name>DeviceRichState</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.ServiceFabric.Actors.2.1.150\build\Microsoft.ServiceFabric.Actors.targets" Condition="Exists('..\packages\Microsoft.ServiceFabric.Actors.2.1.150\build\Microsoft.ServiceFabric.Actors.targets')" />

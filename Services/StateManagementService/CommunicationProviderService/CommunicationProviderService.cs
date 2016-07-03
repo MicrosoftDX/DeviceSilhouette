@@ -8,7 +8,7 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using CommunicationProviders.IoTHub;
 using CommunicationProviders;
 using System.Configuration;
-using DeviceStateNamespace;
+using DeviceRichState;
 using DeviceRepository.Interfaces;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
@@ -108,8 +108,8 @@ namespace CommunicationProviderService
         {
             IDeviceRepositoryActor silhouette = GetDeviceActor(jsonState.DeviceId);
             DeviceState deviceState = await silhouette.GetDeviceStateAsync();
-            if (!String.IsNullOrEmpty(deviceState.DeviceID))
-                await _messageSender.SendCloudToDeviceAsync(deviceState.State, "State:Get", deviceState.DeviceID);
+            if (!String.IsNullOrEmpty(deviceState.DeviceId))
+                await _messageSender.SendCloudToDeviceAsync(deviceState.Values, "State:Get", deviceState.DeviceId);
         }
 
         // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}}
@@ -118,12 +118,13 @@ namespace CommunicationProviderService
         {
             //TODO: error handling
             var deviceId = jsonState.DeviceId;
+            Status result;
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
 
-            DeviceState deviceState = new DeviceState(deviceId, jsonState.State.ToString())
+            DeviceState deviceState = new DeviceState(deviceId, jsonState.State.ToString(), Types.Reported)
             {
-                Status = jsonState.Status,
-                Timestamp = jsonState.Timestamp,
+                MessageStatus = Enum.TryParse<Status>(jsonState.Status, true, out result) ? result : Status.Unknown,
+                Timestamp = jsonState.Timestamp
             };
 
             // update device repository
@@ -160,7 +161,7 @@ namespace CommunicationProviderService
         {
             // update device with the new state (C2D endpoint)
             string json = _jsonSerializer.Serialize(DeviceState);
-            await _messageSender.SendCloudToDeviceAsync(DeviceState.DeviceID, MessageType, json);
+            await _messageSender.SendCloudToDeviceAsync(DeviceState.DeviceId, MessageType, json);
         }
 
         private class JsonState

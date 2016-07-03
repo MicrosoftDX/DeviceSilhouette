@@ -7,7 +7,7 @@ using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
 using DeviceRepository.Interfaces;
-using DeviceStateNamespace;
+using DeviceRichState;
 using Microsoft.ServiceFabric.Data;
 
 namespace DeviceRepository
@@ -23,43 +23,76 @@ namespace DeviceRepository
     [StatePersistence(StatePersistence.Persisted)]
     internal class DeviceRepositoryActor : Actor, IDeviceRepositoryActor
     {
-        public Task<DeviceState> GetDeviceStateAsync()
+        public Task<string> GetDeviceStatus()
         {
-           return StateManager.GetStateAsync<DeviceState>("silhouette");
+            var knowsStatus = StateManager.TryGetStateAsync<string>("deviceStatus").Result;
+            if (knowsStatus.HasValue)
+                return Task.FromResult(knowsStatus.Value);
+            else
+                return Task.FromResult(String.Empty);
         }
 
-        public Task<List<DeviceState>> GetDeviceStateMessagesAsync()
+        public Task SetDeviceStatus(string status)
         {
-            return StateManager.GetStateAsync<List<DeviceState>>("silhouetteMessages");
+            StateManager.SetStateAsync<string>("deviceStatus", status);
+            return Task.FromResult(true);
+        }
+
+        public async Task<DeviceState> GetLastKnownReportedState()
+        {
+            // search in silhouetteMessages
+            var stateMessages = await GetDeviceStateMessagesAsync();
+            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType ==Types.Reported);
+            return orderedMessages.First();
+        }
+
+        public async Task<DeviceState> GetLastKnownRequestedState()
+        {
+            // search in silhouetteMessages
+            var stateMessages = await GetDeviceStateMessagesAsync();
+            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Requested && m.MessageStatus == Status.New);
+            return orderedMessages.First();
+        }
+
+        public async Task<DeviceState> GetDeviceStateAsync()
+        {
+           var state = await StateManager.GetStateAsync<DeviceState>("silhouetteMessage");
+           return state;
+        }
+
+        public async Task<List<DeviceState>> GetDeviceStateMessagesAsync()
+        {
+            var stateMessages = await StateManager.GetStateAsync<List<DeviceState>>("silhouetteMessages");
+            return stateMessages ;
         }
 
         public async Task<DeviceState> SetDeviceStateAsync(DeviceState state)
         {
-            var lastState = await StateManager.GetStateAsync<DeviceState>("silhouette");
-
-            if (lastState.Version < Int32.MaxValue)
+            // check if this state is for this actor : DeviceID == ActorId
+            if (state.DeviceId == this.GetActorId().ToString())
             {
-                state.Version = lastState.Version + 1; //latest.Version++ increase the number in the lastState object and not in the state object
+                var lastState = await StateManager.TryGetStateAsync<DeviceState>("silhouetteMessage");
+
+                if (lastState.HasValue)
+                    state.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
+
+                await AddDeviceMessageAsync(state);
+
+                await StateManager.SetStateAsync("silhouetteMessage", state);
+                return state;
             }
             else
             {
-                state.Version = 1;
+                ActorEventSource.Current.ActorMessage(this, "State invalid, device is {0} silhouette is {1}.",state.DeviceId,this.GetActorId().ToString());
+                return null;
             }
-            state.Timestamp = DateTime.UtcNow;
-            state.DeviceID = this.GetActorId().ToString();
 
-            await AddDeviceMessageAsync(state);
-
-            await StateManager.SetStateAsync("silhouette", state);
-            return state;
         }
 
         async Task AddDeviceMessageAsync(DeviceState state)
         {
             ConditionalValue<List<DeviceState>> messagesInState = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
-            List<DeviceState> messages = messagesInState.HasValue 
-                                ? messagesInState.Value
-                                : new List<DeviceState>();
+            List<DeviceState> messages = messagesInState.HasValue ? messagesInState.Value : new List<DeviceState>();
 
             messages.Add(state);
             await StateManager.SetStateAsync("silhouetteMessages", messages);
@@ -78,7 +111,7 @@ namespace DeviceRepository
             // Any serializable object can be saved in the StateManager.
             // For more information, see http://aka.ms/servicefabricactorsstateserialization
 
-            await StateManager.TryAddStateAsync("silhouette", new DeviceState());
+            //await StateManager.TryAddStateAsync("silhouetteMessage", new DeviceState());
         }
 
     }

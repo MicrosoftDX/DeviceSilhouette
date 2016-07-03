@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="DeviceRichState.DeviceState">
+    <Position X="0.5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>MAAAAEAABACEIAAAAAACIAAAAAAAAAAAEAAgCAAEAAA=</HashCode>
+      <FileName>DeviceState.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MessageType" />
+      <Property Name="MessageStatus" />
+    </ShowAsAssociation>
+  </Class>
+  <Enum Name="DeviceRichState.Types">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>DeviceState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeviceRichState.Status">
+    <Position X="4.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQBAAAAICAAAAAAAABAAAAAAAABAAAAAAAAABA=</HashCode>
+      <FileName>DeviceState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

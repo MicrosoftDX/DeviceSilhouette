@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
-using DeviceStateNamespace;
+using DeviceRichState;
 
 namespace DeviceRepository.Interfaces
 {
@@ -14,14 +14,20 @@ namespace DeviceRepository.Interfaces
     /// </summary>
     public interface IDeviceRepositoryActor : IActor
     {
+        Task SetDeviceStatus(string status);
+        Task<string> GetDeviceStatus();
+
+        Task<DeviceState> GetLastKnownReportedState();
+        Task<DeviceState> GetLastKnownRequestedState();
+
         /// <summary>
-        /// This method reads the current state from the Silhouette
+        /// This method reads the most recent state message from the Silhouette
         /// </summary>
-        /// <returns>Object that contains the stored requested or reported device state</returns>
+        /// <returns>Object that contains the last stored requested or reported device state</returns>
         Task<DeviceState> GetDeviceStateAsync();
 
         /// <summary>
-        /// This method sets the current state of the Silhouette
+        /// This method stores a state message in the Silhouette
         /// </summary>
         /// <param name="state">Object that contains the requested or reported device state</param>
         /// <returns></returns>

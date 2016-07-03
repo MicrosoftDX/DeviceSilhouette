@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateProcessorService", "St
 		{18F7DB3A-4AB9-4279-8160-BB7004373129} = {18F7DB3A-4AB9-4279-8160-BB7004373129}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceState", "DeviceState\DeviceState.csproj", "{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceRepository", "DeviceRepository\DeviceRepository.csproj", "{42CA8E4E-4488-4E3F-9A4A-CF8BD2E262F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceRepository.Interfaces", "DeviceRepository.Interfaces\DeviceRepository.Interfaces.csproj", "{DFD18739-57CE-4786-8F69-EAE4765BE373}"
@@ -64,14 +62,6 @@ Global
 		{39B6E54D-BA52-40E1-AD98-C7B69813799F}.Release|Any CPU.ActiveCfg = Release|x64
 		{39B6E54D-BA52-40E1-AD98-C7B69813799F}.Release|x64.ActiveCfg = Release|x64
 		{39B6E54D-BA52-40E1-AD98-C7B69813799F}.Release|x64.Build.0 = Release|x64
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Debug|x64.Build.0 = Debug|Any CPU
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Release|x64.ActiveCfg = Release|Any CPU
-		{D6706CD2-ADF0-4A40-AE5B-02827DDE5316}.Release|x64.Build.0 = Release|Any CPU
 		{42CA8E4E-4488-4E3F-9A4A-CF8BD2E262F1}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{42CA8E4E-4488-4E3F-9A4A-CF8BD2E262F1}.Debug|Any CPU.Build.0 = Debug|x64
 		{42CA8E4E-4488-4E3F-9A4A-CF8BD2E262F1}.Debug|x64.ActiveCfg = Debug|x64

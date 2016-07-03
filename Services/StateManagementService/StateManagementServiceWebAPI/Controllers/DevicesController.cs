@@ -4,7 +4,7 @@ using System.Web.Http;
 using System.Net.Http;
 using System.Net;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using DeviceStateNamespace;
+using DeviceRichState;
 using Newtonsoft.Json.Linq;
 
 using StateProcessorService;
@@ -29,7 +29,7 @@ namespace StateManagementServiceWebAPI.Controllers
 
             // When no state the DeviceRepository returns an instance with default values
             // use the DeviceID to test if we have an actual result as that should always be set
-            if (deviceState.DeviceID == null)
+            if (deviceState.DeviceId == null)
             {
                 return NotFound();
             }

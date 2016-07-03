@@ -6,55 +6,67 @@ using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors;
 using DeviceRepository.Interfaces;
-using DeviceStateNamespace;
 using Microsoft.ServiceFabric.Actors.Query;
 using System.Threading;
+using DeviceRichState;
 
 namespace ActorTestConsoleApplication
 {
     class Program
     {
         private static Uri serviceUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");
-        
+
 
         static void Main(string[] args)
         {
+            var jsonState = @"{ ""silhouetteProperties"": { },""appMetadata"": { },""deviceValues"": { } }";
+            var deviceId = "RichSilhouette1";
+            var deviceState = new DeviceState(deviceId, jsonState, Types.Reported);
 
+            var id = deviceState.CorrelationId;
             bool cont = true;
 
             while (cont)
             {
-                Console.WriteLine("Enter deviceID");
-                string deviceID = Console.ReadLine();
+                Console.WriteLine("Enter device id");
+                deviceId = Console.ReadLine();
 
                 Console.WriteLine("Put, Set or Get?");
                 string method = Console.ReadLine();
 
-                ActorId actorId = new ActorId(deviceID);
+                ActorId actorId = new ActorId(deviceId);
 
-                if (method == "Put" || (method == "Get" && DoesActorExist(deviceID)) || (method == "Set" && DoesActorExist(deviceID)) )
+                if (method == "Put" || (method == "Get" && DoesActorExist(deviceId)) || (method == "Set" && DoesActorExist(deviceId)))
                 {
                     IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, serviceUri);
+                    DeviceState currentstate = null;
 
-                    if (method == "Set")
+                    if (method == "Put" || method == "Set")
                     {
-                        //use interface?
-                        DeviceState state = new DeviceState(actorId.GetStringId(), "test");
-                        state.Status = "Requested";
-                        silhouette.SetDeviceStateAsync(state).Wait();
+                        DeviceState state = new DeviceState(actorId.GetStringId(), jsonState, Types.Reported);
+                        currentstate = silhouette.SetDeviceStateAsync(state).Result;
                     }
-
-                    //Display device silhouette state
-                    var currentstate = silhouette.GetDeviceStateAsync().Result;
-                    Console.WriteLine("Device : {0}", currentstate.DeviceID);
-                    Console.WriteLine("Data version : {0}", currentstate.Version);
-                    Console.WriteLine("Data timestamp : {0}", currentstate.Timestamp);
-                    Console.WriteLine("Custom data : {0}", currentstate.State);
 
                     if (method == "Get")
                     {
+                        currentstate = silhouette.GetDeviceStateAsync().Result;
+
                         //State history
                         var stateMessages = silhouette.GetDeviceStateMessagesAsync().Result;
+                    }
+
+                    //Display device silhouette state
+                    Console.WriteLine("Current state");
+                    if (currentstate != null)
+                    {
+                        Console.WriteLine("Device : {0}", currentstate.DeviceId);
+                        Console.WriteLine("Data version : {0}", currentstate.Version);
+                        Console.WriteLine("Data timestamp : {0}", currentstate.Timestamp);
+                        Console.WriteLine("Custom data : {0}", currentstate.Values);
+                    }
+                    else
+                    {
+                        Console.WriteLine("State not set");
                     }
 
                     //List all actors in partition
@@ -68,14 +80,14 @@ namespace ActorTestConsoleApplication
                 }
                 else
                 {
-                    Console.WriteLine("Actor {0} does not exist, use Put", deviceID);
+                    Console.WriteLine("Actor {0} does not exist, use Put", deviceId);
                 }
 
                 Console.WriteLine("Press Enter to continue or 'stop' to exit");
                 cont = (Console.ReadLine() != "stop");
             }
-
-    }
+            Console.ReadLine();
+            }
 
         static bool DoesActorExist(string deviceID)
         {

@@ -7,7 +7,7 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
-using DeviceStateNamespace;
+using DeviceRichState;
 using DeviceRepository.Interfaces;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors;
@@ -76,7 +76,6 @@ namespace StateProcessorService
             return newState;
         }
 
-
         // For now it just create an actor in the repository with the DeviceID
         // TODO: Implement get the state from the device itself
         // This API is used by the REST call
@@ -85,10 +84,10 @@ namespace StateProcessorService
         {
             //TODO: error handling - assert device id is not found
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, stateValue)
+            DeviceState deviceState = new DeviceState(deviceId, stateValue,Types.Requested)
             {
-                Timestamp = DateTime.UtcNow,
-                Status = "Requested",
+                //Timestamp = DateTime.UtcNow,
+                //Status = "Requested",
             };
 
             // update device with the new state (C2D endpoint)           
