@@ -2,7 +2,7 @@
 
 This project creates a virtual version or actor (“silhouette”) of each device in the cloud that includes the device’s latest state so that applications interact with the device even when the device is offline. The Device Silhouettes persist the last reported state and desired future state. You can retrieve the last reported state of a device or set a desired future state through a Rest API or using one of the Client SDKs
 
-![Architecture](https://github.com/dx-ted-emea/pudding/blob/master/images/general-architecture4.gif?raw=true)
+![Architecture](https://github.com/dx-ted-emea/pudding/blob/master/images/general-architecture-provider_updatedservices.gif?raw=true)
 
 ## Setting up the project
 There are 2 channels to communicate with the Device Silhouette:
