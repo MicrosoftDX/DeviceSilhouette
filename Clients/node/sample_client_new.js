@@ -1,10 +1,15 @@
 var silhouetteClient = require('./silhouette-client-new');
 
 var my_state = {
-  Xaxis: 0,
-  Yaxis: 0,
-  Zaxis: 0
+	Xaxis: 0,
+	Yaxis: 0,
+	Zaxis: 0
 };
+
+var metadata = { 
+	"Origin" : "sensor"
+};
+
 
 /*
 ** This function gets called when the cloud service sends an update to the state.
@@ -52,7 +57,7 @@ silhouette.on('C2D_getState', C2D_getState);
 ** This could work in whatever way you want. We will just set a timer.
 */
 
-setInterval(doWork, 60*1000);
+setInterval(doWork, 10*1000);
 
 function doWork()
 {
@@ -60,7 +65,7 @@ function doWork()
   // Send our new state to the cloud service
   console.log('sending updated state:');
   console.dir(my_state);
-  silhouette.updateState(my_state);
+  silhouette.updateState(metadata, my_state);
   ++my_state.Xaxis;
   
   // get the state from the cloud service

@@ -76,19 +76,22 @@ function getMessageType(properties)
 ** D2C Update State
 */
 
-SilhouetteClientIoTHub.prototype.updateState = function(state)
+SilhouetteClientIoTHub.prototype.updateState = function(metadata, values)
 {
   // TODO: Make sure timestamp in UTC and not in local computer timezone	
   var formattedDate = new Date().toISOString();
 
   //var timestamp = Date.now();
   var full_state =
-  {
-  "DeviceID" : "device1",
-  "Timestamp" : formattedDate,
-  "Status" : "Reported",
-  "State" : state
-  };
+	{
+		"SilhouetteProperties": {
+			"DeviceId": "device1",
+			"Timestamp" : formattedDate,
+			"Status" : "Reported"        
+		},
+		"AppMetadata": metadata,
+		"DeviceValues": values
+	};    
 	
   var data = JSON.stringify(full_state);
   var message = new Message(data);
@@ -106,14 +109,17 @@ SilhouetteClientIoTHub.prototype.updateState = function(state)
 
 SilhouetteClientIoTHub.prototype.getState = function(state)
 {	
-  var formattedDate = new Date().toISOString();
+  var formattedDate = new Date().toISOString();  
   var getStateMsg = 
   {
-	"DeviceID" : "device1",
-	"Timestamp" : formattedDate,
-	"Status" : "Get",  
-	"MessageTTL" : "5000"	
-  };  
+	"SilhouetteProperties": {
+			"DeviceId": "device1",
+			"Timestamp" : formattedDate,
+			"Status" : "Get",
+			"MessageTTL" : "5000"				
+	}		
+  };
+  
   var data = JSON.stringify(getStateMsg);
   
   var message = new Message(data);

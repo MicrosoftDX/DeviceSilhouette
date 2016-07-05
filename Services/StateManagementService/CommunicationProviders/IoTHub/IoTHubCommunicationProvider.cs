@@ -50,7 +50,7 @@ namespace CommunicationProviders.IoTHub
         {
             _serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
         }
-        public async Task SendCloudToDeviceAsync(string deviceId, string messageType, string message, double timeToLive)
+        public async Task SendCloudToDeviceAsync(string deviceId, string messageType, string message, double timeToLive, string correlationId)
         {
             Message commandMessage;
             commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(message));
@@ -59,6 +59,7 @@ namespace CommunicationProviders.IoTHub
             commandMessage.Ack = DeliveryAcknowledgement.Full;
             // set message expiry time
             commandMessage.ExpiryTimeUtc = DateTime.UtcNow.AddMilliseconds(timeToLive);
+            commandMessage.MessageId = correlationId;
             await _serviceClient.SendAsync(deviceId, commandMessage);
         }
     }

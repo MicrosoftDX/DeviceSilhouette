@@ -21,7 +21,7 @@ namespace ActorTestConsoleApplication
         {
             var jsonState = @"{ ""silhouetteProperties"": { },""appMetadata"": { },""deviceValues"": { } }";
             var deviceId = "RichSilhouette1";
-            var deviceState = new DeviceState(deviceId, jsonState, Types.Reported);
+            var deviceState = new DeviceState(deviceId, "", "", Types.Reported);
 
             var id = deviceState.CorrelationId;
             bool cont = true;
@@ -43,7 +43,7 @@ namespace ActorTestConsoleApplication
 
                     if (method == "Put" || method == "Set")
                     {
-                        DeviceState state = new DeviceState(actorId.GetStringId(), jsonState, Types.Reported);
+                        DeviceState state = new DeviceState(actorId.GetStringId(), "", "", Types.Reported);
                         currentstate = silhouette.SetDeviceStateAsync(state).Result;
                     }
 

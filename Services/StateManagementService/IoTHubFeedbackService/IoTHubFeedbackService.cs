@@ -33,10 +33,13 @@ namespace IoTHubFeedbackService
         private async Task ProcessFeedbackAsync(FeedbackRecord feedbackRecord)           
         {
             // TODO - handle actor not found for deviceID exception
-            IDeviceRepositoryActor silhouette = GetDeviceActor(feedbackRecord.DeviceId);
-            // TODO - use rich state instead of updating the device state
-            // TODO AH - Check if this is "Requested" state
-            DeviceState state = new DeviceState(feedbackRecord.DeviceId, feedbackRecord.Description, Types.Requested);
+            IDeviceRepositoryActor silhouette = GetDeviceActor(feedbackRecord.DeviceId);            
+            DeviceState state = new DeviceState(feedbackRecord.DeviceId, "", "", Types.Requested)
+            {               
+                MessageStatus = (Status)feedbackRecord.StatusCode,
+                Timestamp = feedbackRecord.EnqueuedTimeUtc,
+                CorrelationId = feedbackRecord.OriginalMessageId
+            };
             await silhouette.SetDeviceStateAsync(state);
         }
 

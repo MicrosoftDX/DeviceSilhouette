@@ -21,7 +21,7 @@ namespace StateProcessorService
     {
 
         Task<DeviceState> GetStateAsync(string deviceId);        
-        Task<DeviceState> SetStateValueAsync(string deviceId, string stateValue, double timeToLive);
+        Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, double timeToLive);
     }
 
     /// <summary>
@@ -80,15 +80,11 @@ namespace StateProcessorService
         // TODO: Implement get the state from the device itself
         // This API is used by the REST call
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
-        public async Task<DeviceState> SetStateValueAsync(string deviceId, string stateValue, double timeToLive)
+        public async Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, double timeToLive)
         {
             //TODO: error handling - assert device id is not found
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, stateValue,Types.Requested)
-            {
-                //Timestamp = DateTime.UtcNow,
-                //Status = "Requested",
-            };
+            DeviceState deviceState = new DeviceState(deviceId, metadata, values, Types.Requested, Status.Enqueued);            
 
             // update device with the new state (C2D endpoint)           
             await CommunicationProviderServiceClient.SendCloudToDeviceAsync(deviceState, "State:Set", timeToLive);

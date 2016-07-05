@@ -16,12 +16,12 @@ namespace StateManagementServiceWebAPI.Controllers
 {
     [RoutePrefix("devices")]
     public class DevicesController : ApiController
-    {        
+    {
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
         private ICommunicationProviderRemoting CommunicationProviderServiceClient = ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"));
 
         [Route("{deviceId}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceState))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceState))]
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public async Task<IHttpActionResult> Get([FromUri]string deviceId)
         {
@@ -36,10 +36,10 @@ namespace StateManagementServiceWebAPI.Controllers
             return Ok(deviceState);
         }
 
-        [Route("{deviceId}")]      
+        [Route("{deviceId}")]
         public async Task DeepGet([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
-        {            
-            await CommunicationProviderServiceClient.DeepGetStateAsync(deviceId, timeToLiveMilliSec);          
+        {
+            await CommunicationProviderServiceClient.DeepGetStateAsync(deviceId, timeToLiveMilliSec);
         }
 
         // PUT devices/{DeviceId} 
@@ -51,20 +51,33 @@ namespace StateManagementServiceWebAPI.Controllers
         // User-Agent: Fiddler
         // Host: localhost:9013
         // Content-type: application/json
-        // Body:
-        // {
-        //"Xaxis" : "1" ,
-        //"Yaxis" : "2" ,
-        //"Zaxis" : "3"
-        // }
+        // body:
+        //  {               
+        //      "appMetadata": {"origin" : "sensor"},
+        //      "deviceValues": {"x" : 0, "y" : 0, "z" : 0}
+        //  }
+        // 
         [Route("{deviceId}")]
         [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceState))]
-        public async Task<DeviceState> Put([FromUri]string deviceId, [FromUri]double timeToLiveMilliSec, [FromBody]JToken stateValue)
+        public async Task<DeviceState> Put([FromUri]string deviceId, [FromUri]double timeToLiveMilliSec, [FromBody]JToken state)
         {
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
             try
-            {                
-                var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, stateValue.ToString(Newtonsoft.Json.Formatting.None), timeToLiveMilliSec);
+            {
+                // Split state in metadata and values
+                var jState = Newtonsoft.Json.Linq.JObject.Parse(state.ToString(Newtonsoft.Json.Formatting.None));
+                JToken jsonOut;
+                string appMetadata = "";
+                string values = "";
+
+                // Split state in metadata and values
+                if (jState.TryGetValue("appMetadata", out jsonOut))
+                    appMetadata = jsonOut.ToString();
+
+                if (jState.TryGetValue("deviceValues", out jsonOut))
+                    values = jsonOut.ToString();
+
+                var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, appMetadata, values, timeToLiveMilliSec);
                 return deviceState;
             }
             catch (Exception e)

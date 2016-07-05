@@ -66,10 +66,12 @@ namespace DeviceRichState
         /// Holds the RichState of a device based on the state message and 
         /// </summary>
         /// <param name="deviceId">Unique indentifier of the device</param>
-        /// <param name="state">Actual device and application data</param>
+        /// <param name="metadata">Application metadata</param>   
+        /// <param name="values">Actual data recevied from the device</param>
         /// <param name="messageType">Who send the message; reported == device, requested == application</param>
         /// <param name="messageStatus">Indication of the status of this message instance</param>
-        public DeviceState(string deviceId, string state, Types messageType, Status messageStatus = Status.Unknown, string correlationId = null)
+        /// /// <param name="correlationId">Message id</param>
+        public DeviceState(string deviceId, string metadata, string values, Types messageType, Status messageStatus = Status.Unknown, string correlationId = null)
         {
             // To make these values immutable they are set through private field and get through public property
             // It is not possible to make the setter readonly because of [DataMember]
@@ -91,19 +93,12 @@ namespace DeviceRichState
                 _correlationId = String.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
                 MessageStatus = messageStatus;
 
-            // Split state in metadata and values
-            var jState = Newtonsoft.Json.Linq.JObject.Parse(state);
-            JToken jsonOut;
-
-            if (jState.TryGetValue("appMetadata", out jsonOut))
-                AppMetadata = jsonOut.ToString();
-
-            if (jState.TryGetValue("deviceValues", out jsonOut))
-                Values = jsonOut.ToString();
-        }
+            AppMetadata = metadata;
+            Values = values;
+        }        
     }
 
     public enum Types { Reported, Requested }
 
-    public enum Status { Acknowledged, Enqueued, Expired, New, NotAcknowledged, Received, Unknown }
+    public enum Status { Acknowledged, Expired, DeliveryCountExceeded, NotAcknowledged, Enqueued, New, Received, Unknown }    
 }
