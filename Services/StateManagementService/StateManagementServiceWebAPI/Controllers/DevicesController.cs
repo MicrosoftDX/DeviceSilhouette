@@ -54,7 +54,7 @@ namespace StateManagementServiceWebAPI.Controllers
         // body:
         //  {               
         //      "appMetadata": {"origin" : "sensor"},
-        //      "deviceValues": {"x" : 0, "y" : 0, "z" : 0}
+        //      "deviceValues": {"Xaxis" : 0, "Yaxis" : 0, "Zaxis" : 0}
         //  }
         // 
         [Route("{deviceId}")]

@@ -47,8 +47,8 @@ function processMessage(msg)
 	 
     case 'State:Set':
       console.log("C2D_UpdateState");
-      //might be values and not State
-	  self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
+      self.emit('C2D_updateState', JSON.parse(msg.data));
+	    //self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
       break;
     case 'State:Get':
       console.log("C2D_GetState");
