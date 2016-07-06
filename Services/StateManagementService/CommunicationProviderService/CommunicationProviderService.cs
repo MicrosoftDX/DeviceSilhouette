@@ -171,6 +171,7 @@ namespace CommunicationProviderService
             // update device with the new state (C2D endpoint)
             string json = _jsonSerializer.Serialize(deviceState);
             await _messageSender.SendCloudToDeviceAsync(deviceState.DeviceId, messageType, json, timeToLive, deviceState.CorrelationId);
+            //await _messageSender.SendCloudToDeviceAsync(deviceState.DeviceId, messageType, deviceState.Values, timeToLive, deviceState.CorrelationId);
         }
 
         private class JsonState

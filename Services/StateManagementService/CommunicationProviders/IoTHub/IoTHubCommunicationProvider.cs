@@ -55,12 +55,18 @@ namespace CommunicationProviders.IoTHub
             Message commandMessage;
             commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(message));
             commandMessage.Properties.Add("MessageType", messageType);
+
+
             // get full acknowledgement on message delivery
             commandMessage.Ack = DeliveryAcknowledgement.Full;
             // set message expiry time
             commandMessage.ExpiryTimeUtc = DateTime.UtcNow.AddMilliseconds(timeToLive);
             commandMessage.MessageId = correlationId;
+
             await _serviceClient.SendAsync(deviceId, commandMessage);
         }
     }
 }
+
+
+

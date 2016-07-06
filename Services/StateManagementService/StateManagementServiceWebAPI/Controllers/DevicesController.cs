@@ -72,10 +72,10 @@ namespace StateManagementServiceWebAPI.Controllers
 
                 // Split state in metadata and values
                 if (jState.TryGetValue("appMetadata", out jsonOut))
-                    appMetadata = jsonOut.ToString();
+                    appMetadata = jsonOut.ToString(Newtonsoft.Json.Formatting.None);
 
                 if (jState.TryGetValue("deviceValues", out jsonOut))
-                    values = jsonOut.ToString();
+                    values = jsonOut.ToString(Newtonsoft.Json.Formatting.None);
 
                 var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, appMetadata, values, timeToLiveMilliSec);
                 return deviceState;
