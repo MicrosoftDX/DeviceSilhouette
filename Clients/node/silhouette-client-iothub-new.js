@@ -34,9 +34,7 @@ util.inherits(SilhouetteClientIoTHub, EventEmitter);
 
 function processMessage(msg)
 {
-	console.log("hi");
-	console.log(JSON.parse(msg.data));
-
+	
   // With AMQP, use this trick
   // var msgType = msg.transportObj.applicationProperties.MessageType;
 
@@ -44,8 +42,7 @@ function processMessage(msg)
  
   // TODO: what if we can't find the messageType? i.e. it's not a Silhouette message?
   // TODO: should we forward the message to some other callback?
-  console.log("msg: " + msg);
-  console.log("msgType: " + msgType);
+  
   switch (msgType) {
 	 
     case 'State:Set':
@@ -74,7 +71,7 @@ function processMessage(msg)
 
 function getMessageType(properties)
 {
-	console.log(properties.count());
+	
   for (var i=0; i<properties.count(); i++) {
 	
     if (properties.getItem(i).key == "iothub-app-MessageType")
