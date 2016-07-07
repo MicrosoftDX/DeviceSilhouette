@@ -20,7 +20,7 @@ namespace CommunicationProviderService
 {
     public interface ICommunicationProviderRemoting : IService
     {
-        Task DeepGetStateAsync(string deviceId, double timeToLive);
+        Task InvokeDeepReadStateAsync(string deviceId, double timeToLive);
         Task SendCloudToDeviceAsync(DeviceState deviceState, string messageType, double timeToLive);
     }
 
@@ -123,7 +123,7 @@ namespace CommunicationProviderService
         {
             //TODO: error handling
             var deviceId = jsonState.SilhouetteProperties.DeviceId;
-            Types messageType = Enum.TryParse<Types>(jsonState.SilhouetteProperties.Status, true, out messageType) ? messageType : Types.Reported;
+            Types messageType = Enum.TryParse<Types>(jsonState.SilhouetteProperties.Status, true, out messageType) ? messageType : Types.Report;
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
 
             DeviceState deviceState = new DeviceState(deviceId, jsonState.AppMetadata.ToString(), jsonState.DeviceValues.ToString(), messageType)
@@ -150,7 +150,7 @@ namespace CommunicationProviderService
         //"Timestamp" : "2009-06-15T13:45:30",
         //"Status" : "GetInfo" 
         //}
-        public async Task DeepGetStateAsync(string deviceId, double timeToLive)
+        public async Task InvokeDeepReadStateAsync(string deviceId, double timeToLive)
         {
             JsonState state = new JsonState();
             state.SilhouetteProperties.DeviceId = deviceId;
@@ -160,7 +160,7 @@ namespace CommunicationProviderService
 
             // update the state repository with the new message
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, "", "", Types.Reported, Status.Enqueued);
+            DeviceState deviceState = new DeviceState(deviceId, "", "", Types.Report, Status.Enqueued);
 
             // update C2D end point with the request to state update
             await _messageSender.SendCloudToDeviceAsync(deviceId, "State:Get", message, timeToLive, deviceState.CorrelationId);            

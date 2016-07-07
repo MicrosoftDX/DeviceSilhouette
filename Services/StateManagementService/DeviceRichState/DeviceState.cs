@@ -83,10 +83,10 @@ namespace DeviceRichState
             {
                 _correlationId = Guid.NewGuid().ToString();
 
-                if (messageType == Types.Reported)
+                if (messageType == Types.Report)
                     MessageStatus = Status.Received;
 
-                if (messageType == Types.Requested)
+                if (messageType == Types.Request)
                     MessageStatus = Status.New;
             }
             else
@@ -98,7 +98,63 @@ namespace DeviceRichState
         }        
     }
 
-    public enum Types { Reported, Requested }
+    public class PublicDeviceState
+    {
+        public PublicDeviceState(DeviceState deviceState)
+        {
+            DeviceId = deviceState.DeviceId;
+            Timestamp = deviceState.Timestamp;
+            Version = deviceState.Version;
+            CorrelationId = deviceState.CorrelationId;
+            MessageType = deviceState.MessageType.ToString("F");
+            MessageStatus = deviceState.MessageStatus.ToString("F");
+            AppMetadata = deviceState.AppMetadata;
+            Values = deviceState.Values;
+
+        }
+
+        /// <summary>
+        /// Can only be set at DeviceState instantiation
+        /// </summary>
+        [DataMember]
+        public string DeviceId { get; set; }
+
+        /// <summary>
+        /// Timestamp is UTC time, set automatically on creation
+        /// </summary>
+        [DataMember]
+        public DateTime Timestamp { get; set; }
+
+        /// <summary>
+        /// Version is set by silhouette actor, auto increment
+        /// </summary>
+        [DataMember]
+        public int Version { get; set; }
+
+        [DataMember]
+        public string CorrelationId { get; set; }
+
+        [DataMember]
+        public string MessageType { get; set; }
+
+        [DataMember]
+        public string MessageStatus { get; set; }
+
+        /// <summary>
+        /// Part of the state message that contains Application specific data
+        /// </summary>
+        [DataMember]
+        public string AppMetadata { get; set; }
+
+        /// <summary>
+        /// Part of the state message that contains device metrics
+        /// </summary>
+        [DataMember]
+        public string Values { get; set; }
+
+    }
+
+    public enum Types { Report, Request }
 
     public enum Status { Acknowledged, Expired, DeliveryCountExceeded, NotAcknowledged, Enqueued, New, Received, Unknown }    
 }

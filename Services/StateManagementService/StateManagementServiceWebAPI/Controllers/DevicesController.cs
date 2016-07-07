@@ -21,7 +21,7 @@ namespace StateManagementServiceWebAPI.Controllers
         private ICommunicationProviderRemoting CommunicationProviderServiceClient = ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"));
 
         [Route("{deviceId}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceState))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(PublicDeviceState))]
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public async Task<IHttpActionResult> Get([FromUri]string deviceId)
         {
@@ -33,13 +33,18 @@ namespace StateManagementServiceWebAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(deviceState);
+
+            return Ok(new PublicDeviceState(deviceState));
         }
 
+        // POST devices/{DeviceId} 
+        // Used to invoke Get current state from the device
+        // The current state updates the Silhouette
+        // It has no return value
         [Route("{deviceId}")]
-        public async Task DeepGet([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
+        public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
         {
-            await CommunicationProviderServiceClient.DeepGetStateAsync(deviceId, timeToLiveMilliSec);
+            await CommunicationProviderServiceClient.InvokeDeepReadStateAsync(deviceId, timeToLiveMilliSec);
         }
 
         // PUT devices/{DeviceId} 
@@ -53,13 +58,13 @@ namespace StateManagementServiceWebAPI.Controllers
         // Content-type: application/json
         // body:
         //  {               
-        //      "appMetadata": {"origin" : "sensor"},
-        //      "deviceValues": {"Xaxis" : 0, "Yaxis" : 0, "Zaxis" : 0}
+        //      "AppMetadata": {"origin" : "sensor"},
+        //      "Values": {"Xaxis" : 0, "Yaxis" : 0, "Zaxis" : 0}
         //  }
         // 
         [Route("{deviceId}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceState))]
-        public async Task<DeviceState> Put([FromUri]string deviceId, [FromUri]double timeToLiveMilliSec, [FromBody]JToken state)
+        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(PublicDeviceState))]
+        public async Task<PublicDeviceState> Put([FromUri]string deviceId, [FromUri]double timeToLiveMilliSec, [FromBody]JToken state)
         {
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
             try
@@ -71,14 +76,15 @@ namespace StateManagementServiceWebAPI.Controllers
                 string values = "";
 
                 // Split state in metadata and values
-                if (jState.TryGetValue("appMetadata", out jsonOut))
+                if (jState.TryGetValue("AppMetadata", out jsonOut))
                     appMetadata = jsonOut.ToString(Newtonsoft.Json.Formatting.None);
 
-                if (jState.TryGetValue("deviceValues", out jsonOut))
+                if (jState.TryGetValue("Values", out jsonOut))
                     values = jsonOut.ToString(Newtonsoft.Json.Formatting.None);
 
                 var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, appMetadata, values, timeToLiveMilliSec);
-                return deviceState;
+                
+                return (new PublicDeviceState(deviceState));
             }
             catch (Exception e)
             {

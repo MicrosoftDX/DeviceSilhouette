@@ -42,7 +42,7 @@ namespace DeviceRepository
         {
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
-            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType ==Types.Reported);
+            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType ==Types.Report);
             return orderedMessages.First();
         }
 
@@ -50,7 +50,7 @@ namespace DeviceRepository
         {
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
-            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Requested && m.MessageStatus == Status.New);
+            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Request && m.MessageStatus == Status.New);
             return orderedMessages.First();
         }
 
