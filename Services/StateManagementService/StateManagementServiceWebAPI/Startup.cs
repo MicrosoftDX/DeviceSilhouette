@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using Owin;
 using Swashbuckle.Application;
+using Newtonsoft.Json.Serialization;
 
 namespace StateManagementServiceWebAPI
 {
@@ -12,6 +13,7 @@ namespace StateManagementServiceWebAPI
         {
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             config.MapHttpAttributeRoutes();
 
