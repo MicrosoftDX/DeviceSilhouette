@@ -11,6 +11,7 @@ using StateProcessorService;
 using System.Threading.Tasks;
 using Swashbuckle.Swagger.Annotations;
 using CommunicationProviderService;
+using StateManagementServiceWebAPI.Models;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -21,7 +22,7 @@ namespace StateManagementServiceWebAPI.Controllers
         private ICommunicationProviderRemoting CommunicationProviderServiceClient = ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"));
 
         [Route("{deviceId}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(PublicDeviceState))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateModel))]
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public async Task<IHttpActionResult> Get([FromUri]string deviceId)
         {
@@ -34,7 +35,7 @@ namespace StateManagementServiceWebAPI.Controllers
                 return NotFound();
             }
 
-            return Ok(new PublicDeviceState(deviceState));
+            return Ok(new DeviceStateModel(deviceState));
         }
 
         // POST devices/{DeviceId} 
@@ -63,30 +64,24 @@ namespace StateManagementServiceWebAPI.Controllers
         //  }
         // 
         [Route("{deviceId}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(PublicDeviceState))]
-        public async Task<PublicDeviceState> Put([FromUri]string deviceId, [FromUri]double timeToLiveMilliSec, [FromBody]JToken state)
+        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceStateModel))]
+        public async Task<IHttpActionResult> Put(
+            [FromUri]string deviceId, 
+            [FromUri]double timeToLiveMilliSec, 
+            [FromBody]DeviceStateModel requestedState)
         {
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
             try
             {
-                // Split state in metadata and values
-                var jState = Newtonsoft.Json.Linq.JObject.Parse(state.ToString(Newtonsoft.Json.Formatting.None));
-                JToken jsonOut;
-                string appMetadata = "";
-                string values = "";
-
-                // Split state in metadata and values
-                if (jState.TryGetValue("AppMetadata", out jsonOut))
-                    appMetadata = jsonOut.ToString(Newtonsoft.Json.Formatting.None);
-
-                if (jState.TryGetValue("Values", out jsonOut))
-                    values = jsonOut.ToString(Newtonsoft.Json.Formatting.None);
-
-                var deviceState = await StateProcessorClient.SetStateValueAsync(deviceId, appMetadata, values, timeToLiveMilliSec);
+                var deviceState = await StateProcessorClient.SetStateValueAsync(
+                    deviceId, 
+                    requestedState.AppMetadata.ToString(), 
+                    requestedState.Values.ToString(), 
+                    timeToLiveMilliSec);
                 
-                return (new PublicDeviceState(deviceState));
+                return Ok(new DeviceStateModel(deviceState));
             }
-            catch (Exception e)
+            catch (Exception e) // TODO - filter the exceptions that we catch, add logging, ...
             {
                 throw e;
             }
