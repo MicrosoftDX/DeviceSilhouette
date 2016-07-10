@@ -39,6 +39,7 @@ namespace IoTHubFeedbackService
                 MessageStatus = (Status)feedbackRecord.StatusCode,
                 Timestamp = feedbackRecord.EnqueuedTimeUtc,
                 CorrelationId = feedbackRecord.OriginalMessageId
+            
             };
             await silhouette.SetDeviceStateAsync(state);
         }

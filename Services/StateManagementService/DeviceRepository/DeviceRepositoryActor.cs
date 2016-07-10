@@ -54,6 +54,7 @@ namespace DeviceRepository
             return orderedMessages.First();
         }
 
+        // TODO: Error handling, what if specific device doesnt exist?
         public async Task<DeviceState> GetDeviceStateAsync()
         {
            var state = await StateManager.GetStateAsync<DeviceState>("silhouetteMessage");

@@ -76,8 +76,7 @@ namespace StateProcessorService
             return newState;
         }
 
-        // For now it just create an actor in the repository with the DeviceID
-        // TODO: Implement get the state from the device itself
+
         // This API is used by the REST call
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
         public async Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, double timeToLive)
