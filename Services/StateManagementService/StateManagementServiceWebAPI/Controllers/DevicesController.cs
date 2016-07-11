@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Swashbuckle.Swagger.Annotations;
 using CommunicationProviderService;
 using StateManagementServiceWebAPI.Models;
+using System.Web.Http.Results;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -23,20 +24,26 @@ namespace StateManagementServiceWebAPI.Controllers
 
         [Route("{deviceId}")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateModel))]
-        [SwaggerResponse(HttpStatusCode.NotFound)]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type=typeof(ErrorModel))]
         public async Task<IHttpActionResult> Get([FromUri]string deviceId)
         {
             var deviceState = await StateProcessorClient.GetStateAsync(deviceId);
 
             // When no state the DeviceRepository returns an instance with default values
             // use the DeviceID to test if we have an actual result as that should always be set
-            if (deviceState.DeviceId == null)
+            if (deviceState == null || deviceState.DeviceId == null)
             {
-                return NotFound();
+                return NotFound(new ErrorModel {
+                    Success = false,
+                    Status = ErrorStatus.InvalidDeviceId,
+                    Message = ErrorMessage.InvalidDeviceId(deviceId)
+                });
             }
 
             return Ok(new DeviceStateModel(deviceState));
         }
+
+
 
         // POST devices/{DeviceId} 
         // Used to invoke Get current state from the device
@@ -89,5 +96,11 @@ namespace StateManagementServiceWebAPI.Controllers
         }
 
 
+
+        // TODO - move to helper class?
+        public IHttpActionResult NotFound<T>(T content)
+        {
+            return new NegotiatedContentResult<T>(HttpStatusCode.NotFound, content, this);
+        }
     }
 }
