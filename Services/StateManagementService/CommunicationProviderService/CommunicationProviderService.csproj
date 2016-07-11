@@ -95,7 +95,9 @@
     <Compile Include="ServiceEventSource.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PackageRoot\Config\Settings.xml" />
+    <None Include="PackageRoot\Config\Settings.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="PackageRoot\ServiceManifest.xml" />
     <None Include="App.config" />
     <None Include="packages.config" />
@@ -116,6 +118,10 @@
     <ProjectReference Include="..\DeviceRichState\DeviceRichState.csproj">
       <Project>{6e768642-efc3-4a83-b497-2d6d149a1d4a}</Project>
       <Name>DeviceRichState</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceFabricUtilities\ServiceFabricUtilities.csproj">
+      <Project>{6baef91b-89e4-4514-9646-3f76c9367844}</Project>
+      <Name>ServiceFabricUtilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

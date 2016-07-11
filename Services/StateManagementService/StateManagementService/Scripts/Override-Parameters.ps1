@@ -3,8 +3,11 @@ function CreateParametersFileWithEnvironmentOverrides($paramsFilename)
     $xml = [xml](Get-Content $paramsFilename)
     $xml.Application.Parameters.Parameter | %{ 
         # [PSCustomObject]@{ "Name"= $_.Name; "EnvVarExists" = (Test-Path "env:$($_.Name)")} 
-        if (Test-Path "env:$($_.Name)"){
-            $_.Value = (Get-Item "env:$($_.Name)").Value
+        $parameterName = $_.Name
+        if (Test-Path "env:$parameterName"){
+            $newValue = (Get-Item "env:$parameterName").Value
+            Write-Host "** overriding '$parameterName' with '$newValue' "
+            $_.Value = $newValue
         }
     }
     $tempfile = [System.IO.Path]::GetTempFileName()

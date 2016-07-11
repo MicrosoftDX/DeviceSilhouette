@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceRichState", "DeviceRi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTHubFeedbackService", "IoTHubFeedbackService\IoTHubFeedbackService.csproj", "{6750D66C-BC4B-4486-893A-9BADF98AD316}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabricUtilities", "ServiceFabricUtilities\ServiceFabricUtilities.csproj", "{6BAEF91B-89E4-4514-9646-3F76C9367844}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,14 @@ Global
 		{6750D66C-BC4B-4486-893A-9BADF98AD316}.Release|Any CPU.ActiveCfg = Release|x64
 		{6750D66C-BC4B-4486-893A-9BADF98AD316}.Release|x64.ActiveCfg = Release|x64
 		{6750D66C-BC4B-4486-893A-9BADF98AD316}.Release|x64.Build.0 = Release|x64
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Debug|Any CPU.Build.0 = Debug|x64
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Debug|x64.Build.0 = Debug|Any CPU
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Release|x64.ActiveCfg = Release|Any CPU
+		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
