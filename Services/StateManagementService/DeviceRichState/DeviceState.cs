@@ -90,8 +90,10 @@ namespace DeviceRichState
                     MessageStatus = Status.New;
             }
             else
+            {
                 _correlationId = String.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
                 MessageStatus = messageStatus;
+            }
 
             AppMetadata = metadata;
             Values = values;
