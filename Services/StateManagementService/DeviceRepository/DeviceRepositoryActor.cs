@@ -25,9 +25,9 @@ namespace DeviceRepository
     {
         public Task<string> GetDeviceStatus()
         {
-            var conStatus = StateManager.TryGetStateAsync<string>("deviceStatus").Result;
-            if (conStatus.HasValue)
-                return Task.FromResult(conStatus.Value);
+            var status = StateManager.TryGetStateAsync<string>("deviceStatus").Result;
+            if (status.HasValue)
+                return Task.FromResult(status.Value);
             else
                 return Task.FromResult(String.Empty);
         }
@@ -40,31 +40,51 @@ namespace DeviceRepository
 
         public async Task<DeviceState> GetLastKnownReportedState()
         {
+            DeviceState state = null;
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
-            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType ==Types.Report);
-            return orderedMessages.First();
+            if (stateMessages != null)
+            {
+                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Report);
+                if (orderedMessages != null)
+                    state = orderedMessages.First();
+            }
+
+            return state;
         }
 
         public async Task<DeviceState> GetLastKnownRequestedState()
         {
+            DeviceState state = null;
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
-            var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Request && m.MessageStatus == Status.New);
-            return orderedMessages.First();
+            if (stateMessages != null)
+            {
+                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Request && m.MessageStatus == Status.New);
+                if (orderedMessages != null)
+                    state = orderedMessages.First();
+            }
+            
+            return state;
         }
 
-        // TODO: Error handling, what if specific device doesnt exist?
         public async Task<DeviceState> GetDeviceStateAsync()
         {
-           var state = await StateManager.GetStateAsync<DeviceState>("silhouetteMessage");
-           return state;
+            var stateMessage = await StateManager.TryGetStateAsync<DeviceState>("silhouetteMessage");
+
+            if (stateMessage.HasValue)
+                return stateMessage.Value;
+            else
+                return null;
         }
 
         public async Task<List<DeviceState>> GetDeviceStateMessagesAsync()
         {
-            var stateMessages = await StateManager.GetStateAsync<List<DeviceState>>("silhouetteMessages");
-            return stateMessages ;
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
+            if (stateMessages.HasValue)
+                return stateMessages.Value;
+            else
+                return null;
         }
 
         public async Task<DeviceState> SetDeviceStateAsync(DeviceState state)
@@ -92,8 +112,8 @@ namespace DeviceRepository
 
         async Task AddDeviceMessageAsync(DeviceState state)
         {
-            ConditionalValue<List<DeviceState>> messagesInState = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
-            List<DeviceState> messages = messagesInState.HasValue ? messagesInState.Value : new List<DeviceState>();
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
+            var messages = stateMessages.HasValue ? stateMessages.Value : new List<DeviceState>();
 
             messages.Add(state);
             await StateManager.SetStateAsync("silhouetteMessages", messages);
@@ -111,8 +131,6 @@ namespace DeviceRepository
             // Data stored in the StateManager will be replicated for high-availability for actors that use volatile or persisted state storage.
             // Any serializable object can be saved in the StateManager.
             // For more information, see http://aka.ms/servicefabricactorsstateserialization
-
-            //await StateManager.TryAddStateAsync("silhouetteMessage", new DeviceState());
         }
 
     }
