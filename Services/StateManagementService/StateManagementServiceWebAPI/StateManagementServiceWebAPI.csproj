@@ -86,6 +86,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Fabric, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <HintPath>..\packages\Microsoft.ServiceFabric.5.1.150\lib\net45\System.Fabric.dll</HintPath>
@@ -107,6 +108,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filters\HandleInvalidModelAttribute.cs" />
+    <Compile Include="Models\DeviceStateRequestModel.cs" />
     <Compile Include="Models\DeviceStateModel.cs" />
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

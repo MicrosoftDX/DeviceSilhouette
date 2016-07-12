@@ -13,6 +13,7 @@ using Swashbuckle.Swagger.Annotations;
 using CommunicationProviderService;
 using StateManagementServiceWebAPI.Models;
 using System.Web.Http.Results;
+using StateManagementServiceWebAPI.Filters;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -71,12 +72,14 @@ namespace StateManagementServiceWebAPI.Controllers
         //  }
         // 
         [Route("{deviceId}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceStateModel))]
+        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceStateRequestModel))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type =typeof(ErrorModel))]
+        [HandleInvalidModel]
         public async Task<IHttpActionResult> Put(
             [FromUri]string deviceId, 
-            [FromUri]double timeToLiveMilliSec, 
-            [FromBody]DeviceStateModel requestedState)
+            [FromBody]DeviceStateRequestModel requestedState)
         {
+
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
             try
             {
@@ -84,7 +87,7 @@ namespace StateManagementServiceWebAPI.Controllers
                     deviceId, 
                     requestedState.AppMetadata.ToString(), 
                     requestedState.Values.ToString(), 
-                    timeToLiveMilliSec);
+                    requestedState.TimeToLiveMilliSec);
                 
                 return Ok(new DeviceStateModel(deviceState));
             }
@@ -94,8 +97,6 @@ namespace StateManagementServiceWebAPI.Controllers
             }
             
         }
-
-
 
         // TODO - move to helper class?
         public IHttpActionResult NotFound<T>(T content)

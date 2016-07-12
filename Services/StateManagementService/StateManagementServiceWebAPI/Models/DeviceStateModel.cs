@@ -10,11 +10,6 @@ namespace StateManagementServiceWebAPI.Models
 {
     public class DeviceStateModel
     {
-        public DeviceStateModel()
-        {
-            //empty ctor for WebAPI model binding
-        }
-
         public DeviceStateModel(DeviceState deviceState)
         {            
             DeviceId = deviceState.DeviceId;

@@ -15,9 +15,20 @@ namespace StateManagementServiceWebAPI.Models
         //public string TrackingId { get; set; }
     }
 
+    public class InvalidRequestErrorModel : ErrorModel
+    {
+        public List<ValidationMessage> ValidationMessages { get; set; }
+    }
+    public class ValidationMessage
+    {
+        public string PropertyName { get; set; }
+        public List<string> Messages { get; set; }
+    }
+
     public static class ErrorStatus
     {
         public const string InvalidDeviceId = "invalid-device-id";
+        public const string InvalidRequest = "invalid-request";
     }
 
     // TODO - localisation
@@ -27,6 +38,10 @@ namespace StateManagementServiceWebAPI.Models
         {
             const string format = "The device '{0}' is not registered with IoT Hub";
             return string.Format(format, deviceId);
+        }
+        public static string InvalidRequest()
+        {
+            return "The request body was invalid";
         }
     }
 
