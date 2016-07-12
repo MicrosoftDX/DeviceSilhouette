@@ -49,5 +49,40 @@ The visual studio solution contains a swagger UI for the REST APIs.
 If run locally, can be accessed via [http://localhost:9013/swagger/ui/index](http://localhost:9013/swagger/ui/index). Alternatively, if a Service Fabric cluster is deployed in Azure, the swagger UI can be accessed at [<cluster url>:9013/swagger/ui/index](<cluster url>:9013/swagger/ui/index).
 
 
+## Setting configuration
 
+### StateManagementService
 
+#### Getting started
+
+The config for StateManagementService is driven by environment variables. The easiest way to work with this is to create a MyConfig.ps1 script that sets the variables
+
+```posh
+$env:CommunicationProviderService_IotHubConnectionString="HostName=yourhub.azure-devices.net;SharedAccessKeyName=hubowner;SharedAccessKey=JHMBDjasb12masbdk1289askbsd9SjfHkJSFjqwhfqq="
+$env:CommunicationProviderService_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
+```
+
+If you are deploying through Visual Studio then run the script in the Package Manager Console before running the Publish.
+
+If you are deploying from PowerShell then simply run the script before runnigng the Deploy-FabricApplication.ps1 script.
+
+#### Rationale
+There are two approaches to configuration in .NET services on Service Fabric
+* standard .NET app.config/web.config
+* through [Service Fabric configuration](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-cloud-services-migration-worker-role-stateless-service/#configuration-settings)
+
+With the app.config approach the configuration is baked into the package that is deployed and cannot be changed without rebuilding the package.
+
+With the Service Fabric configuration approach the configuration each project defines its settings in PackageRoot/Config/Settings.xml, but these can be overridden with ConfigOverride sections in the ApplicationPackageRoot/ApplicationManifest.xml in the Service Fabric project. In turn, the settings in the ApplicationManifest can be overridden at deployment time with an Application Parameters file. The Visual Studio project template creates two (Cloud.xml and Local.xml) in the ApplicationParameters folder. The deployment script (Scripts/Deploy-FabricApplication) passes the parameter file to the Publish-*ServiceFabricApplication cmdlets when deploying the application.
+
+```
+    Project settings (MyService/PackageRoot/Config/Settings.xml)
+     --> overridden by Service Fabric Application Settings (MyServiceFabricApp/ApplicationPackageRoot/ApplicationManifest.xml)
+       --> overridden by Parameters File at deploy time (MyServiceFabricApp/ApplicationParameters/<profile>.xml)
+```
+
+One advantage of using the Service Fabric configuration approach is the ability to control the configuration at deployment time, i.e. use the same package but deploy it with different configuration options without rebuilding
+
+The downside is that the tools make it too easy to put your production configuration settings (e.g. access keys) into source control. To work around this, the solution has taken an approach where the application parameters file is generated dynamically when deploying based using environment variables. The core logic in in Scripts/Override-Parameters.ps1. This script looks generated a new, temporary parameters file. If any parameters in the file have matching environment variables then the value of the environment variable is used in the temporary file. In the main Deploy-FabricApplication.ps1 there is a call to CreateParametersFileWithEnvironmentOverrides to generate the temporary file and substitute into the deployment process.
+
+By using environment variables it is easy to create scripts for each of the environments that you wish to target. Running the script sets the environment variables for the deployment process to use.
