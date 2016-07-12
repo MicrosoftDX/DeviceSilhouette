@@ -10,8 +10,13 @@ namespace StateManagementServiceWebAPI.Models
 {
     public class DeviceStateModel
     {
-        public DeviceStateModel(DeviceState deviceState)
+        public DeviceStateModel()
         {
+            //empty ctor
+        }
+
+        public DeviceStateModel(DeviceState deviceState)
+        {            
             DeviceId = deviceState.DeviceId;
             Timestamp = deviceState.Timestamp;
             Version = deviceState.Version;
@@ -19,8 +24,7 @@ namespace StateManagementServiceWebAPI.Models
             MessageType = deviceState.MessageType.ToString("F");
             MessageStatus = deviceState.MessageStatus.ToString("F");
             AppMetadata = deviceState.AppMetadata;
-            Values = deviceState.Values;
-
+            Values = deviceState.Values;            
         }
 
         public string DeviceId { get; set; }
