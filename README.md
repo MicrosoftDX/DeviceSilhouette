@@ -88,3 +88,6 @@ One advantage of using the Service Fabric configuration approach is the ability 
 The downside is that the tools make it too easy to put your production configuration settings (e.g. access keys) into source control. To work around this, the solution has taken an approach where the application parameters file is generated dynamically when deploying based using environment variables. The core logic in in Scripts/Override-Parameters.ps1. This script looks generated a new, temporary parameters file. If any parameters in the file have matching environment variables then the value of the environment variable is used in the temporary file. In the main Deploy-FabricApplication.ps1 there is a call to CreateParametersFileWithEnvironmentOverrides to generate the temporary file and substitute into the deployment process.
 
 By using environment variables it is easy to create scripts for each of the environments that you wish to target. Running the script sets the environment variables for the deployment process to use.
+
+One potential issue with this approach is that the application configuration settings are visible in Service Fabric Explorer. If this is an issue then you probably want to encrypt the settings (as supported by Service Fabric using certificates)
+
