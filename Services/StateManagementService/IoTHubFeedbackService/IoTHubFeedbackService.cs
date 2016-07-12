@@ -33,7 +33,7 @@ namespace IoTHubFeedbackService
         {
             // TODO - handle actor not found for deviceID exception
             IDeviceRepositoryActor silhouette = GetDeviceActor(feedbackRecord.DeviceId);            
-            DeviceState state = new DeviceState(feedbackRecord.DeviceId, "", "", Types.Request, (Status)feedbackRecord.StatusCode, feedbackRecord.OriginalMessageId)
+            DeviceState state = new DeviceState(feedbackRecord.DeviceId, "", "", MessageType.Requested, (MessageStatus)feedbackRecord.StatusCode, feedbackRecord.OriginalMessageId)
             {                              
                 Timestamp = feedbackRecord.EnqueuedTimeUtc,                
             

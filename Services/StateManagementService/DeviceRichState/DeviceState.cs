@@ -20,19 +20,19 @@ namespace DeviceRichState
         [DataMember]
         private DateTime _timestamp;
         [DataMember]
-        private Types _messageType; 
+        private MessageType _messageType;
 
         /// <summary>
         /// Can only be set at DeviceState instantiation
         /// </summary>
         [DataMember]
-        public string DeviceId { get { return _deviceId; } set {;} }
+        public string DeviceId { get { return _deviceId; } set {; } }
 
         /// <summary>
         /// Timestamp is UTC time, set automatically on creation
         /// </summary>
         [DataMember]
-        public DateTime Timestamp { get { return _timestamp; } set {;} }
+        public DateTime Timestamp { get { return _timestamp; } set {; } }
 
         /// <summary>
         /// Version is set by silhouette actor, auto increment
@@ -41,13 +41,13 @@ namespace DeviceRichState
         public int Version { get; set; }
 
         [DataMember]
-        public string CorrelationId { get { return _correlationId; } set {;} }
+        public string CorrelationId { get { return _correlationId; } set {; } }
 
         [DataMember]
-        public Types MessageType { get { return _messageType; } set {;}  }
+        public MessageType MessageType { get { return _messageType; } set {; } }
 
         [DataMember]
-        public Status MessageStatus { get; set; }
+        public MessageStatus MessageStatus { get; set; }
 
         /// <summary>
         /// Part of the state message that contains Application specific data
@@ -55,10 +55,10 @@ namespace DeviceRichState
         [DataMember]
         public string AppMetadata { get; set; }
 
-       /// <summary>
-       /// Part of the state message that contains device metrics
-       /// </summary>
-       [DataMember]
+        /// <summary>
+        /// Part of the state message that contains device metrics
+        /// </summary>
+        [DataMember]
         public string Values { get; set; }
 
 
@@ -71,7 +71,7 @@ namespace DeviceRichState
         /// <param name="messageType">Who send the message; reported == device, requested == application</param>
         /// <param name="messageStatus">Indication of the status of this message instance</param>
         /// /// <param name="correlationId">Message id</param>
-        public DeviceState(string deviceId, string metadata, string values, Types messageType, Status messageStatus = Status.Unknown, string correlationId = null)
+        public DeviceState(string deviceId, string metadata, string values, MessageType messageType, MessageStatus messageStatus = MessageStatus.Unknown, string correlationId = null)
         {
             // To make these values immutable they are set through private field and get through public property
             // It is not possible to make the setter readonly because of [DataMember]
@@ -79,15 +79,15 @@ namespace DeviceRichState
             _timestamp = DateTime.UtcNow;
             _messageType = messageType;
 
-            if (messageStatus == Status.Unknown)
+            if (messageStatus == MessageStatus.Unknown)
             {
                 _correlationId = Guid.NewGuid().ToString();
 
-                if (messageType == Types.Report)
-                    MessageStatus = Status.Received;
+                if (messageType == MessageType.Reported)
+                    MessageStatus = MessageStatus.Received;
 
-                if (messageType == Types.Request)
-                    MessageStatus = Status.New;
+                if (messageType == MessageType.Requested)
+                    MessageStatus = MessageStatus.New;
             }
             else
             {
@@ -97,10 +97,30 @@ namespace DeviceRichState
 
             AppMetadata = metadata;
             Values = values;
-        }        
+        }
     }
 
-    public enum Types { Report, Request }
+    public enum MessageType
+    {
+        /// <summary>
+        /// Reported by device
+        /// </summary>
+        Reported,
+        /// <summary>
+        /// Requested by application
+        /// </summary>
+        Requested
+    }
 
-    public enum Status { Acknowledged, Expired, DeliveryCountExceeded, NotAcknowledged, Enqueued, New, Received, Unknown }    
+    public enum MessageStatus
+    {
+        Acknowledged,
+        Expired,
+        DeliveryCountExceeded,
+        NotAcknowledged,
+        Enqueued,
+        New,
+        Received,
+        Unknown
+    }
 }

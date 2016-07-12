@@ -45,7 +45,7 @@ namespace DeviceRepository
             var stateMessages = await GetDeviceStateMessagesAsync();
             if (stateMessages != null)
             {
-                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Report);
+                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == MessageType.Reported);
                 if (orderedMessages != null)
                     state = orderedMessages.First();
             }
@@ -60,7 +60,7 @@ namespace DeviceRepository
             var stateMessages = await GetDeviceStateMessagesAsync();
             if (stateMessages != null)
             {
-                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == Types.Request && m.MessageStatus == Status.New);
+                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == MessageType.Requested && m.MessageStatus == MessageStatus.New);
                 if (orderedMessages != null)
                     state = orderedMessages.First();
             }

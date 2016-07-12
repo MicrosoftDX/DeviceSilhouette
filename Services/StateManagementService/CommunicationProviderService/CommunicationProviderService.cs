@@ -123,7 +123,7 @@ namespace CommunicationProviderService
         {
             //TODO: error handling
             var deviceId = jsonState.SilhouetteProperties.DeviceId;
-            Types messageType = Enum.TryParse<Types>(jsonState.SilhouetteProperties.Status, true, out messageType) ? messageType : Types.Report;
+            MessageType messageType = Enum.TryParse<MessageType>(jsonState.SilhouetteProperties.Status, true, out messageType) ? messageType : MessageType.Reported;
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
 
             DeviceState deviceState = new DeviceState(deviceId, jsonState.AppMetadata.ToString(), jsonState.DeviceValues.ToString(), messageType)
@@ -160,7 +160,7 @@ namespace CommunicationProviderService
 
             // update the state repository with the new message
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, "", "", Types.Report, Status.Enqueued);
+            DeviceState deviceState = new DeviceState(deviceId, "", "", MessageType.Reported, MessageStatus.Enqueued);
 
             // update C2D end point with the request to state update
             await _messageSender.SendCloudToDeviceAsync(deviceId, "State:Get", message, timeToLive, deviceState.CorrelationId);            
