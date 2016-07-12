@@ -91,3 +91,14 @@ By using environment variables it is easy to create scripts for each of the envi
 
 One potential issue with this approach is that the application configuration settings are visible in Service Fabric Explorer. If this is an issue then you probably want to encrypt the settings (as supported by Service Fabric using certificates)
 
+#### Implementation in code
+You can access the Service Fabric configuration through the `System.Fabric.ServiceContext` reference that is passed into your service factory (often just a delegate on the ServiceRuntime.RegisterServiceAsync call). 
+
+To simplify working with the configuration, the solution has a ServiceFabricUtilies project with some configuration helpers. These allow you to access the configuration in a way that feels similar to the way ConfigurationManager allowed access to AppSettings in app.config.
+
+```csharp
+            var configurationSection = context.GetConfigurationSection("CommunicationProviderServiceSettings");
+            string iotHubConnectionString = configurationSection["IotHubConnectionString"];
+            string storageConnectionString = configurationSection["StorageConnectionString"];
+```
+
