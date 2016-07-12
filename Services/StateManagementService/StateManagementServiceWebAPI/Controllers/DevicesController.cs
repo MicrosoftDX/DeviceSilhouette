@@ -90,7 +90,7 @@ namespace StateManagementServiceWebAPI.Controllers
             }
             catch (Exception e) // TODO - filter the exceptions that we catch, add logging, ...
             {
-                throw e;
+                throw;
             }
             
         }
