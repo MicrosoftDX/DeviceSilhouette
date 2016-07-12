@@ -4,6 +4,7 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
+using System.Configuration;
 
 namespace IoTHubFeedbackService
 {
@@ -21,8 +22,10 @@ namespace IoTHubFeedbackService
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
+                string iotHubConnectionString = ConfigurationManager.AppSettings["iotHubConnectionString"];
+
                 ServiceRuntime.RegisterServiceAsync("IoTHubFeedbackServiceType",
-                    context => new IoTHubFeedbackService(context)).GetAwaiter().GetResult();
+                    context => new IoTHubFeedbackService(context, iotHubConnectionString)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(IoTHubFeedbackService).Name);
 

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
-using System.Configuration;
 using CommunicationProviders.IoTHub;
 using Microsoft.Azure.Devices;
 using DeviceRepository.Interfaces;
@@ -23,10 +22,10 @@ namespace IoTHubFeedbackService
         private static Uri RepositoryUri = new Uri("fabric:/StateManagementService/DeviceRepositoryActorService");
         private IoTHubFeedbackProcessor _feedbackProcessor;
 
-        public IoTHubFeedbackService(StatelessServiceContext context)
+        public IoTHubFeedbackService(StatelessServiceContext context,
+            string iotHubConnectionString)
             : base(context)
         {
-            string iotHubConnectionString = ConfigurationManager.AppSettings["iotHubConnectionString"];
             _feedbackProcessor = new IoTHubFeedbackProcessor(iotHubConnectionString, ProcessFeedbackAsync);
         }
 
