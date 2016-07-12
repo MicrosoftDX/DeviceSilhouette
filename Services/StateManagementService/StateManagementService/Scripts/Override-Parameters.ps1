@@ -13,3 +13,18 @@ function CreateParametersFileWithEnvironmentOverrides($paramsFilename)
     $xml.Save($tempfile)
     return $tempfile
 }
+
+function OverwriteApplicationParameterFilePath{
+    param(
+        [Parameter(Mandatory=$true)]
+        $profileFilePath,
+
+        [Parameter(Mandatory=$true)]
+        $parameterFilePath
+    )
+
+    $fileContent = Get-Content $profileFilePath -Raw
+    $xml = [xml]$fileContent
+    $xml.PublishProfile.ApplicationParameterFile.Path = $parameterFilePath 
+    $xml.Save($profileFilePath)
+}

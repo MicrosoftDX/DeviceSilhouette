@@ -7,5 +7,11 @@
          For example: <ClusterConnectionParameters />
   -->
   <ClusterConnectionParameters />
-  <ApplicationParameterFile Path="..\ApplicationParameters\Local.xml" />
+  <!-- Typically for local development you would have the line following this comment.
+  However whilst the environment variable re-writing works for deployment (including local deployment),
+  when debugging, the tools create a new Publish-NewServiceFabricApplication to set up the debugger, and that isn't customisable.
+  To work around this, the Deploy script always updates the Path here to the latest transformed path
+  -->
+  <!--<ApplicationParameterFile Path="..\ApplicationParameters\Local.xml" />-->
+  <ApplicationParameterFile Path="C:\Users\stuartle\AppData\Local\Temp\tmp4889.tmp" />
 </PublishProfile>
