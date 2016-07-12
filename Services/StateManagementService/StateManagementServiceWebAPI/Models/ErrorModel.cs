@@ -36,7 +36,7 @@ namespace StateManagementServiceWebAPI.Models
     {
         public static string InvalidDeviceId(string deviceId)
         {
-            const string format = "The device '{0}' is not registered with IoT Hub";
+            const string format = "The device '{0}' was not found";
             return string.Format(format, deviceId);
         }
         public static string InvalidRequest()
