@@ -12,7 +12,7 @@ namespace StateManagementServiceWebAPI.Models
     {
         public DeviceStateModel()
         {
-            //empty ctor
+            //empty ctor for WebAPI model binding
         }
 
         public DeviceStateModel(DeviceState deviceState)
