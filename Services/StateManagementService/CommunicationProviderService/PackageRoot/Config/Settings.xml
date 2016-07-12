@@ -7,7 +7,7 @@
   </Section>
   -->
   <Section Name="CommunicationProviderServiceSettings">
-    <Parameter Name="IotHubConnectionString" Value="asd"/>
-    <Parameter Name="StorageConnectionString" Value="qwe"/>
+    <Parameter Name="IotHubConnectionString" Value=""/>
+    <Parameter Name="StorageConnectionString" Value=""/>
   </Section>
 </Settings>

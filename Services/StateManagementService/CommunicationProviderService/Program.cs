@@ -29,8 +29,9 @@ namespace CommunicationProviderService
                 // Registering a service maps a service type name to a .NET type.
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
-                ServiceRuntime.RegisterServiceAsync("CommunicationProviderServiceType",
-                    context => CreateCommuncationProviderService(context)).GetAwaiter().GetResult();
+                ServiceRuntime.RegisterServiceAsync("CommunicationProviderServiceType", CreateCommuncationProviderService)
+                    .GetAwaiter()
+                    .GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(CommunicationProviderService).Name);
 

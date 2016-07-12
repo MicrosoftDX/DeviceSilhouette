@@ -6,7 +6,7 @@
     <Parameter Name="StateProcessorService_InstanceCount" Value="1" />
     <Parameter Name="StateManagementServiceWebAPI_InstanceCount" Value="1" />
     <Parameter Name="DeviceRepositoryActorService_PartitionCount" Value="1" />
-    <Parameter Name="CommunicationProviderService_IotHubConnectionString" Value="" />
-    <Parameter Name="CommunicationProviderService_StorageConnectionString" Value="" />
+    <Parameter Name="IotHubConnectionString" Value=""/>
+    <Parameter Name="StorageConnectionString" Value=""/>
   </Parameters>
 </Application>

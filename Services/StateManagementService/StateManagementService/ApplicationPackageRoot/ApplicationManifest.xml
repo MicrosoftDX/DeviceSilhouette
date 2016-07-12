@@ -8,8 +8,8 @@
     <Parameter Name="DeviceRepositoryActorService_PartitionCount" DefaultValue="10" />
     <Parameter Name="DeviceRepositoryActorService_MinReplicaSetSize" DefaultValue="2" />
     <Parameter Name="DeviceRepositoryActorService_TargetReplicaSetSize" DefaultValue="3" />
-    <Parameter Name="CommunicationProviderService_IotHubConnectionString" DefaultValue="dsa" />
-    <Parameter Name="CommunicationProviderService_StorageConnectionString" DefaultValue="ewq" />
+    <Parameter Name="Silhouette_IotHubConnectionString" DefaultValue="" />
+    <Parameter Name="Silhouette_StorageConnectionString" DefaultValue="" />
   </Parameters>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="CommunicationProviderServicePkg" ServiceManifestVersion="1.0.0" />
@@ -18,8 +18,8 @@
       <ConfigOverride Name="Config">
         <Settings>
           <Section Name="CommunicationProviderServiceSettings">
-            <Parameter Name="IotHubConnectionString" Value="[CommunicationProviderService_IotHubConnectionString]" />
-            <Parameter Name="StorageConnectionString" Value="[CommunicationProviderService_StorageConnectionString]" />
+            <Parameter Name="IotHubConnectionString" Value="[Silhouette_IotHubConnectionString]" />
+            <Parameter Name="StorageConnectionString" Value="[Silhouette_StorageConnectionString]" />
           </Section>
         </Settings>
       </ConfigOverride>
@@ -27,7 +27,15 @@
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="IoTHubFeedbackServicePkg" ServiceManifestVersion="1.0.0" />
-    <ConfigOverrides />
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="IoTHubFeedbackServiceSettings">
+            <Parameter Name="IotHubConnectionString" Value="[Silhouette_IotHubConnectionString]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="DeviceRepositoryPkg" ServiceManifestVersion="1.0.0" />

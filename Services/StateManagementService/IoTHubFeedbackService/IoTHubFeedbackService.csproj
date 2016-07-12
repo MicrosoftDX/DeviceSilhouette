@@ -83,11 +83,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Abstractions, Version=2.0.2.26, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Configuration.Abstractions.2.0.2.26\lib\net45\System.Configuration.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Fabric, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <HintPath>..\packages\Microsoft.ServiceFabric.5.1.150\lib\net45\System.Fabric.dll</HintPath>
@@ -132,6 +127,10 @@
     <ProjectReference Include="..\DeviceRichState\DeviceRichState.csproj">
       <Project>{6e768642-efc3-4a83-b497-2d6d149a1d4a}</Project>
       <Name>DeviceRichState</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceFabricUtilities\ServiceFabricUtilities.csproj">
+      <Project>{6baef91b-89e4-4514-9646-3f76c9367844}</Project>
+      <Name>ServiceFabricUtilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
