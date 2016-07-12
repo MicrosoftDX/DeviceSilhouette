@@ -64,6 +64,8 @@ $env:CommunicationProviderService_StorageConnectionString="DefaultEndpointsProto
 
 If you are deploying through Visual Studio then run the script in the Package Manager Console before running the Publish.
 
+![Package Manager Console](images/config-PackageManagerConsole.png)
+
 If you are deploying from PowerShell then simply run the script before runnigng the Deploy-FabricApplication.ps1 script.
 
 #### Rationale
