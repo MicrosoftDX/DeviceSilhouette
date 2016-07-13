@@ -168,15 +168,8 @@ $ApplicationPackagePath = Resolve-Path $ApplicationPackagePath
 
 $publishProfile = Read-PublishProfile $PublishProfileFile
 $projectParameterFile = $publishProfile.ApplicationParameterFile
-Write-Host "** Old parameter file $projectParameterFile"
-$publishProfile.ApplicationParameterFile = CreateParametersFileWithEnvironmentOverrides $projectParameterFile
-Write-Host "Temp parameter file $($publishProfile.ApplicationParameterFile)"
-
-if ($PublishProfileFile.EndsWith("\Local.xml")) {
-    ## local - update as per comment in Local.xml
-    Write-Host "Updating $PublishProfileFile to point to generated ApplicationParameterFile to enable debugging"
-    OverwriteApplicationParameterFilePath -profileFilePath $PublishProfileFile -parameterFilePath $publishProfile.ApplicationParameterFile
-} 
+OverrideParametersFileFromBaseWithEnvironmentVariables $projectParameterFile
+Write-Host "Using parameter file $projectParameterFile"
 
 if (-not $UseExistingClusterConnection)
 {

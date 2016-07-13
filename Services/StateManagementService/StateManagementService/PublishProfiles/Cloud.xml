@@ -17,5 +17,8 @@
 
   -->
   <ClusterConnectionParameters ConnectionEndpoint="silhouettecluster.westeurope.cloudapp.azure.com:19000" />
-  <ApplicationParameterFile Path="..\ApplicationParameters\Cloud.xml" />
+  <!-- The ApplicationParameterFile should point to the -generated.xml version of the parameters
+       This file is generated at deploy time from the non-generated version by applying environment variable overrides
+  -->
+  <ApplicationParameterFile Path="..\ApplicationParameters\Cloud-generated.xml" />
 </PublishProfile>

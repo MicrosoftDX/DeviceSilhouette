@@ -1,30 +1,22 @@
-function CreateParametersFileWithEnvironmentOverrides($paramsFilename)
+function OverrideParametersFileFromBaseWithEnvironmentVariables($paramsFilename)
 {
-    $xml = [xml](Get-Content $paramsFilename)
+    Write-Host "*********************************************"
+    Write-Host "*** Applying parameter file overrides"
+    if (-not($paramsFilename.Contains("-generated.xml"))){
+        Write-Host "*** ERROR: Params file should point to the generated file. Got: '$paramsFilename'"
+        return;
+    }
+    $baseParamsFile = $paramsFilename.Replace("-generated.xml", ".xml")
+    Write-Host "*** Replacing '$paramsFilename' using '$baseParamsFile' as input"
+    $xml = [xml](Get-Content $baseParamsFile)
     $xml.Application.Parameters.Parameter | %{ 
         $parameterName = $_.Name
         if (Test-Path "env:$parameterName"){
             $newValue = (Get-Item "env:$parameterName").Value
-            Write-Host "** overriding '$parameterName' with '$newValue' "
+            Write-Host "*** overriding parameter '$parameterName' with value '$newValue' "
             $_.Value = $newValue
         }
     }
-    $tempfile = [System.IO.Path]::GetTempFileName()
-    $xml.Save($tempfile)
-    return $tempfile
-}
-
-function OverwriteApplicationParameterFilePath{
-    param(
-        [Parameter(Mandatory=$true)]
-        $profileFilePath,
-
-        [Parameter(Mandatory=$true)]
-        $parameterFilePath
-    )
-
-    $fileContent = Get-Content $profileFilePath -Raw
-    $xml = [xml]$fileContent
-    $xml.PublishProfile.ApplicationParameterFile.Path = $parameterFilePath 
-    $xml.Save($profileFilePath)
+    $xml.Save($paramsFilename)
+    Write-Host "*********************************************"
 }
