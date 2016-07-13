@@ -107,4 +107,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.ServiceFabric.Actors.2.1.150\build\Microsoft.ServiceFabric.Actors.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ServiceFabric.Actors.2.1.150\build\Microsoft.ServiceFabric.Actors.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>powershell -noprofile -command {"$(SolutionDir)StateManagementService\Scripts\InitializeGeneratedParametersFiles.ps1}</PostBuildEvent>
+  </PropertyGroup>
 </Project>
