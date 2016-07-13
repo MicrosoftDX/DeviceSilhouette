@@ -160,7 +160,7 @@ namespace CommunicationProviderService
 
             // update the state repository with the new message
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, "", "", MessageType.Reported, MessageStatus.Enqueued);
+            DeviceState deviceState = new DeviceState(deviceId, "", "", MessageType.GetInfo, MessageStatus.Enqueued);
 
             // update C2D end point with the request to state update
             await _messageSender.SendCloudToDeviceAsync(deviceId, "State:Get", message, timeToLive, deviceState.CorrelationId);            

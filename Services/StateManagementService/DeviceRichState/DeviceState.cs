@@ -109,7 +109,9 @@ namespace DeviceRichState
         /// <summary>
         /// Requested by application
         /// </summary>
-        Requested
+        Requested,
+
+        GetInfo
     }
 
     public enum MessageStatus

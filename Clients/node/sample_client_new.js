@@ -11,6 +11,7 @@ var metadata = {
 };
 
 
+
 /*
 ** This function gets called when the cloud service sends an update to the state.
 ** The device should update its state accordingly.
@@ -42,6 +43,7 @@ function C2D_getState()
 ** Create the Silhouette client
 */
 
+var deviceID = "device1";
 var silhouette = silhouetteClient.create('iothub', {
   //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
   //connectionString: 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKeyName=device;SharedAccessKey=5l0nsPi3d8ggCdEeYTQi5YkWWuYKsUxSEPEpJMBslqA='
@@ -65,7 +67,7 @@ function doWork()
   // Send our new state to the cloud service
   console.log('sending updated state:');
   console.dir(my_state);
-  silhouette.updateState(metadata, my_state);
+  silhouette.updateState(metadata, my_state, deviceID);
   ++my_state.Xaxis;
   
   // get the state from the cloud service
