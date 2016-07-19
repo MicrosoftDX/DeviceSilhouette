@@ -100,21 +100,23 @@ namespace StateManagementServiceWebAPI.Controllers
             await CommunicationProviderServiceClient.InvokeDeepReadStateAsync(deviceId, timeToLiveMilliSec);
         }
 
-        // PUT devices/{DeviceId} 
-        // To call using Swagger UI: http://localhost:9013/swagger/ui/index
-        // Or to call from fiddler:
-        // Method: PUT
-        // Host: http://localhost:9013/devices/{DeviceId}
-        // Headers:
-        // User-Agent: Fiddler
-        // Host: localhost:9013
-        // Content-type: application/json
-        // body:
-        //  {               
-        //      "AppMetadata": {"origin" : "sensor"},
-        //      "Values": {"Xaxis" : 0, "Yaxis" : 0, "Zaxis" : 0}
-        //  }
-        // 
+        /*
+         PUT devices/{DeviceId}
+         To call using Swagger UI: http://localhost:9013/swagger/ui/index
+         Or to call from fiddler:
+         Method: PUT
+         Host: http://localhost:9013/devices/{DeviceId}
+         Headers:
+         User-Agent: Fiddler
+         Host: localhost:9013
+         Content-type: application/json
+         body:
+          {
+              "appMetadata": {"origin" : "sensor"},
+              "values": {"Xaxis" : 0, "Yaxis" : 0, "Zaxis" : 0},
+              "timeToLiveMilliSec": 5000
+           }
+        */
         [Route("{deviceId}")]
         [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceStateRequestModel))]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type =typeof(ErrorModel))]
