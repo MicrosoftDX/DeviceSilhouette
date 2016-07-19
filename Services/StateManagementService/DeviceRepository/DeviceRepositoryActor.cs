@@ -57,14 +57,14 @@ namespace DeviceRepository
         {
             DeviceState state = null;
             // search in silhouetteMessages
-            var stateMessages = await GetDeviceStateMessagesAsync();
+            IEnumerable<DeviceState> stateMessages = await GetDeviceStateMessagesAsync();
             if (stateMessages != null)
             {
-                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == MessageType.Requested && m.MessageStatus == MessageStatus.New);
-                if (orderedMessages != null)
-                    state = orderedMessages.First();
-            }
-            
+                state = (from msg in stateMessages
+                            where msg.MessageType == MessageType.Requested
+                            orderby msg.Timestamp
+                            select msg).First();
+            }            
             return state;
         }
 

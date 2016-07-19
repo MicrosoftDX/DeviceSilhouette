@@ -20,7 +20,9 @@ namespace StateProcessorService
     public interface IStateProcessorRemoting : IService
     {
 
-        Task<DeviceState> GetStateAsync(string deviceId);        
+        Task<DeviceState> GetStateAsync(string deviceId);
+        Task<DeviceState> GetLastRequestedStateAsync(string deviceId);
+        Task<DeviceState> GetLastReportedStateAsync(string deviceId);
         Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, double timeToLive);
     }
 
@@ -73,6 +75,26 @@ namespace StateProcessorService
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
             var newState = await silhouette.GetDeviceStateAsync();
+            return newState;
+        }
+
+        // This API is used by the REST call
+        public async Task<DeviceState> GetLastRequestedStateAsync(string deviceId)
+        {
+            //TODO: error handling
+            //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
+            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
+            var newState = await silhouette.GetLastKnownRequestedState();
+            return newState;
+        }
+
+        // This API is used by the REST call
+        public async Task<DeviceState> GetLastReportedStateAsync(string deviceId)
+        {
+            //TODO: error handling
+            //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
+            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
+            var newState = await silhouette.GetLastKnownReportedState();
             return newState;
         }
 

@@ -44,7 +44,51 @@ namespace StateManagementServiceWebAPI.Controllers
             return Ok(new DeviceStateModel(deviceState));
         }
 
+        [Route("{deviceId}/states/latest/reported")]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
+        public async Task<IHttpActionResult> GetLastReportedState([FromUri]string deviceId)
+        {
+            IHttpActionResult result;
+            try
+            {
+                var state = await StateProcessorClient.GetLastReportedStateAsync(deviceId);
+                result = Ok(new DeviceStateModel(state));
+            }
+            catch (Exception e)
+            {
+                // TODO: return different response according to exception. For now assuming deviceId not found.
+                result = NotFound(new ErrorModel
+                {
+                    Success = false,
+                    Status = ErrorStatus.InvalidDeviceId,
+                    Message = ErrorMessage.InvalidDeviceId(deviceId)
+                });
+            }
+            return result;
+        }
 
+        [Route("{deviceId}/states/latest/requested")]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
+        public async Task<IHttpActionResult> GetLastRequestedState([FromUri]string deviceId)
+        {
+            IHttpActionResult result;
+            try
+            {
+                var state = await StateProcessorClient.GetLastRequestedStateAsync(deviceId);
+                result = Ok(new DeviceStateModel(state));
+            }
+            catch (Exception e)
+            {
+                // TODO: return different response according to exception. For now assuming deviceId not found.
+                result = NotFound(new ErrorModel
+                {
+                    Success = false,
+                    Status = ErrorStatus.InvalidDeviceId,
+                    Message = ErrorMessage.InvalidDeviceId(deviceId)
+                });
+            }
+            return result;
+        }
 
         // POST devices/{DeviceId} 
         // Used to invoke Get current state from the device
