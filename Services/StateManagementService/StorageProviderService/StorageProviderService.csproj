@@ -61,6 +61,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Abstractions, Version=2.0.2.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.Abstractions.2.0.2.26\lib\net45\System.Configuration.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Fabric, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <HintPath>..\packages\Microsoft.ServiceFabric.5.1.150\lib\net45\System.Fabric.dll</HintPath>
@@ -75,10 +80,29 @@
     <Compile Include="ServiceEventSource.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PackageRoot\Config\Settings.xml" />
+    <None Include="PackageRoot\Config\Settings.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="PackageRoot\ServiceManifest.xml" />
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DeviceRichState\DeviceRichState.csproj">
+      <Project>{6e768642-efc3-4a83-b497-2d6d149a1d4a}</Project>
+      <Name>DeviceRichState</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceFabricUtilities\ServiceFabricUtilities.csproj">
+      <Project>{6baef91b-89e4-4514-9646-3f76c9367844}</Project>
+      <Name>ServiceFabricUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StorageProviders\PersistencyProviders.csproj">
+      <Project>{7266121c-8f5c-42b1-9a40-f5d9763f6008}</Project>
+      <Name>PersistencyProviders</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

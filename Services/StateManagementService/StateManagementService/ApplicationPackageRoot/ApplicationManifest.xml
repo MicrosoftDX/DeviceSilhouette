@@ -11,10 +11,21 @@
     <Parameter Name="DeviceRepositoryActorService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="Silhouette_IotHubConnectionString" DefaultValue="" />
     <Parameter Name="Silhouette_StorageConnectionString" DefaultValue="" />
+    <Parameter Name="Persistant_StorageConnectionString" DefaultValue="" />
+    <Parameter Name="Repository_MaxMessages" DefaultValue="" />
   </Parameters>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="StorageProviderServicePkg" ServiceManifestVersion="1.0.0" />
-    <ConfigOverrides />
+    <!--<ConfigOverrides />-->
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="StorageProviderServiceSettings">
+            <Parameter Name="StorageConnectionString" Value="[Persistant_StorageConnectionString]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="CommunicationProviderServicePkg" ServiceManifestVersion="1.0.0" />
@@ -44,6 +55,15 @@
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="DeviceRepositoryPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="DeviceRepositorySettings">
+            <Parameter Name="MaxMessages" Value="[Repository_MaxMessages]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="StateProcessorServicePkg" ServiceManifestVersion="1.0.0" />

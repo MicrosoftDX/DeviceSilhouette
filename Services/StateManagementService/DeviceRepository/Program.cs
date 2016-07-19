@@ -4,6 +4,7 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
+using Silhouette.ServiceFabricUtilities;
 
 namespace DeviceRepository
 {
@@ -22,7 +23,7 @@ namespace DeviceRepository
                 // For more information, see http://aka.ms/servicefabricactorsplatform
 
                 ActorRuntime.RegisterActorAsync<DeviceRepositoryActor>(
-                   (context, actorType) => new ActorService(context, actorType, () => new DeviceRepositoryActor())).GetAwaiter().GetResult();
+                   (context, actorType) => new ActorService(context, actorType, () => new DeviceRepositoryActor(getParameters(context)))).GetAwaiter().GetResult();
 
                 Thread.Sleep(Timeout.Infinite);
             }
@@ -31,6 +32,12 @@ namespace DeviceRepository
                 ActorEventSource.Current.ActorHostInitializationFailed(e.ToString());
                 throw;
             }
+        }
+
+        private static int getParameters(StatefulServiceContext context)
+        {
+            var configurationSection = context.GetConfigurationSection("DeviceRepositorySettings");
+            return Int32.Parse(configurationSection["MaxMessages"]);
         }
     }
 }

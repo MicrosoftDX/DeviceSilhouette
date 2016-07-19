@@ -61,6 +61,10 @@ namespace DeviceRichState
         [DataMember]
         public string Values { get; set; }
 
+        public DeviceState()
+        {
+            // empty constructor for serialization
+        }
 
         /// <summary>
         /// Holds the RichState of a device based on the state message and 
