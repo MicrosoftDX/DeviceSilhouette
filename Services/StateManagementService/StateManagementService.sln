@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTHubFeedbackService", "Io
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabricUtilities", "ServiceFabricUtilities\ServiceFabricUtilities.csproj", "{6BAEF91B-89E4-4514-9646-3F76C9367844}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProviders", "StorageProviders\StorageProviders.csproj", "{7266121C-8F5C-42B1-9A40-F5D9763F6008}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProviderService", "StorageProviderService\StorageProviderService.csproj", "{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,6 +130,20 @@ Global
 		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Release|x64.ActiveCfg = Release|Any CPU
 		{6BAEF91B-89E4-4514-9646-3F76C9367844}.Release|x64.Build.0 = Release|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Debug|x64.Build.0 = Debug|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Release|x64.ActiveCfg = Release|Any CPU
+		{7266121C-8F5C-42B1-9A40-F5D9763F6008}.Release|x64.Build.0 = Release|Any CPU
+		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Debug|x64.ActiveCfg = Debug|x64
+		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Debug|x64.Build.0 = Debug|x64
+		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Release|Any CPU.ActiveCfg = Release|x64
+		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Release|x64.ActiveCfg = Release|x64
+		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

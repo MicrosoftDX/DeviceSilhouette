@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="StateManagementServiceType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
+    <Parameter Name="StorageProviderService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="CommunicationProviderService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="IoTHubFeedbackService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="StateProcessorService_InstanceCount" DefaultValue="-1" />
@@ -11,6 +12,10 @@
     <Parameter Name="Silhouette_IotHubConnectionString" DefaultValue="" />
     <Parameter Name="Silhouette_StorageConnectionString" DefaultValue="" />
   </Parameters>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="StorageProviderServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="CommunicationProviderServicePkg" ServiceManifestVersion="1.0.0" />
     <!--<ConfigOverrides />-->
@@ -49,6 +54,11 @@
     <ConfigOverrides />
   </ServiceManifestImport>
   <DefaultServices>
+    <Service Name="StorageProviderService">
+      <StatelessService ServiceTypeName="StorageProviderServiceType" InstanceCount="[StorageProviderService_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
     <Service Name="CommunicationProviderService">
       <StatelessService ServiceTypeName="CommunicationProviderServiceType" InstanceCount="[CommunicationProviderService_InstanceCount]">
         <SingletonPartition />

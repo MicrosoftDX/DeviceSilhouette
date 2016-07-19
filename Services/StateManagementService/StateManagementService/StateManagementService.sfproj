@@ -30,6 +30,7 @@
     <ProjectReference Include="..\IoTHubFeedbackService\IoTHubFeedbackService.csproj" />
     <ProjectReference Include="..\StateManagementServiceWebAPI\StateManagementServiceWebAPI.csproj" />
     <ProjectReference Include="..\StateProcessorService\StateProcessorService.csproj" />
+    <ProjectReference Include="..\StorageProviderService\StorageProviderService.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
