@@ -153,7 +153,8 @@ namespace DeviceRepository
             if (messages != null && messages.Count() >= _maxMessages)
             {
                 await StorageProviderServiceClient.StoreStateMessagesAsync(messages);
-                //await StateManager.TryRemoveStateAsync("silhouetteMessages");
+                // TODO - add a smart purging engine
+                await StateManager.TryRemoveStateAsync("silhouetteMessages");
             }
         }
 
