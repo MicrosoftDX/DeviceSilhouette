@@ -9,6 +9,8 @@ using Microsoft.ServiceFabric.Actors.Client;
 using DeviceRepository.Interfaces;
 using DeviceRichState;
 using Microsoft.ServiceFabric.Data;
+using StorageProviderService;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
 
 namespace DeviceRepository
 {
@@ -23,6 +25,15 @@ namespace DeviceRepository
     [StatePersistence(StatePersistence.Persisted)]
     internal class DeviceRepositoryActor : Actor, IDeviceRepositoryActor
     {
+        private IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));        
+        private int _maxMessages;
+
+        public DeviceRepositoryActor(int maxMessages)
+        {
+            _maxMessages = maxMessages;
+            // TODO: create a task to check elapsed time and persist all messages older than the time limit
+        }
+
         public Task<string> GetDeviceStatus()
         {
             var status = StateManager.TryGetStateAsync<string>("deviceStatus").Result;
@@ -114,9 +125,19 @@ namespace DeviceRepository
         {
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
             var messages = stateMessages.HasValue ? stateMessages.Value : new List<DeviceState>();
-
+            
             messages.Add(state);
+            persistMessages(messages);
             await StateManager.SetStateAsync("silhouetteMessages", messages);
+        }
+
+        private async void persistMessages(List<DeviceState> messages)
+        {
+            // check if #of messages requires storing in persistance storage
+            if (messages != null && messages.Count() >= _maxMessages)
+            {
+                await StorageProviderServiceClient.StoreStateMessagesAsync(messages);
+            }
         }
 
         /// <summary>

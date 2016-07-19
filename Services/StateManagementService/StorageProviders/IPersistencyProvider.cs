@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using DeviceRichState;
 
-namespace StorageProviders
+namespace PersistencyProviders
 {
     public interface IHistoryStorage
     {
-        Task StoreStateMessage(DeviceState stateMessage);
+        Task StoreStateMessageAsync(DeviceState stateMessage);
 
-        Task StoreStateMessages(DeviceState[] stateMessages);
+        Task StoreStateMessagesAsync(List<DeviceState> stateMessages);
     }
 
 }

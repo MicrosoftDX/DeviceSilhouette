@@ -4,17 +4,53 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DeviceRichState;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System.IO;
+using System.Xml.Serialization;
+using System.Xml;
 
-namespace StorageProviders.BlobStorage
+namespace PersistencyProviders.BlobStorage
 {
-    class BlobStorageProvider : IHistoryStorage
+    /// <summary>
+    /// Store device messages in Azure Blob store. 
+    /// Main container = silhouette-messages
+    /// Meesages will be partioned based on message timestamp
+    /// year=2016
+    ///     month=07
+    ///         day=18                
+    /// </summary>
+    public class BlobStorageProvider : IHistoryStorage
     {
-        private string _storageConnection;
+        private string _storageConnectionString;
         private const string _storageContainer = "silhouette-messages";
 
-        public BlobStorageProvider(string storageConnection)
+        private CloudBlobClient _blobClient;
+
+        public BlobStorageProvider(string storageConnectionString)
         {
-            _storageConnection = storageConnection;
+            _storageConnectionString = storageConnectionString;
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_storageConnectionString);
+            _blobClient = storageAccount.CreateCloudBlobClient();
+            createMainContainer();
+        }
+
+        private void createMainContainer()
+        {           
+            // Retrieve a reference to a container.
+            CloudBlobContainer container = _blobClient.GetContainerReference(_storageContainer);
+            // Create the container if it doesn't already exist.
+            container.CreateIfNotExists();
+            container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
+        }
+
+        private MemoryStream SerializeToStream(DeviceState stateMessage)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(DeviceState));
+            MemoryStream stream = new MemoryStream();
+            serializer.Serialize(XmlWriter.Create(stream), stateMessage);
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
         }
 
         /// <summary>
@@ -22,19 +58,34 @@ namespace StorageProviders.BlobStorage
         /// </summary>
         /// <param name="stateMessage">the device state message to store</param>
         /// <returns></returns>
-        public Task StoreStateMessage(DeviceState stateMessage)
+        public async Task StoreStateMessageAsync(DeviceState stateMessage)
         {
-            throw new NotImplementedException();
+            await internalStoreMessageAsync(stateMessage);
         }
-
+        
         /// <summary>
         /// Stores a collection of state messages to blob storage
         /// </summary>
         /// <param name="stateMessages">device state messages to store</param>
         /// <returns></returns>
-        public Task StoreStateMessages(DeviceState[] stateMessages)
+        public async Task StoreStateMessagesAsync(List<DeviceState> stateMessages)
         {
-            throw new NotImplementedException();
+            var processingTasks = stateMessages.Select(internalStoreMessageAsync);
+            await Task.WhenAll(processingTasks);
         }
+
+        private async Task internalStoreMessageAsync(DeviceState stateMessage)
+        {
+            // create a unique name for the blob based on device id and message stamptime
+            String folderPath = String.Concat(stateMessage.Timestamp.Year, "/", stateMessage.Timestamp.Month, "/", stateMessage.Timestamp.Day, "/");
+            string blobName = String.Concat(folderPath, stateMessage.DeviceId, "_", Guid.NewGuid().ToString());
+            
+            CloudBlobContainer container = _blobClient.GetContainerReference(_storageContainer);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
+
+            MemoryStream stream = SerializeToStream(stateMessage);
+            await blockBlob.UploadFromStreamAsync(stream);
+        }
+
     }
 }

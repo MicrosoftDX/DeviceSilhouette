@@ -7,4 +7,7 @@
   <Section Name="DeviceRepositoryActorServiceReplicatorSecurityConfig">
     <Parameter Name="CredentialType" Value="None" />
   </Section>
+  <Section Name="DeviceRepositorySettings">
+    <Parameter Name="MaxMessages" Value="" />
+  </Section>
 </Settings>
