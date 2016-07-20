@@ -14,9 +14,6 @@ namespace DeviceRepository.Interfaces
     /// </summary>
     public interface IDeviceRepositoryActor : IActor
     {
-        Task SetDeviceStatus(string status);
-        Task<string> GetDeviceStatus();
-
         Task<DeviceState> GetLastKnownReportedState();
         Task<DeviceState> GetLastKnownRequestedState();
 

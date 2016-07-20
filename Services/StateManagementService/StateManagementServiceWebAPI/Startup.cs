@@ -20,11 +20,13 @@ namespace StateManagementServiceWebAPI
             config.EnableSwagger(c =>
             {
                 //c.IncludeXmlComments("docs.xml");
-                c.SingleApiVersion("1.0", "StateManagementService");
+                c.SingleApiVersion("0.1", "StateManagementService");
             }).EnableSwaggerUi();
 
 
             appBuilder.UseWebApi(config);
+
+            config.EnsureInitialized();
         }
     }
 }

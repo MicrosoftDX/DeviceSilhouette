@@ -108,12 +108,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\DeviceCommandController.cs" />
     <Compile Include="Filters\HandleInvalidModelAttribute.cs" />
+    <Compile Include="Helpers\ApiControllerResponseExtensions.cs" />
     <Compile Include="Models\DeviceStateRequestModel.cs" />
     <Compile Include="Models\DeviceStateModel.cs" />
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controllers\DevicesController.cs" />
+    <Compile Include="Controllers\DeviceStateController.cs" />
     <Compile Include="OwinCommunicationListener.cs" />
     <Compile Include="StateManagementServiceWebAPI.cs" />
     <Compile Include="Program.cs" />

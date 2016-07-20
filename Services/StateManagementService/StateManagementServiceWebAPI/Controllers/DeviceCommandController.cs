@@ -17,61 +17,19 @@ using StateManagementServiceWebAPI.Filters;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
-    [RoutePrefix("v0.1/devices/{deviceId}")]
-    public class DevicesController : ApiController
+    [RoutePrefix("v0.1/devices/{deviceId}/commands")]
+    public class DeviceCommandController : ApiController
     {
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
         private ICommunicationProviderRemoting CommunicationProviderServiceClient = ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"));
 
-        [Route("states/latest-reported")]
-        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
-        public async Task<IHttpActionResult> GetLastReportedState([FromUri]string deviceId)
-        {
-            IHttpActionResult result;
-            try
-            {
-                var state = await StateProcessorClient.GetLastReportedStateAsync(deviceId);
-                result = Ok(new DeviceStateModel(state));
-            }
-            catch (Exception e)
-            {
-                // TODO: return different response according to exception. For now assuming deviceId not found.
-                result = NotFound(new ErrorModel
-                {
-                    Code = ErrorCode.InvalidDeviceId,
-                    Message = ErrorMessage.InvalidDeviceId(deviceId)
-                });
-            }
-            return result;
-        }
 
-        [Route("state/latest-requested")]
-        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
-        public async Task<IHttpActionResult> GetLastRequestedState([FromUri]string deviceId)
-        {
-            IHttpActionResult result;
-            try
-            {
-                var state = await StateProcessorClient.GetLastRequestedStateAsync(deviceId);
-                result = Ok(new DeviceStateModel(state));
-            }
-            catch (Exception e)
-            {
-                // TODO: return different response according to exception. For now assuming deviceId not found.
-                result = NotFound(new ErrorModel
-                {
-                    Code = ErrorCode.InvalidDeviceId,
-                    Message = ErrorMessage.InvalidDeviceId(deviceId)
-                });
-            }
-            return result;
-        }
-
-        // POST devices/{DeviceId} 
+        // POST devices/{DeviceId} /commands/deepget
         // Used to invoke Get current state from the device
         // The current state updates the Silhouette
         // It has no return value
-        [Route("")]
+        [Route("deepget")] // TODO - this is a temporary endpoint - it feels as though it should be just another command
+        [HttpPost]
         public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
         {
             await CommunicationProviderServiceClient.InvokeDeepReadStateAsync(deviceId, timeToLiveMilliSec);
@@ -98,7 +56,7 @@ namespace StateManagementServiceWebAPI.Controllers
         [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceStateRequestModel))]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type =typeof(ErrorModel))]
         [HandleInvalidModel]
-        public async Task<IHttpActionResult> Put(
+        public async Task<IHttpActionResult> Post(
             [FromUri]string deviceId, 
             [FromBody]DeviceStateRequestModel requestedState)
         {
