@@ -77,7 +77,7 @@ namespace PersistencyProviders.BlobStorage
         private async Task internalStoreMessageAsync(DeviceState stateMessage)
         {
             // create a unique name for the blob based on device id and message stamptime
-            String folderPath = String.Concat(stateMessage.Timestamp.Year, "/", stateMessage.Timestamp.Month, "/", stateMessage.Timestamp.Day, "/");
+            String folderPath = String.Concat(stateMessage.Timestamp.Year, "/", stateMessage.Timestamp.Month, "/", stateMessage.Timestamp.Day, "/", stateMessage.MessageType.ToString(), "_", "/");
             string blobName = String.Concat(folderPath, stateMessage.DeviceId, "_", Guid.NewGuid().ToString());
             
             CloudBlobContainer container = _blobClient.GetContainerReference(_storageContainer);
