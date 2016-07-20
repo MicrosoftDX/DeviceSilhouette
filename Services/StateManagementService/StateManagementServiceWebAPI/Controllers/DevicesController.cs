@@ -17,33 +17,13 @@ using StateManagementServiceWebAPI.Filters;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
-    [RoutePrefix("v0.1/devices")]
+    [RoutePrefix("v0.1/devices/{deviceId}")]
     public class DevicesController : ApiController
     {
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
         private ICommunicationProviderRemoting CommunicationProviderServiceClient = ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"));
 
-        [Route("{deviceId}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateModel))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Type=typeof(ErrorModel))]
-        public async Task<IHttpActionResult> Get([FromUri]string deviceId)
-        {
-            var deviceState = await StateProcessorClient.GetStateAsync(deviceId);
-
-            // When no state the DeviceRepository returns an instance with default values
-            // use the DeviceID to test if we have an actual result as that should always be set
-            if (deviceState == null || deviceState.DeviceId == null)
-            {
-                return NotFound(new ErrorModel {
-                    Code = ErrorCode.InvalidDeviceId,
-                    Message = ErrorMessage.InvalidDeviceId(deviceId)
-                });
-            }
-
-            return Ok(new DeviceStateModel(deviceState));
-        }
-
-        [Route("{deviceId}/states/latest/reported")]
+        [Route("states/latest-reported")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
         public async Task<IHttpActionResult> GetLastReportedState([FromUri]string deviceId)
         {
@@ -65,7 +45,7 @@ namespace StateManagementServiceWebAPI.Controllers
             return result;
         }
 
-        [Route("{deviceId}/states/latest/requested")]
+        [Route("state/latest-requested")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
         public async Task<IHttpActionResult> GetLastRequestedState([FromUri]string deviceId)
         {
@@ -91,7 +71,7 @@ namespace StateManagementServiceWebAPI.Controllers
         // Used to invoke Get current state from the device
         // The current state updates the Silhouette
         // It has no return value
-        [Route("{deviceId}")]
+        [Route("")]
         public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
         {
             await CommunicationProviderServiceClient.InvokeDeepReadStateAsync(deviceId, timeToLiveMilliSec);
@@ -114,7 +94,7 @@ namespace StateManagementServiceWebAPI.Controllers
               "timeToLiveMilliSec": 5000
            }
         */
-        [Route("{deviceId}")]
+        [Route("")]
         [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceStateRequestModel))]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type =typeof(ErrorModel))]
         [HandleInvalidModel]
