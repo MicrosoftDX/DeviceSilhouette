@@ -27,11 +27,33 @@ namespace DeviceRepository
     {
         private const string StateName = "silhouetteMessages";
         private IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
-        private int _maxMessages;        
+        private int _maxMessages;
+        private double _messagesRetention;
 
-        public DeviceRepositoryActor(int maxMessages)
+        private IActorTimer _purgeTimer;
+
+        public DeviceRepositoryActor(int maxMessages, double messagesRetention)
         {
-            _maxMessages = maxMessages;            
+            _maxMessages = maxMessages;
+            _messagesRetention = messagesRetention;
+        }       
+
+        private async Task purgeStates(object arg)
+        {           
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
+            if (stateMessages.HasValue)
+            {                                              
+                var messages = stateMessages.Value;
+                var lastReprted = GetLastKnownReportedState().Result;
+                messages.RemoveAll(item => isPurge(item, lastReprted));
+            }            
+        }
+
+        private bool isPurge(DeviceState item, DeviceState lastReported)
+        {
+            // check for messages older than the retention, that were persistet 
+            // make sure to keep the last Reported message in any case  
+            return !item.Equals(lastReported) && item.Persisted && item.Timestamp.CompareTo(DateTime.Now.ToUniversalTime().AddMilliseconds(-_messagesRetention)) < 0;            
         }
 
         public Task<string> GetDeviceStatus()
@@ -148,11 +170,15 @@ namespace DeviceRepository
         protected override async Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
+            _purgeTimer = RegisterTimer(purgeStates, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+        }
 
-            // The StateManager is this actor's private state store.
-            // Data stored in the StateManager will be replicated for high-availability for actors that use volatile or persisted state storage.
-            // Any serializable object can be saved in the StateManager.
-            // For more information, see http://aka.ms/servicefabricactorsstateserialization
+        protected override async Task OnDeactivateAsync()
+        {
+            if (_purgeTimer != null)
+            {
+                UnregisterTimer(_purgeTimer);
+            }
         }
 
     }

@@ -11,5 +11,6 @@
     <Parameter Name="Silhouette_StorageConnectionString" Value="" />
     <Parameter Name="Persistent_StorageConnectionString" Value="" />
     <Parameter Name="Repository_MaxMessages" Value="" />
+    <Parameter Name="Repository_MessagesRetention" Value="" />
   </Parameters>
 </Application>

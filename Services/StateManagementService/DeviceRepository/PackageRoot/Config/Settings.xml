@@ -9,5 +9,6 @@
   </Section>
   <Section Name="DeviceRepositorySettings">
     <Parameter Name="MaxMessages" Value="" />
+    <Parameter Name="MessagesRetention" Value="" />
   </Section>
 </Settings>
