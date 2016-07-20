@@ -66,7 +66,13 @@ $env:Repository_MaxMessages=10
 
 If you are deploying through Visual Studio then run the script in the Package Manager Console before running the Publish.
 
-![Package Manager Console](images/config-PackageManagerConsole.png)
+![Package Manager Console - set config](images/config-PackageManagerConsole.png)
+
+When you Deploy (either to publish, or to run/debug locally) you should see output similar to what is shown below in the Output Window.
+
+![Output Window on deploy](images/config-ExpectedOutput.png)
+
+
 
 If you are deploying from PowerShell then simply run the script before runnigng the Deploy-FabricApplication.ps1 script.
 
