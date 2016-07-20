@@ -108,8 +108,12 @@ namespace CommunicationProviderService
         {
             try { 
                 IDeviceRepositoryActor silhouette = GetDeviceActor(jsonState.SilhouetteProperties.DeviceId);
-                DeviceState deviceState = await silhouette.GetDeviceStateAsync();            
-                await _messageSender.SendCloudToDeviceAsync(deviceState.Values, "State:Get", deviceState.DeviceId, jsonState.SilhouetteProperties.MessageTTL, deviceState.CorrelationId);
+                DeviceState deviceState = await silhouette.GetDeviceStateAsync();
+
+                // create a new DeviceState with new correlation id, send to the device and store in the repository   
+                DeviceState newState = new DeviceState(deviceState.DeviceId, deviceState.AppMetadata, deviceState.Values, MessageType.GetInfo, MessageStatus.Enqueued);                
+                await _messageSender.SendCloudToDeviceAsync(newState.DeviceId, "State:Get", newState.Values,  jsonState.SilhouetteProperties.MessageTTL, newState.CorrelationId);
+                await silhouette.SetDeviceStateAsync(newState);
             }
             catch (Exception e)
             {
