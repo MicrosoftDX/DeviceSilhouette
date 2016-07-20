@@ -27,29 +27,11 @@ namespace DeviceRepository
     {
         private const string StateName = "silhouetteMessages";
         private IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
-        private int _maxMessages;
-        DateTime _lastPersist = DateTime.Now;
+        private int _maxMessages;        
 
         public DeviceRepositoryActor(int maxMessages)
         {
-            _maxMessages = maxMessages;
-            // TODO: create a task to check elapsed time and persist all messages older than the time limit
-            Task.Run(() => storeMessages());
-        }
-
-        private async void storeMessages()
-        {
-            while (true)
-            {
-                if (StateManager != null)
-                {
-                    var stateMessages = StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
-                    var messages = stateMessages.Result.HasValue ? stateMessages.Result.Value : new List<DeviceState>();
-                    await persistMessages(messages);
-                }
-
-                Thread.Sleep(1000);
-            }
+            _maxMessages = maxMessages;            
         }
 
         public Task<string> GetDeviceStatus()
@@ -126,6 +108,8 @@ namespace DeviceRepository
                 if (lastState.HasValue)
                     state.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
 
+                // persist the message
+                await persistMessage(state);
                 await AddDeviceMessageAsync(state);
 
                 await StateManager.SetStateAsync("silhouetteMessage", state);
@@ -139,6 +123,15 @@ namespace DeviceRepository
 
         }
 
+        private async Task persistMessage(DeviceState state)
+        {
+            if (!state.Persisted)
+            {
+                await StorageProviderServiceClient.StoreStateMessageAsync(state);
+                state.persist();
+            }
+        }
+
         async Task AddDeviceMessageAsync(DeviceState state)
         {
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
@@ -146,19 +139,7 @@ namespace DeviceRepository
 
             messages.Add(state);
             await StateManager.SetStateAsync(StateName, messages);
-        }
-
-        private async Task persistMessages(List<DeviceState> messages)
-        {
-            // check if #of messages requires storing in persistance storage
-            if (messages != null && messages.Count() >= _maxMessages)
-            {
-                await StorageProviderServiceClient.StoreStateMessagesAsync(messages);
-                // add a message cursor to know what message was last persisted, to avoid perging all the messages
-                // TODO - add a smart purging engine
-                await StateManager.TryRemoveStateAsync(StateName);                
-            }
-        }
+        }        
 
         /// <summary>
         /// This method is called whenever an actor is activated.
