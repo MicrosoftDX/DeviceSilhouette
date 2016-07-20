@@ -17,7 +17,7 @@ using StateManagementServiceWebAPI.Filters;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
-    [RoutePrefix("devices")]
+    [RoutePrefix("v0.1/devices")]
     public class DevicesController : ApiController
     {
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
