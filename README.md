@@ -62,6 +62,7 @@ $env:Silhouette_IotHubConnectionString="HostName=yourhub.azure-devices.net;Share
 $env:Silhouette_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
 $env:Persistent_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
 $env:Repository_MaxMessages=10
+$env:Repository_MessagesRetention=300000
 ```
 
 If you are deploying through Visual Studio then run the script in the Package Manager Console before running the Publish.
