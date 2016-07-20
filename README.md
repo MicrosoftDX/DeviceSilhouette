@@ -70,6 +70,15 @@ If you are deploying through Visual Studio then run the script in the Package Ma
 
 If you are deploying from PowerShell then simply run the script before runnigng the Deploy-FabricApplication.ps1 script.
 
+#### Meanings of the settings
+
+| Name                               | Description |
+|------------------------------------|-------------|
+| Silhouette_IotHubConnectionString  | The connection string for the IoT Hub to use to communicate with devices |
+| Silhouette_StorageConnectionString | The connection string used to synchronise consuming messages across partitions of the IoT Hub |
+| Persistent_StorageConnectionString | The connection string to the storage account to write the blob history to |
+| Repository_MaxMessages             | ?? |
+
 #### Rationale
 There are two approaches to configuration in .NET services on Service Fabric
 * standard .NET app.config/web.config
