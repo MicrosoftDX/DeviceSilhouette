@@ -11,7 +11,7 @@
     <Parameter Name="DeviceRepositoryActorService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="Silhouette_IotHubConnectionString" DefaultValue="" />
     <Parameter Name="Silhouette_StorageConnectionString" DefaultValue="" />
-    <Parameter Name="Persistant_StorageConnectionString" DefaultValue="" />
+    <Parameter Name="Persistent_StorageConnectionString" DefaultValue="" />
     <Parameter Name="Repository_MaxMessages" DefaultValue="" />
   </Parameters>
   <ServiceManifestImport>
@@ -21,7 +21,7 @@
       <ConfigOverride Name="Config">
         <Settings>
           <Section Name="StorageProviderServiceSettings">
-            <Parameter Name="StorageConnectionString" Value="[Persistant_StorageConnectionString]" />
+            <Parameter Name="StorageConnectionString" Value="[Persistent_StorageConnectionString]" />
           </Section>
         </Settings>
       </ConfigOverride>
