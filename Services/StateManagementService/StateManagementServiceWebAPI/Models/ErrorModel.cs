@@ -8,8 +8,7 @@ namespace StateManagementServiceWebAPI.Models
 {
     public class ErrorModel
     {
-        public bool Success { get; set; }
-        public string Status { get; set; }
+        public string Code { get; set; }
         public string Message { get; set; }
         // TODO - need to implement logging and include tracking id in error message
         //public string TrackingId { get; set; }
@@ -25,7 +24,7 @@ namespace StateManagementServiceWebAPI.Models
         public List<string> Messages { get; set; }
     }
 
-    public static class ErrorStatus
+    public static class ErrorCode // TODO - revisit in relation to https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#7102-error-condition-responses
     {
         public const string InvalidDeviceId = "invalid-device-id";
         public const string InvalidRequest = "invalid-request";

@@ -35,8 +35,7 @@ namespace StateManagementServiceWebAPI.Controllers
             if (deviceState == null || deviceState.DeviceId == null)
             {
                 return NotFound(new ErrorModel {
-                    Success = false,
-                    Status = ErrorStatus.InvalidDeviceId,
+                    Code = ErrorCode.InvalidDeviceId,
                     Message = ErrorMessage.InvalidDeviceId(deviceId)
                 });
             }
@@ -59,8 +58,7 @@ namespace StateManagementServiceWebAPI.Controllers
                 // TODO: return different response according to exception. For now assuming deviceId not found.
                 result = NotFound(new ErrorModel
                 {
-                    Success = false,
-                    Status = ErrorStatus.InvalidDeviceId,
+                    Code = ErrorCode.InvalidDeviceId,
                     Message = ErrorMessage.InvalidDeviceId(deviceId)
                 });
             }
@@ -82,8 +80,7 @@ namespace StateManagementServiceWebAPI.Controllers
                 // TODO: return different response according to exception. For now assuming deviceId not found.
                 result = NotFound(new ErrorModel
                 {
-                    Success = false,
-                    Status = ErrorStatus.InvalidDeviceId,
+                    Code = ErrorCode.InvalidDeviceId,
                     Message = ErrorMessage.InvalidDeviceId(deviceId)
                 });
             }

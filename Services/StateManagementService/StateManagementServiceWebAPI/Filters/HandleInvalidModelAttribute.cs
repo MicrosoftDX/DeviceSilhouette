@@ -15,8 +15,7 @@ namespace StateManagementServiceWebAPI.Filters
             {
                 var errorModel = new InvalidRequestErrorModel
                 {
-                    Success = false,
-                    Status = ErrorStatus.InvalidRequest,
+                    Code = ErrorCode.InvalidRequest,
                     Message = ErrorMessage.InvalidRequest(),
                     ValidationMessages = actionContext.ModelState
                                                 .Select(kvp => new ValidationMessage
