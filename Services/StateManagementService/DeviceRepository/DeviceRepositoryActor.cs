@@ -25,6 +25,7 @@ namespace DeviceRepository
     [StatePersistence(StatePersistence.Persisted)]
     internal class DeviceRepositoryActor : Actor, IDeviceRepositoryActor
     {
+        private const string StateName = "silhouetteMessages";
         private IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
         private int _maxMessages;
         DateTime _lastPersist = DateTime.Now;
@@ -42,7 +43,7 @@ namespace DeviceRepository
             {
                 if (StateManager != null)
                 {
-                    var stateMessages = StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
+                    var stateMessages = StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
                     var messages = stateMessages.Result.HasValue ? stateMessages.Result.Value : new List<DeviceState>();
                     await persistMessages(messages);
                 }
@@ -108,7 +109,7 @@ namespace DeviceRepository
 
         public async Task<List<DeviceState>> GetDeviceStateMessagesAsync()
         {
-            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
             if (stateMessages.HasValue)
                 return stateMessages.Value;
             else
@@ -140,11 +141,11 @@ namespace DeviceRepository
 
         async Task AddDeviceMessageAsync(DeviceState state)
         {
-            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>("silhouetteMessages");
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
             var messages = stateMessages.HasValue ? stateMessages.Value : new List<DeviceState>();
 
             messages.Add(state);
-            await StateManager.SetStateAsync("silhouetteMessages", messages);
+            await StateManager.SetStateAsync(StateName, messages);
         }
 
         private async Task persistMessages(List<DeviceState> messages)
@@ -153,8 +154,9 @@ namespace DeviceRepository
             if (messages != null && messages.Count() >= _maxMessages)
             {
                 await StorageProviderServiceClient.StoreStateMessagesAsync(messages);
+                // add a message cursor to know what message was last persisted, to avoid perging all the messages
                 // TODO - add a smart purging engine
-                await StateManager.TryRemoveStateAsync("silhouetteMessages");
+                await StateManager.TryRemoveStateAsync(StateName);                
             }
         }
 
