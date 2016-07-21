@@ -21,7 +21,6 @@ namespace DeviceRichState
         private DateTime _timestamp;
         [DataMember]
         private MessageType _messageType;
-        private bool _persist = false;
 
         /// <summary>
         /// Can only be set at DeviceState instantiation
