@@ -130,9 +130,11 @@ namespace DeviceRepository
                 if (lastState.HasValue)
                     state.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
 
-                // persist the message
-                await PersistMessage(state);
-                await AddDeviceMessageAsync(state);
+                // persist the message and add to actor state (in parallel)
+                await Task.WhenAll(
+                    PersistMessage(state),
+                    AddDeviceMessageAsync(state)
+                    );
 
                 await StateManager.SetStateAsync("silhouetteMessage", state);
                 return state;
