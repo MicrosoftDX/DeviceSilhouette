@@ -7,8 +7,15 @@ using System.Web.Http.Filters;
 
 namespace StateManagementServiceWebAPI.Filters
 {
+    /// <summary>
+    /// If model state is invalid, automatically return an ErrorModel
+    /// </summary>
     public class HandleInvalidModelAttribute : ActionFilterAttribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionContext"></param>
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
             if (!actionContext.ModelState.IsValid)

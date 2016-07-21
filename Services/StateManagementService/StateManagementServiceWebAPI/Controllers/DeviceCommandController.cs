@@ -17,6 +17,9 @@ using StateManagementServiceWebAPI.Filters;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
+    /// <summary>
+    /// Get or manipulate commands for a device
+    /// </summary>
     [RoutePrefix("v0.1/devices/{deviceId}/commands")]
     public class DeviceCommandController : ApiController
     {
@@ -28,6 +31,14 @@ namespace StateManagementServiceWebAPI.Controllers
         // Used to invoke Get current state from the device
         // The current state updates the Silhouette
         // It has no return value
+
+        /// <summary>
+        /// Trigger a DeepGet.
+        /// NOTE: this endpoint is temporary and will likely change!
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="timeToLiveMilliSec"></param>
+        /// <returns></returns>
         [Route("deepget")] // TODO - this is a temporary endpoint - it feels as though it should be just another command
         [HttpPost]
         public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
@@ -52,12 +63,19 @@ namespace StateManagementServiceWebAPI.Controllers
               "timeToLiveMilliSec": 5000
            }
         */
+        /// <summary>
+        /// Add a new command
+        /// NB Currently this only supports creating a state request command
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="requestedState"></param>
+        /// <returns></returns>
         [Route("")]
-        [SwaggerResponse(HttpStatusCode.OK, Type=typeof(DeviceStateRequestModel))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, Type =typeof(ErrorModel))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateRequestModel))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ErrorModel))]
         [HandleInvalidModel]
         public async Task<IHttpActionResult> Post(
-            [FromUri]string deviceId, 
+            [FromUri]string deviceId,
             [FromBody]DeviceStateRequestModel requestedState)
         {
 
@@ -65,24 +83,18 @@ namespace StateManagementServiceWebAPI.Controllers
             try
             {
                 var deviceState = await StateProcessorClient.SetStateValueAsync(
-                    deviceId, 
-                    requestedState.AppMetadata.ToString(), 
-                    requestedState.Values.ToString(), 
+                    deviceId,
+                    requestedState.AppMetadata.ToString(),
+                    requestedState.Values.ToString(),
                     requestedState.TimeToLiveMilliSec);
-                
+
                 return Ok(new DeviceStateModel(deviceState));
             }
             catch (Exception e) // TODO - filter the exceptions that we catch, add logging, ...
             {
                 throw;
             }
-            
-        }
 
-        // TODO - move to helper class?
-        public IHttpActionResult NotFound<T>(T content)
-        {
-            return new NegotiatedContentResult<T>(HttpStatusCode.NotFound, content, this);
         }
     }
 }

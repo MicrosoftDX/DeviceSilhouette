@@ -18,12 +18,20 @@ using StateManagementServiceWebAPI.Helpers;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
+    /// <summary>
+    /// Get state information for a device
+    /// </summary>
     [RoutePrefix("v0.1/devices/{deviceId}/state")]
     public class DeviceStateController : ApiController
     {
         private IStateProcessorRemoting StateProcessorClient = ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"));
         private ICommunicationProviderRemoting CommunicationProviderServiceClient = ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"));
 
+        /// <summary>
+        /// Get the last state reported by the device
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <returns></returns>
         [Route("latest-reported")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
         public async Task<IHttpActionResult> GetLastReportedState([FromUri]string deviceId)
@@ -46,6 +54,11 @@ namespace StateManagementServiceWebAPI.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Get the last state reported by the device or requested by the client (but not negatively acknowledged, expired, ...)
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <returns></returns>
         [Route("latest-requested")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
         public async Task<IHttpActionResult> GetLastRequestedState([FromUri]string deviceId)

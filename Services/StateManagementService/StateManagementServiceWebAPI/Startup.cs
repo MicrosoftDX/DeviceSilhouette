@@ -19,7 +19,7 @@ namespace StateManagementServiceWebAPI
 
             config.EnableSwagger(c =>
             {
-                //c.IncludeXmlComments("docs.xml");
+                c.IncludeXmlComments(GetXmlCommentsPath());
                 c.SingleApiVersion("0.1", "StateManagementService");
             }).EnableSwaggerUi();
 
@@ -27,6 +27,12 @@ namespace StateManagementServiceWebAPI
             appBuilder.UseWebApi(config);
 
             config.EnsureInitialized();
+        }
+
+        private static string GetXmlCommentsPath()
+        {
+            return string.Format(@"{0}\XmlDocComments.xml",
+                System.AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

@@ -9,8 +9,18 @@ using System.Web.Http.Results;
 
 namespace StateManagementServiceWebAPI.Helpers
 {
+    /// <summary>
+    /// Extensions to ApiControllers for customising the returned Response
+    /// </summary>
     public static class ApiControllerResponseExtensions
     {
+        /// <summary>
+        /// Send a NotFound (404) with body content
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="controller"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         public static IHttpActionResult NotFound<T>(this ApiController controller, T content)
         {
             return new NegotiatedContentResult<T>(HttpStatusCode.NotFound, content, controller);

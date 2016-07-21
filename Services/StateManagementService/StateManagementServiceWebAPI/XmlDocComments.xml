@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StateManagementServiceWebAPI</name>
+    </assembly>
+    <members>
+        <member name="T:StateManagementServiceWebAPI.Controllers.DeviceCommandController">
+            <summary>
+            Get or manipulate commands for a device
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.InvokeDeepRead(System.String,System.Double)">
+            <summary>
+            Trigger a DeepGet.
+            NOTE: this endpoint is temporary and will likely change!
+            </summary>
+            <param name="deviceId"></param>
+            <param name="timeToLiveMilliSec"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.Post(System.String,StateManagementServiceWebAPI.Models.DeviceStateRequestModel)">
+            <summary>
+            Add a new command
+            NB Currently this only supports creating a state request command
+            </summary>
+            <param name="deviceId"></param>
+            <param name="requestedState"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Controllers.DeviceStateController">
+            <summary>
+            Get state information for a device
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.GetLastReportedState(System.String)">
+            <summary>
+            Get the last state reported by the device
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.GetLastRequestedState(System.String)">
+            <summary>
+            Get the last state reported by the device or requested by the client (but not negatively acknowledged, expired, ...)
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Filters.HandleInvalidModelAttribute">
+            <summary>
+            If model state is invalid, automatically return an ErrorModel
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Filters.HandleInvalidModelAttribute.OnActionExecuting(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            
+            </summary>
+            <param name="actionContext"></param>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Filters.HandleInvalidModelAttribute.StripInitialPrefix(System.String)">
+            <summary>
+            The key in the ModelState includes the variable name. E.g. "requestedState.Value" rather than "value"
+            This method strips it out so that the message makes more sense to the API consumer
+            This is a bit of a hack, but works for now
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Helpers.ApiControllerResponseExtensions">
+            <summary>
+            Extensions to ApiControllers for customising the returned Response
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Helpers.ApiControllerResponseExtensions.NotFound``1(System.Web.Http.ApiController,``0)">
+            <summary>
+            Send a NotFound (404) with body content
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="controller"></param>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.DeviceStateRequestModel">
+            <summary>
+            Data model used to capture the State Request command added through the API
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.#ctor">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.AppMetadata">
+            <summary>
+            The application specific metadata
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.Values">
+            <summary>
+            The device values (state) to set
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.TimeToLiveMilliSec">
+            <summary>
+            The time-to-live for the command message
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.DeviceStateModel">
+            <summary>
+            Represents the device state
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Models.DeviceStateModel.#ctor(DeviceRichState.DeviceState)">
+            <summary>
+            
+            </summary>
+            <param name="deviceState"></param>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.DeviceId">
+            <summary>
+            The ID of the device the state is for
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.Timestamp">
+            <summary>
+            The timestamp for the state
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.Version">
+            <summary>
+            The version/sequence number for the state
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.CorrelationId">
+            <summary>
+            The correlation ID that the state corresponds to
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.MessageType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.MessageStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.AppMetadata">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.DeviceValues">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.ErrorModel">
+            <summary>
+            Representation for errors in API responses
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.ErrorModel.Code">
+            <summary>
+            The identifier for the error
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.ErrorModel.Message">
+            <summary>
+            Non-localized error description
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.InvalidRequestErrorModel">
+            <summary>
+            Error model for ModelState validation errors
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.InvalidRequestErrorModel.ValidationMessages">
+            <summary>
+            The set of ModelState validation failures
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.ValidationMessage">
+            <summary>
+            Representation of a ModelState validation failure
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.ValidationMessage.PropertyName">
+            <summary>
+            The name of the request property that failed validation
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.ValidationMessage.Messages">
+            <summary>
+            The ModelState validation failure messages for the property 
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.ErrorCode">
+            <summary>
+            List of error codes
+            </summary>
+        </member>
+        <member name="F:StateManagementServiceWebAPI.Models.ErrorCode.InvalidDeviceId">
+            <summary>
+            The specified device id wasn't found
+            </summary>
+        </member>
+        <member name="F:StateManagementServiceWebAPI.Models.ErrorCode.InvalidRequest">
+            <summary>
+            The request body/parameters are not valid
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.ErrorMessage">
+            <summary>
+            List of error messages
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Models.ErrorMessage.InvalidDeviceId(System.String)">
+            <summary>
+            The specified device id wasn't found
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Models.ErrorMessage.InvalidRequest">
+            <summary>
+            The request body/parameters are not valid
+            </summary>>
+            <returns></returns>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.StateManagementServiceWebAPI">
+            <summary>
+            The FabricRuntime creates an instance of this class for each service type instance. 
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.StateManagementServiceWebAPI.CreateServiceInstanceListeners">
+            <summary>
+            Optional override to create listeners (like tcp, http) for this service instance.
+            </summary>
+            <returns>The collection of listeners.</returns>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Program.Main">
+            <summary>
+            This is the entry point of the service host process.
+            </summary>
+        </member>
+    </members>
+</doc>
