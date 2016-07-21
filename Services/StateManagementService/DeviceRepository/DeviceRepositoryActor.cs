@@ -26,16 +26,16 @@ namespace DeviceRepository
     internal class DeviceRepositoryActor : Actor, IDeviceRepositoryActor
     {
         private const string StateName = "silhouetteMessages";
-        private IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
-        private int _maxMessages;
-        private double _messagesRetention;
+        private readonly IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
+        private readonly MessagePurger _messagePurger;
+        private readonly double _messagesRetentionMilliseconds;
 
         private IActorTimer _purgeTimer;
 
-        public DeviceRepositoryActor(int maxMessages, double messagesRetention)
+        public DeviceRepositoryActor(int maxMessages, double messagesRetentionMilliseconds)
         {
-            _maxMessages = maxMessages;
-            _messagesRetention = messagesRetention;
+            _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
+            _messagePurger = new MessagePurger(messagesRetentionMilliseconds);
         }       
 
         private async Task PurgeStates(object arg)
@@ -44,16 +44,9 @@ namespace DeviceRepository
             if (stateMessages.HasValue)
             {                                              
                 var messages = stateMessages.Value;
-                var lastReprted = await GetLastKnownReportedState();
-                messages.RemoveAll(item => isPurge(item, lastReprted));
+                var indexOfLastPurgeableMessage = _messagePurger.GetIndexOfLastPurgeableMessage(messages);
+                messages.RemoveRange(0, indexOfLastPurgeableMessage + 1);
             }            
-        }
-
-        private bool isPurge(DeviceState item, DeviceState lastReported)
-        {
-            // check for messages older than the retention, that were persisted 
-            // make sure to keep the last Reported message in any case  
-            return !item.Equals(lastReported) && item.Persisted && item.Timestamp.CompareTo(DateTime.Now.ToUniversalTime().AddMilliseconds(-_messagesRetention)) < 0;            
         }
 
         public Task<string> GetDeviceStatus()

@@ -12,8 +12,7 @@
     <Parameter Name="Silhouette_IotHubConnectionString" DefaultValue="" />
     <Parameter Name="Silhouette_StorageConnectionString" DefaultValue="" />
     <Parameter Name="Persistent_StorageConnectionString" DefaultValue="" />
-    <Parameter Name="Repository_MaxMessages" DefaultValue="" />
-    <Parameter Name="Repository_MessagesRetention" DefaultValue="" />
+    <Parameter Name="Repository_MessagesRetentionMilliseconds" DefaultValue="" />
   </Parameters>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="StorageProviderServicePkg" ServiceManifestVersion="1.0.0" />
@@ -61,7 +60,7 @@
         <Settings>
           <Section Name="DeviceRepositorySettings">
             <Parameter Name="MaxMessages" Value="[Repository_MaxMessages]" />
-            <Parameter Name="MessagesRetention" Value="[Repository_MessagesRetention]" />
+            <Parameter Name="MessagesRetentionMilliseconds" Value="[Repository_MessagesRetentionMilliseconds]" />
           </Section>
         </Settings>
       </ConfigOverride>

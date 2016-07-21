@@ -8,7 +8,6 @@
     <Parameter Name="CredentialType" Value="None" />
   </Section>
   <Section Name="DeviceRepositorySettings">
-    <Parameter Name="MaxMessages" Value="" />
-    <Parameter Name="MessagesRetention" Value="" />
+    <Parameter Name="MessagesRetentionMilliseconds" Value="" />
   </Section>
 </Settings>

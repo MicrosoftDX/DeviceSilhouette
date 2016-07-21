@@ -61,7 +61,6 @@ The config for StateManagementService is driven by environment variables. The ea
 $env:Silhouette_IotHubConnectionString="HostName=yourhub.azure-devices.net;SharedAccessKeyName=hubowner;SharedAccessKey=JHMBDjasb12masbdk1289askbsd9SjfHkJSFjqwhfqq="
 $env:Silhouette_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
 $env:Persistent_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
-$env:Repository_MaxMessages=10
 $env:Repository_MessagesRetention=300000
 ```
 
@@ -79,12 +78,12 @@ If you are deploying from PowerShell then simply run the script before runnigng 
 
 #### Meanings of the settings
 
-| Name                               | Description |
-|------------------------------------|-------------|
-| Silhouette_IotHubConnectionString  | The connection string for the IoT Hub to use to communicate with devices |
-| Silhouette_StorageConnectionString | The connection string used to synchronise consuming messages across partitions of the IoT Hub |
-| Persistent_StorageConnectionString | The connection string to the storage account to write the blob history to |
-| Repository_MaxMessages             | ?? |
+| Name                                           | Description |
+|------------------------------------------------|-------------|
+| Silhouette_IotHubConnectionString              | The connection string for the IoT Hub to use to communicate with devices |
+| Silhouette_StorageConnectionString             | The connection string used to synchronise consuming messages across partitions of the IoT Hub |
+| Persistent_StorageConnectionString             | The connection string to the storage account to write the blob history to |
+| Repository_MessagesRetentionMilliseconds       | The minimum time period to retain state messages for in the actor (in milliseconds) |
 
 #### Rationale
 There are two approaches to configuration in .NET services on Service Fabric

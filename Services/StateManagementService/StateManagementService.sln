@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistencyProviders", "Sto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProviderService", "StorageProviderService\StorageProviderService.csproj", "{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceRepository.UnitTests", "DeviceRepository.UnitTests\DeviceRepository.UnitTests.csproj", "{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,6 +147,14 @@ Global
 		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Release|Any CPU.ActiveCfg = Release|x64
 		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Release|x64.ActiveCfg = Release|x64
 		{CDC75CB3-9E6D-409E-8FBC-20FB0CF459B5}.Release|x64.Build.0 = Release|x64
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
