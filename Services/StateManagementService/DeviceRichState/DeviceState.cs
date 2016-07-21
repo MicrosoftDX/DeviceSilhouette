@@ -21,6 +21,7 @@ namespace DeviceRichState
         private DateTime _timestamp;
         [DataMember]
         private MessageType _messageType;
+        private bool _persist = false;
 
         /// <summary>
         /// Can only be set at DeviceState instantiation
@@ -55,12 +56,14 @@ namespace DeviceRichState
         [DataMember]
         public string AppMetadata { get; set; }
 
+        public bool Persisted { get { return _persist; } set { _persist = value; } }
+
         /// <summary>
         /// Part of the state message that contains device metrics
         /// </summary>
         [DataMember]
         public string Values { get; set; }
-
+        
         public DeviceState()
         {
             // empty constructor for serialization
@@ -101,6 +104,11 @@ namespace DeviceRichState
 
             AppMetadata = metadata;
             Values = values;
+        }
+
+        public void persist()
+        {
+            _persist = true;
         }
     }
 

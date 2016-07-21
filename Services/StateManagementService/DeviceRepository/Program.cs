@@ -23,7 +23,7 @@ namespace DeviceRepository
                 // For more information, see http://aka.ms/servicefabricactorsplatform
 
                 ActorRuntime.RegisterActorAsync<DeviceRepositoryActor>(
-                   (context, actorType) => new ActorService(context, actorType, () => new DeviceRepositoryActor(getParameters(context)))).GetAwaiter().GetResult();
+                   (context, actorType) => new ActorService(context, actorType, () => createDeviceRepositoryActor(context))).GetAwaiter().GetResult();
 
                 Thread.Sleep(Timeout.Infinite);
             }
@@ -34,10 +34,13 @@ namespace DeviceRepository
             }
         }
 
-        private static int getParameters(StatefulServiceContext context)
+        private static DeviceRepositoryActor createDeviceRepositoryActor(StatefulServiceContext context)
         {
             var configurationSection = context.GetConfigurationSection("DeviceRepositorySettings");
-            return Int32.Parse(configurationSection["MaxMessages"]);
-        }
+            int maxMessages = Int32.Parse(configurationSection["MaxMessages"]);
+            double retention = Double.Parse(configurationSection["MessagesRetention"]);
+
+            return new DeviceRepositoryActor(maxMessages, retention);
+        }        
     }
 }
