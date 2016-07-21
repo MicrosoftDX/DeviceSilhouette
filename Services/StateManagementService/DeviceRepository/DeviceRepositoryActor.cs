@@ -32,7 +32,7 @@ namespace DeviceRepository
 
         private IActorTimer _purgeTimer;
 
-        public DeviceRepositoryActor(int maxMessages, double messagesRetentionMilliseconds)
+        public DeviceRepositoryActor(double messagesRetentionMilliseconds)
         {
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
             _messagePurger = new MessagePurger(messagesRetentionMilliseconds);

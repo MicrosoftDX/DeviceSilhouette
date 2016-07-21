@@ -59,7 +59,6 @@
       <ConfigOverride Name="Config">
         <Settings>
           <Section Name="DeviceRepositorySettings">
-            <Parameter Name="MaxMessages" Value="[Repository_MaxMessages]" />
             <Parameter Name="MessagesRetentionMilliseconds" Value="[Repository_MessagesRetentionMilliseconds]" />
           </Section>
         </Settings>

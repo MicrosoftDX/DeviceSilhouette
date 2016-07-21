@@ -36,10 +36,9 @@ namespace DeviceRepository
         private static ActorService CreateActorService(StatefulServiceContext context, ActorTypeInformation actorType)
         {
             var configurationSection = context.GetConfigurationSection("DeviceRepositorySettings");
-            int maxMessages = Int32.Parse(configurationSection["MaxMessages"]);
             double retention = Double.Parse(configurationSection["MessagesRetention"]);
 
-            return new ActorService(context, actorType, () => new DeviceRepositoryActor(maxMessages, retention));
+            return new ActorService(context, actorType, () => new DeviceRepositoryActor(retention));
         }
     }
 }
