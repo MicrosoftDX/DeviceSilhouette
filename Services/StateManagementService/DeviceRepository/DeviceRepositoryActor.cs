@@ -44,7 +44,7 @@ namespace DeviceRepository
             if (stateMessages.HasValue)
             {                                              
                 var messages = stateMessages.Value;
-                var lastReprted = GetLastKnownReportedState().Result;
+                var lastReprted = await GetLastKnownReportedState();
                 messages.RemoveAll(item => isPurge(item, lastReprted));
             }            
         }
