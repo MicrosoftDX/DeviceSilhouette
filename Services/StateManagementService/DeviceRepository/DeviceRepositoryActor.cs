@@ -38,7 +38,7 @@ namespace DeviceRepository
             _messagesRetention = messagesRetention;
         }       
 
-        private async Task purgeStates(object arg)
+        private async Task PurgeStates(object arg)
         {           
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
             if (stateMessages.HasValue)
@@ -51,7 +51,7 @@ namespace DeviceRepository
 
         private bool isPurge(DeviceState item, DeviceState lastReported)
         {
-            // check for messages older than the retention, that were persistet 
+            // check for messages older than the retention, that were persisted 
             // make sure to keep the last Reported message in any case  
             return !item.Equals(lastReported) && item.Persisted && item.Timestamp.CompareTo(DateTime.Now.ToUniversalTime().AddMilliseconds(-_messagesRetention)) < 0;            
         }
@@ -131,7 +131,7 @@ namespace DeviceRepository
                     state.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
 
                 // persist the message
-                await persistMessage(state);
+                await PersistMessage(state);
                 await AddDeviceMessageAsync(state);
 
                 await StateManager.SetStateAsync("silhouetteMessage", state);
@@ -145,7 +145,7 @@ namespace DeviceRepository
 
         }
 
-        private async Task persistMessage(DeviceState state)
+        private async Task PersistMessage(DeviceState state)
         {
             if (!state.Persisted)
             {
@@ -170,7 +170,7 @@ namespace DeviceRepository
         protected override async Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
-            _purgeTimer = RegisterTimer(purgeStates, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+            _purgeTimer = RegisterTimer(PurgeStates, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
         }
 
         protected override async Task OnDeactivateAsync()
