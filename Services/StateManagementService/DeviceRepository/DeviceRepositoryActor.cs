@@ -150,7 +150,7 @@ namespace DeviceRepository
             if (!state.Persisted)
             {
                 await StorageProviderServiceClient.StoreStateMessageAsync(state);
-                state.persist();
+                state.Persisted = true;
             }
         }
 

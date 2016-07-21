@@ -56,7 +56,7 @@ namespace DeviceRichState
         [DataMember]
         public string AppMetadata { get; set; }
 
-        public bool Persisted { get { return _persist; } set { _persist = value; } }
+        public bool Persisted { get; set; }
 
         /// <summary>
         /// Part of the state message that contains device metrics
@@ -104,11 +104,6 @@ namespace DeviceRichState
 
             AppMetadata = metadata;
             Values = values;
-        }
-
-        public void persist()
-        {
-            _persist = true;
         }
     }
 
