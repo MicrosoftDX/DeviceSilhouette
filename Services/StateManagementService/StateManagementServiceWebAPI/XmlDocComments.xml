@@ -161,6 +161,21 @@
             
             </summary>
         </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.DeviceId">
+            <summary>
+            The device ID for the message
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.TimeStamp">
+            <summary>
+            The timestamp for when the message was enqueued
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.Version">
+            <summary>
+            The version number for the message. This is a unique identifier for the message within a device id
+            </summary>
+        </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel">
             <summary>
             

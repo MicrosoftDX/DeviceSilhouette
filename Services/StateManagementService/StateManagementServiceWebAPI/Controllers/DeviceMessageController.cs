@@ -59,7 +59,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <param name="deviceId"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        [Route("{version:int}", Name ="GetMessages")]
+        [Route("{version:int}")]
         public async Task<IHttpActionResult> GetMessage(string deviceId, int version)
         {
             IHttpActionResult result;

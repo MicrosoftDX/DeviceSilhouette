@@ -24,7 +24,15 @@ namespace Silhouette.ServiceFabricUtilities
         private string GetValueAndDecryptIfRequired(string key)
         {
             // TODO error handling
-            var parameter = _section.Parameters[key];
+            ConfigurationProperty parameter;
+            try
+            {
+                parameter = _section.Parameters[key];
+            }
+            catch(KeyNotFoundException knfe)
+            {
+                throw new ArgumentException($"Configuration value '{key}' not found");
+            }
             if (parameter.IsEncrypted)
             {
                 var secureValue = parameter.DecryptValue();
