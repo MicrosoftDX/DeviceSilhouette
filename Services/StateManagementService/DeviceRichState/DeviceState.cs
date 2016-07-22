@@ -18,7 +18,7 @@ namespace DeviceRichState
         [DataMember]
         private string _correlationId;
         [DataMember]
-        private DateTime _timestamp;
+        internal DateTime _timestamp;
         [DataMember]
         private MessageType _messageType;
 
@@ -82,7 +82,7 @@ namespace DeviceRichState
             // To make these values immutable they are set through private field and get through public property
             // It is not possible to make the setter readonly because of [DataMember]
             _deviceId = deviceId;
-            _timestamp = DateTime.UtcNow;
+            _timestamp = SystemTime.UtcNow();
             _messageType = messageType;
 
             if (messageStatus == MessageStatus.Unknown)

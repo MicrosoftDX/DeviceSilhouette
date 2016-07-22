@@ -40,6 +40,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProviderService", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceRepository.UnitTests", "DeviceRepository.UnitTests\DeviceRepository.UnitTests.csproj", "{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AE3F9CA-F838-4595-9D27-42D12FECD350}"
+	ProjectSection(SolutionItems) = preProject
+		local-64bit.testsettings = local-64bit.testsettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
