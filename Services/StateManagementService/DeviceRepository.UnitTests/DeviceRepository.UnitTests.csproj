@@ -71,8 +71,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DeviceStateTests.cs" />
-    <Compile Include="MessagePurgerTests.cs" />
+    <Compile Include="DeviceState_SerializationTests.cs" />
+    <Compile Include="MessagePurgerTests_GetIndexOfLastPurgeableMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

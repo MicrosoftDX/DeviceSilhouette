@@ -87,6 +87,27 @@ namespace DeviceRepository.Tests
             ExpectLastPurgeIndexToBe(0);
         }
 
+
+        [TestMethod()]
+        public void WhenAnEarlierMessageIsNotPersisted_ThenLaterMessagesAreNotPurged()
+        {
+            var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
+
+            WithSystemTimeUtc(baseDateTime);
+            WithMessageRetentionOf(10 * Minutes);
+            var messages = new List<DeviceState>
+            {
+                // All messages are outside the retention window, but the initial message isn't persisted so can't be purged
+                // There is a constraint that for any message retained, later messages must be retained
+                // So none are purgeable in this scenario
+                /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-20), persisted:false), 
+                /* index 1 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-19), persisted:true), // would be purgeable, but the earlier message isn't persisted
+                /* index 2 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-16), persisted:true), // last state report => not purgeable
+            };
+            WithMessages(messages);
+            ExpectLastPurgeIndexToBe(-1);
+        }
+
         #region helpers
         private int _messageRetentionInMilliseconds;
         private List<DeviceState> _messages;
