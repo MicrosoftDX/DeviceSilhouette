@@ -15,22 +15,26 @@ using StateManagementServiceWebAPI.Models;
 using System.Web.Http.Results;
 using StateManagementServiceWebAPI.Filters;
 using StateManagementServiceWebAPI.Helpers;
+using StateManagementServiceWebAPI.Models.DeviceMessage;
+using System.Linq;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
     /// <summary>
-    /// Get state information for a device
+    /// Get or manipulate commands for a device
     /// </summary>
-    [RoutePrefix("v0.1/devices/{deviceId}/state")]
-    public class DeviceStateController : ApiController
+    [RoutePrefix("v0.1/devices/{deviceId}/messages")]
+    public class DeviceMessageController : ApiController
     {
         private readonly IStateProcessorRemoting _stateProcessor;
         private readonly ICommunicationProviderRemoting _communicationProvider;
 
+        private const int MessageResultPageSize = 10;
+
         /// <summary>
         /// Lazy DI constructor ;-)
         /// </summary>
-        public DeviceStateController()
+        public DeviceMessageController()
             : this (
                   stateProcessor:ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
                   communicationProvider: ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"))
@@ -43,27 +47,33 @@ namespace StateManagementServiceWebAPI.Controllers
         /// </summary>
         /// <param name="stateProcessor"></param>
         /// <param name="communicationProvider"></param>
-        public DeviceStateController(IStateProcessorRemoting stateProcessor, ICommunicationProviderRemoting communicationProvider)
+        public DeviceMessageController(IStateProcessorRemoting stateProcessor, ICommunicationProviderRemoting communicationProvider)
         {
             _stateProcessor = stateProcessor;
             _communicationProvider = communicationProvider;
         }
 
         /// <summary>
-        /// Get the last state reported by the device
+        /// Get a specific message by device id and version
         /// </summary>
         /// <param name="deviceId"></param>
+        /// <param name="version"></param>
         /// <returns></returns>
-        [Route("latest-reported")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateModel))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
-        public async Task<IHttpActionResult> GetLastReportedState([FromUri]string deviceId)
+        [Route("{version:int}", Name ="GetMessages")]
+        public async Task<IHttpActionResult> GetMessage(string deviceId, int version)
         {
             IHttpActionResult result;
             try
             {
-                var state = await _stateProcessor.GetLastReportedStateAsync(deviceId);
-                result = Ok(new DeviceStateModel(state));
+                var message = await _stateProcessor.GetMessageAsync(deviceId, version);
+                if (message == null)
+                {
+                    result = NotFound();
+                }
+                else
+                {
+                    result = Ok(ToMessageModel(message));
+                }
             }
             catch (Exception e)
             {
@@ -78,20 +88,26 @@ namespace StateManagementServiceWebAPI.Controllers
         }
 
         /// <summary>
-        /// Get the last state reported by the device or requested by the client (but not negatively acknowledged, expired, ...)
+        /// Get the last state reported by the device
         /// </summary>
         /// <param name="deviceId"></param>
+        /// param name="continuationToken"></param>
         /// <returns></returns>
-        [Route("latest-requested")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateModel))]
+        [Route("", Name ="GetMessages")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MessageListModel))]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
-        public async Task<IHttpActionResult> GetLastRequestedState([FromUri]string deviceId)
+        public async Task<IHttpActionResult> GetMessages(string deviceId, [FromUri]int? continuationToken)
         {
             IHttpActionResult result;
             try
             {
-                var state = await _stateProcessor.GetLastRequestedStateAsync(deviceId);
-                result = Ok(new DeviceStateModel(state));
+                var messages = await _stateProcessor.GetMessagesAsync(deviceId, MessageResultPageSize, continuationToken);
+                var resultModel = new MessageListModel
+                {
+                    Values = messages.Messages.Select(ToMessageModel),
+                    NextLink =  Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
+                };
+                result = Ok(resultModel);
             }
             catch (Exception e)
             {
@@ -103,6 +119,17 @@ namespace StateManagementServiceWebAPI.Controllers
                 });
             }
             return result;
+        }
+
+        private static MessageModel ToMessageModel(DeviceState message)
+        {
+            return new MessageModel
+            {
+                DeviceId = message.DeviceId,
+                Version = message.Version,
+                TimeStamp = message.Timestamp,
+                // TODO - complete this list based on https://github.com/dx-ted-emea/pudding/wiki/7.3-Web-API#get-messagesmessageid-response
+            };
         }
     }
 }

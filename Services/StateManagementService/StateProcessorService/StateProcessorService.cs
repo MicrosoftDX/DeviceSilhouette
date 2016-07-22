@@ -24,6 +24,21 @@ namespace StateProcessorService
         Task<DeviceState> GetLastRequestedStateAsync(string deviceId);
         Task<DeviceState> GetLastReportedStateAsync(string deviceId);
         Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, double timeToLive);
+        /// <summary>
+        /// Get specific message by device id and message version
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        Task<DeviceState> GetMessageAsync(string deviceId, int version);
+        /// <summary>
+        /// Get Paged messages
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="continuation"></param>
+        /// <returns></returns>
+        Task<MessageList> GetMessagesAsync(string deviceId, int pageSize, int? continuation);
     }
 
     /// <summary>
@@ -84,7 +99,7 @@ namespace StateProcessorService
             //TODO: error handling
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            var newState = await silhouette.GetLastKnownRequestedState();
+            var newState = await silhouette.GetLastKnownRequestedStateAsync();
             return newState;
         }
 
@@ -94,8 +109,22 @@ namespace StateProcessorService
             //TODO: error handling
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            var newState = await silhouette.GetLastKnownReportedState();
+            var newState = await silhouette.GetLastKnownReportedStateAsync();
             return newState;
+        }
+
+        public async Task<DeviceState> GetMessageAsync(string deviceId, int version)
+        {
+            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
+            return await silhouette.GetMessageByVersionAsync(version);
+        }
+
+        public async Task<MessageList> GetMessagesAsync(string deviceId, int pageSize, int? continuation)
+        {
+            //TODO: error handling
+            //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
+            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
+            return await silhouette.GetMessagesAsync(pageSize, continuation);
         }
 
 
@@ -125,6 +154,6 @@ namespace StateProcessorService
             ActorId actorId = new ActorId(deviceId);
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoryUri);
             return silhouette;
-        }        
+        }
     }
 }

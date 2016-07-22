@@ -11,6 +11,7 @@ using DeviceRichState;
 using Microsoft.ServiceFabric.Data;
 using StorageProviderService;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
+using CommonUtils;
 
 namespace DeviceRepository
 {
@@ -36,17 +37,17 @@ namespace DeviceRepository
         {
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
             _messagePurger = new MessagePurger(messagesRetentionMilliseconds);
-        }       
+        }
 
         private async Task PurgeStates(object arg)
-        {           
+        {
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
             if (stateMessages.HasValue)
-            {                                              
+            {
                 var messages = stateMessages.Value;
                 var indexOfLastPurgeableMessage = _messagePurger.GetIndexOfLastPurgeableMessage(messages);
                 messages.RemoveRange(0, indexOfLastPurgeableMessage + 1);
-            }            
+            }
         }
 
         public Task<string> GetDeviceStatus()
@@ -64,35 +65,37 @@ namespace DeviceRepository
             return Task.FromResult(true);
         }
 
-        public async Task<DeviceState> GetLastKnownReportedState()
+        public async Task<DeviceState> GetLastKnownReportedStateAsync()
         {
             DeviceState state = null;
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
             if (stateMessages != null)
             {
-                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == MessageType.Reported);
-                if (orderedMessages != null)
-                    state = orderedMessages.First();
+                state = stateMessages.OrderByDescending(m => m.Timestamp)
+                                                    .Where(m => m.MessageType == MessageType.Reported)
+                                                    .FirstOrDefault();
             }
 
             return state;
         }
 
-        public async Task<DeviceState> GetLastKnownRequestedState()
+        public async Task<DeviceState> GetLastKnownRequestedStateAsync()
         {
             DeviceState state = null;
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
             if (stateMessages != null)
             {
-                var orderedMessages = stateMessages.OrderByDescending(m => m.Timestamp).Where(m => m.MessageType == MessageType.Requested && m.MessageStatus == MessageStatus.New);
-                if (orderedMessages != null)
-                    state = orderedMessages.First();
+                state = stateMessages.OrderByDescending(m => m.Timestamp)
+                                        .Where(m => m.MessageType == MessageType.Requested && m.MessageStatus == MessageStatus.New)
+                                        .FirstOrDefault();
             }
 
             return state;
         }
+
+
 
         public async Task<DeviceState> GetDeviceStateAsync()
         {
@@ -111,6 +114,43 @@ namespace DeviceRepository
                 return stateMessages.Value;
             else
                 return null;
+        }
+
+        public async Task<DeviceState> GetMessageByVersionAsync(int version)
+        {
+            var messages = await GetDeviceStateMessagesAsync();
+            if (messages == null)
+            {
+                return null;
+            }
+            return messages.FirstOrDefault(m => m.Version == version);
+
+        }
+        public async Task<MessageList> GetMessagesAsync(int pageSize, int? continuation)
+        {
+            var messages = await GetDeviceStateMessagesAsync();
+            if (messages == null)
+            {
+                return null;
+            }
+            var messagesToReturn = messages
+                                    .OrderBy(m => m.Timestamp)
+                                    .SkipUntil(m => m.Version == continuation || continuation == null)
+                                    .Take(pageSize + 1) // take one extra to get the next continuation token!
+                                    .ToList();
+
+            int? newContinuation = null;
+            if (messagesToReturn.Count > pageSize)
+            {
+                newContinuation = messagesToReturn[pageSize].Version; // set next continuation value to be the Version of the next item in the list
+                messagesToReturn.RemoveAt(pageSize);
+            }
+            return new MessageList
+            {
+                Messages = messagesToReturn,
+                Continuation = newContinuation
+            };
+
         }
 
         public async Task<DeviceState> SetDeviceStateAsync(DeviceState state)
@@ -156,7 +196,7 @@ namespace DeviceRepository
 
             messages.Add(state);
             await StateManager.SetStateAsync(StateName, messages);
-        }        
+        }
 
         /// <summary>
         /// This method is called whenever an actor is activated.
@@ -175,6 +215,7 @@ namespace DeviceRepository
                 UnregisterTimer(_purgeTimer);
             }
         }
+
 
     }
 }

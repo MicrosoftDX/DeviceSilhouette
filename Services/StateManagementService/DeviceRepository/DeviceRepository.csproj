@@ -91,6 +91,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonUtils\CommonUtils.csproj">
+      <Project>{b7313376-b9c8-46f4-a2d1-ca4a8313c861}</Project>
+      <Name>CommonUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeviceRepository.Interfaces\DeviceRepository.Interfaces.csproj">
       <Project>{DFD18739-57CE-4786-8F69-EAE4765BE373}</Project>
       <Name>DeviceRepository.Interfaces</Name>

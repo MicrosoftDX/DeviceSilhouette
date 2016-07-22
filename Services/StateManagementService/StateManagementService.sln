@@ -45,6 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		local-64bit.testsettings = local-64bit.testsettings
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonUtils", "CommonUtils\CommonUtils.csproj", "{B7313376-B9C8-46F4-A2D1-CA4A8313C861}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -160,6 +162,14 @@ Global
 		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Release|x64.ActiveCfg = Release|Any CPU
 		{EC0AA5D6-BF33-4BAE-8420-EB2437117A33}.Release|x64.Build.0 = Release|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Debug|x64.Build.0 = Debug|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Release|x64.ActiveCfg = Release|Any CPU
+		{B7313376-B9C8-46F4-A2D1-CA4A8313C861}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,8 +14,8 @@ namespace DeviceRepository.Interfaces
     /// </summary>
     public interface IDeviceRepositoryActor : IActor
     {
-        Task<DeviceState> GetLastKnownReportedState();
-        Task<DeviceState> GetLastKnownRequestedState();
+        Task<DeviceState> GetLastKnownReportedStateAsync();
+        Task<DeviceState> GetLastKnownRequestedStateAsync();
 
         /// <summary>
         /// This method reads the most recent state message from the Silhouette
@@ -35,5 +35,30 @@ namespace DeviceRepository.Interfaces
         /// </summary>
         /// <returns>List of DeviceState objects</returns>
         Task<List<DeviceState>> GetDeviceStateMessagesAsync();
+        /// <summary>
+        /// Get a specific message by version number
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        Task<DeviceState> GetMessageByVersionAsync(int version);
+        /// <summary>
+        /// Get a paged set of messages from the actor
+        /// </summary>
+        /// <param name="pageSize">The maximum number of messages to return</param>
+        /// <param name="continuation">A token that indicates the next message to start at</param>
+        /// <returns></returns>
+        Task<MessageList> GetMessagesAsync(int pageSize, int? continuation);
+    }
+
+    public class MessageList
+    {
+        /// <summary>
+        /// The set of messages
+        /// </summary>
+        public List<DeviceState> Messages { get; set; }
+        /// <summary>
+        /// The continuation token to pass to retrieve the next set of messages
+        /// </summary>
+        public int? Continuation { get; set; }
     }
 }

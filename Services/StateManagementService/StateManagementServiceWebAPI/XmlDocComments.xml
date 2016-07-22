@@ -4,15 +4,54 @@
         <name>StateManagementServiceWebAPI</name>
     </assembly>
     <members>
+        <member name="T:StateManagementServiceWebAPI.Controllers.DeviceMessageController">
+            <summary>
+            Get or manipulate commands for a device
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.#ctor">
+            <summary>
+            Lazy DI constructor ;-)
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.#ctor(StateProcessorService.IStateProcessorRemoting,CommunicationProviderService.ICommunicationProviderRemoting)">
+            <summary>
+            
+            </summary>
+            <param name="stateProcessor"></param>
+            <param name="communicationProvider"></param>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.GetMessage(System.String,System.Int32)">
+            <summary>
+            Get a specific message by device id and version
+            </summary>
+            <param name="deviceId"></param>
+            <param name="version"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.GetMessages(System.String,System.Nullable{System.Int32})" -->
         <member name="T:StateManagementServiceWebAPI.Controllers.DeviceCommandController">
             <summary>
             Get or manipulate commands for a device
             </summary>
         </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.#ctor">
+            <summary>
+            Lazy DI constructor ;-)
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.#ctor(StateProcessorService.IStateProcessorRemoting,CommunicationProviderService.ICommunicationProviderRemoting)">
+            <summary>
+            
+            </summary>
+            <param name="stateProcessor"></param>
+            <param name="communicationProvider"></param>
+        </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.InvokeDeepRead(System.String,System.Double)">
             <summary>
-            Trigger a DeepGet.
+            Trigger a DeepGet (i.e. invoke getting the current state from the device
             NOTE: this endpoint is temporary and will likely change!
+            
             </summary>
             <param name="deviceId"></param>
             <param name="timeToLiveMilliSec"></param>
@@ -31,6 +70,18 @@
             <summary>
             Get state information for a device
             </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.#ctor">
+            <summary>
+            Lazy DI constructor ;-)
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.#ctor(StateProcessorService.IStateProcessorRemoting,CommunicationProviderService.ICommunicationProviderRemoting)">
+            <summary>
+            
+            </summary>
+            <param name="stateProcessor"></param>
+            <param name="communicationProvider"></param>
         </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.GetLastReportedState(System.String)">
             <summary>
@@ -103,6 +154,26 @@
         <member name="P:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.TimeToLiveMilliSec">
             <summary>
             The time-to-live for the command message
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel.Values">
+            <summary>
+            The messages in the current page
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel.NextLink">
+            <summary>
+            The link to use to get the next page of messages
             </summary>
         </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceStateModel">
