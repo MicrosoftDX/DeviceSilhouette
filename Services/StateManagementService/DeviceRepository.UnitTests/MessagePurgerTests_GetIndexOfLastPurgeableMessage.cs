@@ -108,6 +108,46 @@ namespace DeviceRepository.Tests
             ExpectLastPurgeIndexToBe(-1);
         }
 
+        [TestMethod()]
+        public void WhenACommandMessageHasNoResponse_ThenTheCommandMessageIsNotPurged()
+        {
+            var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
+
+            WithSystemTimeUtc(baseDateTime);
+            WithMessageRetentionOf(10 * Minutes);
+            var messages = new List<DeviceState>
+            {
+                // Whilst the command is persisted and outside the retention window, it doesn't have a response so cannot be purged
+                /* index 0 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), // safe to purge
+                /* index 1 */ Command       (baseDateTime + TimeSpan.FromMinutes(-19), persisted:true, correlationId: "correlation1"),
+                /* index 2 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-16), persisted:true), 
+                /* index 3 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-11), persisted:true),                 
+            };
+            WithMessages(messages);
+            ExpectLastPurgeIndexToBe(0);
+        }
+
+
+        [TestMethod()]
+        public void WhenAMessageIsNotPurged_ThenOtherMessagesWithTheSameCorrelationIdAreNotPurged()
+        {
+            var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
+
+            WithSystemTimeUtc(baseDateTime);
+            WithMessageRetentionOf(10 * Minutes);
+            var messages = new List<DeviceState>
+            {
+                // Whilst the command is persisted and outside the retention window, 
+                // it has a response that is in the retention window so can't be purged
+                /* index 0 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), // safe to purge
+                /* index 1 */ Command       (baseDateTime + TimeSpan.FromMinutes(-19), persisted:true, correlationId: "correlation1"),
+                /* index 2 */ Response      (baseDateTime + TimeSpan.FromMinutes(-9), persisted:true, correlationId: "correlation1"), 
+                /* index 3 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-8), persisted:true),
+            };
+            WithMessages(messages);
+            ExpectLastPurgeIndexToBe(0);
+        }
+
         #region helpers
         private int _messageRetentionInMilliseconds;
         private List<DeviceState> _messages;
@@ -131,7 +171,39 @@ namespace DeviceRepository.Tests
             };
             return message;
         }
-
+        private DeviceState Command(DateTime timestamp, bool persisted, string correlationId)
+        {
+            var message = new DeviceState(
+                DeviceId,
+                "{}",
+                "{}",
+                MessageType.Requested,
+                MessageStatus.Enqueued,
+                correlationId
+                )
+            {
+                Persisted = persisted,
+                _timestamp = timestamp
+            };
+            return message;
+        }
+        private DeviceState Response(DateTime timestamp, bool persisted, string correlationId)
+        {
+            var message = new DeviceState(
+                DeviceId,
+                "{}",
+                "{}",
+#warning Need to sort out identifying a response message! Wait on implementation of Rachel's State notes
+                MessageType.Requested,
+                MessageStatus.Acknowledged,
+                correlationId
+                )
+            {
+                Persisted = persisted,
+                _timestamp = timestamp
+            };
+            return message;
+        }
         private void WithSystemTimeUtc(DateTime systemDateTime)
         {
             SystemTime.UtcNow = () => systemDateTime;
