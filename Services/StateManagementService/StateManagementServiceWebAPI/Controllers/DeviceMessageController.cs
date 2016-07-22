@@ -96,7 +96,7 @@ namespace StateManagementServiceWebAPI.Controllers
         [Route("", Name ="GetMessages")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MessageListModel))]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
-        public async Task<IHttpActionResult> GetMessages(string deviceId, [FromUri]int? continuationToken)
+        public async Task<IHttpActionResult> GetMessages(string deviceId, [FromUri]int? continuationToken=null)
         {
             IHttpActionResult result;
             try
