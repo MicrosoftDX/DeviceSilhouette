@@ -41,37 +41,37 @@ namespace DeviceRichState.Tests
         }
 
         [TestMethod()]
-        public void AppMetadataMatches()
+        public void WhenDeserializingDeviceState_AppMetadataMatches()
         {
             Assert.AreEqual(OriginalMessage.AppMetadata, DeserializedMessage.AppMetadata);
         }
         [TestMethod()]
-        public void CorrelationIdMatches()
+        public void WhenDeserializingDeviceState_CorrelationIdMatches()
         {
             Assert.AreEqual(OriginalMessage.CorrelationId, DeserializedMessage.CorrelationId);
         }
         [TestMethod()]
-        public void DeviceIdMatches()
+        public void WhenDeserializingDeviceState_DeviceIdMatches()
         {
             Assert.AreEqual(OriginalMessage.DeviceId, DeserializedMessage.DeviceId);
         }
         [TestMethod()]
-        public void MessageStatusMatches()
+        public void WhenDeserializingDeviceState_MessageStatusMatches()
         {
             Assert.AreEqual(OriginalMessage.MessageStatus, DeserializedMessage.MessageStatus);
         }
                 [TestMethod()]
-        public void MessageTypeMatches()
+        public void WhenDeserializingDeviceState_MessageTypeMatches()
         {
             Assert.AreEqual(OriginalMessage.MessageType, DeserializedMessage.MessageType);
         }
         [TestMethod()]
-        public void PersistedMatches()
+        public void WhenDeserializingDeviceState_PersistedMatches()
         {
             Assert.AreEqual(OriginalMessage.Persisted, DeserializedMessage.Persisted);
         }
         [TestMethod()]
-        public void ValuesMatches()
+        public void WhenDeserializingDeviceState_ValuesMatches()
         {
             Assert.AreEqual(OriginalMessage.Values, DeserializedMessage.Values);
         }
