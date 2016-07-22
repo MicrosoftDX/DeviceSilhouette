@@ -98,7 +98,16 @@ namespace DotNetClient
         {
             var stateBuf = Encoding.UTF8.GetBytes(state);
 
-            var message = new Microsoft.Azure.Devices.Client.Message(stateBuf);
+            var message = new Microsoft.Azure.Devices.Client.Message(stateBuf)
+            {
+                Properties =
+                {
+                    {"DeviceId" , _deviceId}, // is this needed - does the SDK not include it based on our auth?
+                    //{ "Timestamp" , DateTime.MinValue}, // TODO - shouldn't set this here
+                    { "Status", "Reported" }
+                },
+                //CorrelationId = "asdas" // TODO - use this when responding to messages!
+            };
             await _deviceClient.SendEventAsync(message);
         }
 
