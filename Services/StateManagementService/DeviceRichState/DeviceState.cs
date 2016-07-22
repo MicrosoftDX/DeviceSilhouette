@@ -12,6 +12,7 @@ namespace DeviceRichState
     [DataContract]
     public class DeviceState
     {
+        // NOTE - when adding new properties, also add the related tests in DeviceState_SerializationTests
 
         [DataMember]
         private string _deviceId;

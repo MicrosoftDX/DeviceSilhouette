@@ -80,8 +80,8 @@ namespace DeviceRepository.Tests
             {
                 // Index 0 is before the retention window, is persisted, and has later StateReport => can be purged
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), 
-                /* index 1 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-9), persisted:true),
-                /* index 2 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-6), persisted:true),
+                /* index 1 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-9), persisted:true), // in retention window
+                /* index 2 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-6), persisted:true), // in retention window
             };
             WithMessages(messages);
             ExpectLastPurgeIndexToBe(0);
