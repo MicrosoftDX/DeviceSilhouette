@@ -23,8 +23,8 @@ namespace DeviceRichState.Tests
                 "deviceIdWibble",
                 "{\"metadataValue\":123}",
                 "{\"state\":123}",
-                MessageType.Reported,
-                MessageStatus.DeliveryCountExceeded,
+                MessageType.Report,
+                MessageSubType.ExceededRetryCount,
                 "ACorrelationId")
             {
                 _timestamp = DateTime.UtcNow.AddDays(-123)
@@ -58,7 +58,7 @@ namespace DeviceRichState.Tests
         [TestMethod()]
         public void WhenDeserializingDeviceState_MessageStatusMatches()
         {
-            Assert.AreEqual(OriginalMessage.MessageStatus, DeserializedMessage.MessageStatus);
+            Assert.AreEqual(OriginalMessage.MessageSubType, DeserializedMessage.MessageSubType);
         }
                 [TestMethod()]
         public void WhenDeserializingDeviceState_MessageTypeMatches()

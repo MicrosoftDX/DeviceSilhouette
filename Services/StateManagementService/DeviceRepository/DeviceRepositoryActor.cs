@@ -26,7 +26,8 @@ namespace DeviceRepository
     [StatePersistence(StatePersistence.Persisted)]
     internal class DeviceRepositoryActor : Actor, IDeviceRepositoryActor
     {
-        private const string StateName = "silhouetteMessages";
+        //private const string StateName = "silhouetteMessages";
+        private const string StateName = "silhouetteMessage";
         private readonly IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
         private readonly MessagePurger _messagePurger;
         private readonly double _messagesRetentionMilliseconds;
@@ -73,7 +74,7 @@ namespace DeviceRepository
             if (stateMessages != null)
             {
                 state = stateMessages.OrderByDescending(m => m.Timestamp)
-                                                    .Where(m => m.MessageType == MessageType.Reported)
+                                                    .Where(m => m.MessageType == MessageType.Report)
                                                     .FirstOrDefault();
             }
 
@@ -88,7 +89,7 @@ namespace DeviceRepository
             if (stateMessages != null)
             {
                 state = stateMessages.OrderByDescending(m => m.Timestamp)
-                                        .Where(m => m.MessageType == MessageType.Requested && m.MessageStatus == MessageStatus.New)
+                                        .Where(m => m.MessageType == MessageType.CommandRequest && m.MessageSubType == MessageSubType.New)
                                         .FirstOrDefault();
             }
 
@@ -99,7 +100,7 @@ namespace DeviceRepository
 
         public async Task<DeviceState> GetDeviceStateAsync()
         {
-            var stateMessage = await StateManager.TryGetStateAsync<DeviceState>("silhouetteMessage");
+            var stateMessage = await StateManager.TryGetStateAsync<DeviceState>(StateName);
 
             if (stateMessage.HasValue)
                 return stateMessage.Value;
@@ -158,7 +159,7 @@ namespace DeviceRepository
             // check if this state is for this actor : DeviceID == ActorId
             if (state.DeviceId == this.GetActorId().ToString())
             {
-                var lastState = await StateManager.TryGetStateAsync<DeviceState>("silhouetteMessage");
+                var lastState = await StateManager.TryGetStateAsync<DeviceState>(StateName);
 
                 if (lastState.HasValue)
                     state.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
@@ -169,7 +170,7 @@ namespace DeviceRepository
                     AddDeviceMessageAsync(state)
                     );
 
-                await StateManager.SetStateAsync("silhouetteMessage", state);
+                await StateManager.SetStateAsync(StateName, state);
                 return state;
             }
             else
@@ -193,7 +194,7 @@ namespace DeviceRepository
         {
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
             var messages = stateMessages.HasValue ? stateMessages.Value : new List<DeviceState>();
-
+            
             messages.Add(state);
             await StateManager.SetStateAsync(StateName, messages);
         }

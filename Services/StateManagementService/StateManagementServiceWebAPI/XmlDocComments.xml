@@ -227,7 +227,7 @@
             
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.MessageStatus">
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.MessageSubType">
             <summary>
             
             </summary>

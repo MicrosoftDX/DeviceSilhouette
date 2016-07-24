@@ -111,7 +111,7 @@ namespace CommunicationProviderService
                 DeviceState deviceState = await silhouette.GetDeviceStateAsync();
 
                 // create a new DeviceState with new correlation id, send to the device and store in the repository   
-                DeviceState newState = new DeviceState(deviceState.DeviceId, deviceState.AppMetadata, deviceState.Values, MessageType.GetInfo, MessageStatus.Enqueued);                
+                DeviceState newState = new DeviceState(deviceState.DeviceId, deviceState.AppMetadata, deviceState.Values, MessageType.InquiryRequest, MessageSubType.GetState);                
                 await _messageSender.SendCloudToDeviceAsync(newState.DeviceId, "State:Get", newState.Values,  jsonState.SilhouetteProperties.MessageTTL, newState.CorrelationId);
                 await silhouette.SetDeviceStateAsync(newState);
             }
@@ -127,7 +127,7 @@ namespace CommunicationProviderService
         {
             //TODO: error handling
             var deviceId = jsonState.SilhouetteProperties.DeviceId;
-            MessageType messageType = Enum.TryParse<MessageType>(jsonState.SilhouetteProperties.Status, true, out messageType) ? messageType : MessageType.Reported;
+            MessageType messageType = Enum.TryParse<MessageType>(jsonState.SilhouetteProperties.Status, true, out messageType) ? messageType : MessageType.Report;
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
 
             DeviceState deviceState = new DeviceState(deviceId, jsonState.AppMetadata.ToString(), jsonState.DeviceValues.ToString(), messageType)
@@ -164,7 +164,7 @@ namespace CommunicationProviderService
 
             // update the state repository with the new message
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, "", "", MessageType.GetInfo, MessageStatus.Enqueued);
+            DeviceState deviceState = new DeviceState(deviceId, "", "", MessageType.CommandResponse, MessageSubType.Enqueued);
             await silhouette.SetDeviceStateAsync(deviceState);
 
             // update C2D end point with the request to state update

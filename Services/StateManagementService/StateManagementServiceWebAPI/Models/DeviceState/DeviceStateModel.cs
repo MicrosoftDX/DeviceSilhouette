@@ -24,7 +24,7 @@ namespace StateManagementServiceWebAPI.Models
             Version = deviceState.Version;
             CorrelationId = deviceState.CorrelationId;
             MessageType = deviceState.MessageType.ToString("F");
-            MessageStatus = deviceState.MessageStatus.ToString("F");
+            MessageSubType = deviceState.MessageSubType.ToString("F");
             AppMetadata = deviceState.AppMetadata;
             DeviceValues = deviceState.Values;
         }
@@ -59,7 +59,7 @@ namespace StateManagementServiceWebAPI.Models
         /// <summary>
         /// 
         /// </summary>
-        public string MessageStatus { get; set; }
+        public string MessageSubType { get; set; }
 
         /// <summary>
         /// 

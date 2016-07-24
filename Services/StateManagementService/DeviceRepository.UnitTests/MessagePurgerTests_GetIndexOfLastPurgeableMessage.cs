@@ -162,8 +162,8 @@ namespace DeviceRepository.Tests
                 DeviceId,
                 "{}",
                 "{}",
-                MessageType.Reported,
-                MessageStatus.Received
+                MessageType.Report,
+                MessageSubType.State
                 )
             {
                 Persisted = persisted,
@@ -177,8 +177,8 @@ namespace DeviceRepository.Tests
                 DeviceId,
                 "{}",
                 "{}",
-                MessageType.Requested,
-                MessageStatus.Enqueued,
+                MessageType.CommandResponse,
+                MessageSubType.Enqueued,
                 correlationId
                 )
             {
@@ -194,8 +194,8 @@ namespace DeviceRepository.Tests
                 "{}",
                 "{}",
 #warning Need to sort out identifying a response message! Wait on implementation of Rachel's State notes
-                MessageType.Requested,
-                MessageStatus.Acknowledged,
+                MessageType.CommandResponse,
+                MessageSubType.Acknowledged,
                 correlationId
                 )
             {
