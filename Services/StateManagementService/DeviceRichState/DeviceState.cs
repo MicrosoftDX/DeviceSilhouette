@@ -141,45 +141,45 @@ namespace DeviceRichState
     public enum MessageSubType
     {
         /// <summary>
-        /// Subtypes for CommandRequest
+        /// CommandRequest: body contains desired state for the device
         /// </summary>
         SetState,
+        /// <summary>
+        /// CommandRequest: request for the device to report its state
+        /// </summary>
         ReportState,
 
-        /// <summary>
-        /// Subtypes for CommandResponse and InquiryResponse
-        /// </summary>
         New,
         Unknown,
+        /// <summary>
+        /// CommandResponse/InquiryResponse: Device sent ACK
+        /// </summary>
         Acknowledged,
         Enqueued,
+        /// <summary>
+        /// CommandResponse/InquiryResponse: the request message was not delivered before the message TTL
+        /// </summary>
         Expired,
+        /// <summary>
+        /// CommandResponse/InquiryResponse: Device sent NAK
+        /// </summary>
         NotAcknowledged,
+        /// <summary>
+        /// CommandResponse/InquiryResponse: the number of delivery attempts for the request message exceeded the retry count
+        /// </summary>
         ExceededRetryCount,
         Received,
 
         /// <summary>
-        /// Subtypes for Report
+        /// Report: The device is reporting its state
         /// </summary>
         State,
 
+
         /// <summary>
-        /// Subtypes for InquiryRequest
+        /// InquiryRequest: The device is requesting its last state
         /// </summary>
         GetState,
 
-
     }
-
-    //public enum MessageStatus
-    //{
-    //    Acknowledged,
-    //    Expired,
-    //    DeliveryCountExceeded,
-    //    NotAcknowledged,
-    //    Enqueued,
-    //    New,
-    //    Received,
-    //    Unknown
-    //}
 }
