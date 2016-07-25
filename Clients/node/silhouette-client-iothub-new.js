@@ -90,23 +90,12 @@ SilhouetteClientIoTHub.prototype.updateState = function(metadata, values, device
   // TODO: Make sure timestamp in UTC and not in local computer timezone	
   var formattedDate = new Date().toISOString();
 
-  //var timestamp = Date.now();
-  var full_state =
-	{
-		"SilhouetteProperties": {
-			"DeviceId": deviceID,
-			"Timestamp" : formattedDate,
-			"Status" : "Reported"        
-		},
-		"AppMetadata": metadata,
-		"DeviceValues": values
-	};    
 	
-  var data = JSON.stringify(full_state);
+  var data = JSON.stringify(values);
   var message = new Message(data);
   message.properties.add('MessageType', 'Report');
   message.properties.add('MessageSubType', 'State');
-  message.correlationId = "qwertyuiop";
+  // message.correlationId = "qwertyuiop"; // TODO set correlationId when responding to messages
   //console.log("outgoing message:");
   //console.log(message);
   client.sendEvent(message, function(err) {
