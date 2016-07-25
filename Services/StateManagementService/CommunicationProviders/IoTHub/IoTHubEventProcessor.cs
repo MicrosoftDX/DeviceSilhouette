@@ -1,4 +1,5 @@
-﻿using Microsoft.ServiceBus.Messaging;
+﻿using DeviceRichState;
+using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace CommunicationProviders.IoTHub
         {
             var processingTasks = messages
                 .Select(ToMessageInfo)
+                .Where(m=>m!=null)
                 .Select(_messageHandler);
 
             await Task.WhenAll(processingTasks);
@@ -42,31 +44,68 @@ namespace CommunicationProviders.IoTHub
 
         private static MessageInfo ToMessageInfo(EventData eventData)
         {
-            // TODO - should add handling arround Properties lookups
+            string deviceId;
+            if (!TryGetStringValue(eventData.SystemProperties, "iothub-connection-device-id", out deviceId))
+            {
+                // TODO - log failure. (also move to alternative queue for handling?)
+                return null;
+            }
+
+            string correlationId;
+            TryGetStringValue(eventData.SystemProperties, "correlation-id", out correlationId); // OK if correlationId doesn't exist!
+            // TODO SL - get the message Id - assume that this will become the correlation id for responses if correlationId not set
+
+            string messageTypeString;
+            if (!TryGetStringValue(eventData.SystemProperties, "MessageType", out messageTypeString))
+            {
+                // TODO - log failure. (also move to alternative queue for handling?)
+                return null;
+            }
+            MessageType messageType;
+            if (!Enum.TryParse(messageTypeString, ignoreCase: true, result:out messageType))
+            {
+                // TODO - log failure. (also move to alternative queue for handling?)
+                return null;
+            }
+
+            string messageSubTypeString;
+            if (!TryGetStringValue(eventData.SystemProperties, "MessageSubType", out messageSubTypeString))
+            {
+                // TODO - log failure. (also move to alternative queue for handling?)
+                return null;
+            }
+            MessageSubType messageSubType;
+            if (!Enum.TryParse(messageSubTypeString, ignoreCase: true, result: out messageSubType))
+            {
+                // TODO - log failure. (also move to alternative queue for handling?)
+                return null;
+            }
 
             var message = new MessageInfo
             {
-                DeviceId = SafeGetValue(eventData.SystemProperties, "iothub-connection-device-id"),
-                CorrelationId = SafeGetValue(eventData.SystemProperties, "correlation-id"),
-                MessageType = SafeGetValue(eventData.Properties, "MessageType"),
-                MessageSubType = SafeGetValue(eventData.Properties,"MessageSubType"),
+                DeviceId = deviceId,
+                CorrelationId = correlationId,
+                MessageType = messageType,
+                MessageSubType = messageSubType,
                 EnqueuedTimeUtc = eventData.EnqueuedTimeUtc,
-                Properties = eventData.Properties,
-                Body = GetMessageStringFromEvent(eventData)
+                Body = GetMessageStringFromEvent(eventData),
+                RawProperties = eventData.Properties,
             };
 
             return message;
         }
-        private static string SafeGetValue(IDictionary<string, object> dictionary, string key, string defaultValue = null)
+        private static bool TryGetStringValue(IDictionary<string, object> dictionary, string key, out string value)
         {
-            object value;
-            if (dictionary.TryGetValue(key, out value))
+            object tempValue;
+            if (dictionary.TryGetValue(key, out tempValue))
             {
-                return (string)value;
+                value = (string)tempValue;
+                return true;
             }
             else
             {
-                return defaultValue;
+                value = null;
+                return false;
             }
         }
         private static string GetMessageStringFromEvent(EventData eventData)

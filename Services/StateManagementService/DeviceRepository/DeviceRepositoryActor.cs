@@ -167,7 +167,7 @@ namespace DeviceRepository
                 // persist the message and add to actor state (in parallel)
                 await Task.WhenAll(
                     PersistMessage(state),
-                    AddDeviceMessageAsync(state)
+                    AddDeviceMessageToMessageListAsync(state)
                     );
 
                 await StateManager.SetStateAsync(StateName, state);
@@ -190,7 +190,7 @@ namespace DeviceRepository
             }
         }
 
-        async Task AddDeviceMessageAsync(DeviceState state)
+        private async Task AddDeviceMessageToMessageListAsync(DeviceState state)
         {
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
             var messages = stateMessages.HasValue ? stateMessages.Value : new List<DeviceState>();

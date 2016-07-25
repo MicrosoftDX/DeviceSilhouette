@@ -20,7 +20,11 @@ namespace CommunicationProviderService
 {
     public interface ICommunicationProviderRemoting : IService
     {
-        Task InvokeDeepReadStateAsync(string deviceId, long timeToLive);
+        /// <summary>
+        /// Send a message to the device (and log it)
+        /// </summary>
+        /// <param name="deviceState"></param>
+        /// <returns></returns>
         Task SendCloudToDeviceAsync(DeviceState deviceState);
     }
 
@@ -81,16 +85,17 @@ namespace CommunicationProviderService
         {
             try
             {
-                JsonState jsonState = _jsonSerializer.Deserialize<JsonState>(message.Body);
+                DeviceState deviceMessage = ToDeviceState(message);
+                await StoreMessageInActor(deviceMessage);
 
-                // TODO - add assert if device id exist. Create if not?
-                switch (jsonState.SilhouetteProperties.MessageType)
+                // Any actions to take on the message (should this be handled here?)
+                switch (message.MessageType)
                 {
-                    case "Reported": // device reporting a state update                            
-                        await UpdateDeviceSilhouetteAsync(jsonState);
-                        break;
-                    case "Get": // device requesting last stored state
-                        await UpdateDeviceStateAsync(jsonState);
+                    case MessageType.InquiryRequest: // device requesting last stored state
+                        if (message.MessageSubType == MessageSubType.GetState)
+                        {
+                            await SendLastReportedStateToDeviceAsync(message);
+                        }
                         break;
                 }
             }
@@ -102,17 +107,22 @@ namespace CommunicationProviderService
 
 
         // send a message to the device using the C2D endpoint. called when a device is requesting the last stored state
-        private async Task UpdateDeviceStateAsync(JsonState jsonState)
+        private async Task SendLastReportedStateToDeviceAsync(MessageInfo message)
         {
             try
             {
-                IDeviceRepositoryActor silhouette = GetDeviceActor(jsonState.SilhouetteProperties.DeviceId);
-                DeviceState lastReportedState = await silhouette.GetLastKnownReportedStateAsync();
+                IDeviceRepositoryActor actor = GetDeviceActor(message.DeviceId);
+                DeviceState lastReportedState = await actor.GetLastKnownReportedStateAsync();
 
                 // create a new DeviceState with new correlation id, send to the device and store in the repository   
-                var newState = new DeviceState(lastReportedState.DeviceId, null, lastReportedState.Values, MessageType.InquiryResponse, MessageSubType.GetState);
-                await _messageSender.SendCloudToDeviceAsync(newState);
-                await silhouette.SetDeviceStateAsync(newState);
+                var newState = new DeviceState(
+                        message.DeviceId,
+                        null,
+                        lastReportedState.Values,
+                        MessageType.InquiryResponse,
+                        MessageSubType.GetState
+                    );
+                await SendCloudToDeviceAsync(newState);
             }
             catch (Exception e)
             {
@@ -120,25 +130,21 @@ namespace CommunicationProviderService
             }
         }
 
-        // StateMessage example: {"DeviceID":"silhouette1","Timestamp":1464524365618,"Status":"Reported","State":{"Xaxis":"0","Yaxis":"0","Zaxis":"0"}}
-        // update the device state in the repository - the device is reporting a state update  
-        private async Task<DeviceState> UpdateDeviceSilhouetteAsync(JsonState jsonState)
+
+        public async Task SendCloudToDeviceAsync(DeviceState deviceMessage)
         {
-            //TODO: error handling
-            var deviceId = jsonState.SilhouetteProperties.DeviceId;
-            MessageType messageType = (MessageType)Enum.Parse(typeof(MessageType), jsonState.SilhouetteProperties.MessageType, ignoreCase: true);
-            MessageSubType messageSubType = (MessageSubType)Enum.Parse(typeof(MessageSubType), jsonState.SilhouetteProperties.MessageSubType, ignoreCase: true);
-            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
+            await StoreMessageInActor(deviceMessage);
 
-            DeviceState deviceState = new DeviceState(deviceId, jsonState.AppMetadata.ToString(), jsonState.DeviceValues.ToString(), messageType, messageSubType)
-            {
-                Timestamp = jsonState.SilhouetteProperties.Timestamp
-            };
-
-            // update device repository
-            return await silhouette.SetDeviceStateAsync(deviceState);
+            // update C2D end point with the request to state update
+            await _messageSender.SendCloudToDeviceAsync(deviceMessage);
         }
 
+        private async Task StoreMessageInActor(DeviceState deviceMessage)
+        {
+            // update the state repository with the new message
+            IDeviceRepositoryActor actor = GetDeviceActor(deviceMessage.DeviceId);
+            await actor.SetDeviceStateAsync(deviceMessage);
+        }
         private static IDeviceRepositoryActor GetDeviceActor(string deviceId)
         {
             ActorId actorId = new ActorId(deviceId);
@@ -146,56 +152,19 @@ namespace CommunicationProviderService
             return silhouette;
         }
 
-        // Send a get request directly from the device, not going through the device repository
-        // The device with send the state in a sepetate call
-        // message example:
-        //{
-        //"DeviceID" : "Device1",
-        //"Timestamp" : "2009-06-15T13:45:30",
-        //"Status" : "GetInfo" 
-        //}
-        public async Task InvokeDeepReadStateAsync(string deviceId, long timeToLive)
+        private DeviceState ToDeviceState(MessageInfo message)
         {
-            // update the state repository with the new message
-            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, "", "", MessageType.CommandResponse, MessageSubType.Enqueued);
-            await silhouette.SetDeviceStateAsync(deviceState);
-
-            // update C2D end point with the request to state update
-            var deviceMessage = new DeviceState(deviceId, null, null, MessageType.CommandRequest, MessageSubType.ReportState)
+            return new DeviceState(
+                message.DeviceId,
+                null,
+                message.Body,
+                message.MessageType,
+                message.MessageSubType,
+                message.CorrelationId
+                )
             {
-                MessageTtlMs = timeToLive
+                Timestamp = message.EnqueuedTimeUtc
             };
-            await _messageSender.SendCloudToDeviceAsync(deviceMessage);
-        }
-
-        public async Task SendCloudToDeviceAsync(DeviceState deviceState)
-        {
-            await _messageSender.SendCloudToDeviceAsync(deviceState);
-        }
-
-        private class JsonState // TODO SL: align with message shape
-        {
-
-            public JsonState()
-            {
-                SilhouetteProperties = new Properties();
-            }
-            public Properties SilhouetteProperties { get; set; }
-            public Object AppMetadata { get; set; }
-            public Object DeviceValues { get; set; }
-
-            public class Properties
-            {
-                public string DeviceId { get; set; }
-                public DateTime Timestamp { get; set; }
-                public int Version { get; set; }
-                public string MessageType { get; set; }
-                public string MessageSubType { get; set; }
-                public double MessageTTL { get; set; }
-            }
-
-
         }
     }
 }

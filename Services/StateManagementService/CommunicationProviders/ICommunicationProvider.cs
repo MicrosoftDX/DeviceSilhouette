@@ -38,8 +38,8 @@ namespace CommunicationProviders
         public string CorrelationId { get; internal set; }
         public string DeviceId { get; internal set; }
         public DateTime EnqueuedTimeUtc { get; set; }
-        public string MessageSubType { get; internal set; }
-        public string MessageType { get; internal set; }
-        public IDictionary<string, object> Properties { get; set; }
+        public MessageType MessageType { get; internal set; }
+        public MessageSubType MessageSubType { get; internal set; }
+        public IDictionary<string, object> RawProperties { get; set; }
     }
 }
