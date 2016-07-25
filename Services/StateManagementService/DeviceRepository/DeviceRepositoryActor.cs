@@ -135,10 +135,7 @@ namespace DeviceRepository
             // check if this state is for this actor : DeviceID == ActorId
             if (message.DeviceId == this.GetActorId().ToString())
             {
-                var lastState = await StateManager.TryGetStateAsync<DeviceMessage>(StateName);
-
-                if (lastState.HasValue)
-                    message.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
+                message.Version = await GetNextMessageVersionAsync();
 
                 // persist the message and add to actor state (in parallel)
                 await Task.WhenAll(
@@ -146,7 +143,6 @@ namespace DeviceRepository
                     AddDeviceMessageToMessageListAsync(message)
                     );
 
-                await StateManager.SetStateAsync(StateName, message);
                 return message;
             }
             else
@@ -155,6 +151,21 @@ namespace DeviceRepository
                 return null;
             }
 
+        }
+
+        private async Task<int> GetNextMessageVersionAsync()
+        {
+            var lastState = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
+            int nextMessageVersion;
+            if (lastState.HasValue)
+            {
+                nextMessageVersion = lastState.Value.Last().Version + 1;
+            }
+            else
+            {
+                nextMessageVersion = 1;
+            }
+            return nextMessageVersion;
         }
 
         private async Task PersistMessage(DeviceMessage state)
