@@ -24,6 +24,34 @@ namespace StateManagementServiceWebAPI.Models.DeviceMessage
         /// </summary>
         public int Version { get; internal set; }
 
-        // TODO - add the rest of the properties!
+        /// <summary>
+        /// The main type for the message (e.g. CommandRequest, Report)
+        /// </summary>
+        public string MessageType { get; set; }
+
+        /// <summary>
+        /// The subtype for the message (e.g. SetState for CommandRequest messages)
+        /// </summary>
+        public string MessageSubType { get; set; }
+
+        /// <summary>
+        /// The correlation id for messages. Used to link related messages
+        /// </summary>
+        public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// Application metadata (used by the application to store data associated with a command, e.g. the origin or reason)
+        /// </summary>
+        public string AppMetadata { get; set; }
+
+        /// <summary>
+        /// The message body. For state reports this is the state
+        /// </summary>
+        public string DeviceValues { get; set; }
+
+        /// <summary>
+        /// The message time-to-live (TTL) in milliseconds
+        /// </summary>
+        public long MessageTtlMs { get; set; }
     }
 }

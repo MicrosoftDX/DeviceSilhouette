@@ -128,7 +128,12 @@ namespace StateManagementServiceWebAPI.Controllers
                 DeviceId = message.DeviceId,
                 Version = message.Version,
                 TimeStamp = message.Timestamp,
-                // TODO - complete this list based on https://github.com/dx-ted-emea/pudding/wiki/7.3-Web-API#get-messagesmessageid-response
+                MessageType = message.MessageType.ToString(),
+                MessageSubType = message.MessageSubType.ToString(),
+                CorrelationId = message.CorrelationId,
+                AppMetadata = message.AppMetadata,
+                MessageTtlMs = message.MessageTtlMs,
+                DeviceValues = message.Values
             };
         }
     }

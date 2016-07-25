@@ -176,6 +176,36 @@
             The version number for the message. This is a unique identifier for the message within a device id
             </summary>
         </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.MessageType">
+            <summary>
+            The main type for the message (e.g. CommandRequest, Report)
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.MessageSubType">
+            <summary>
+            The subtype for the message (e.g. SetState for CommandRequest messages)
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.CorrelationId">
+            <summary>
+            The correlation id for messages. Used to link related messages
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.AppMetadata">
+            <summary>
+            Application metadata (used by the application to store data associated with a command, e.g. the origin or reason)
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.DeviceValues">
+            <summary>
+            The message body. For state reports this is the state
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.MessageTtlMs">
+            <summary>
+            The message time-to-live (TTL) in milliseconds
+            </summary>
+        </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel">
             <summary>
             
