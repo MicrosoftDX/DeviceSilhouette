@@ -29,7 +29,14 @@
             <param name="version"></param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.GetMessages(System.String,System.Nullable{System.Int32})" -->
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.GetMessages(System.String,System.Nullable{System.Int32})">
+            <summary>
+            Get the last state reported by the device
+            </summary>
+            <param name="deviceId"></param>
+            <param name="continuationToken"></param>
+            <returns></returns>
+        </member>
         <member name="T:StateManagementServiceWebAPI.Controllers.DeviceCommandController">
             <summary>
             Get or manipulate commands for a device

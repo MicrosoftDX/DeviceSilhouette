@@ -25,10 +25,13 @@ namespace DeviceRichState.Tests
                 "{\"state\":123}",
                 MessageType.Report,
                 MessageSubType.ExceededRetryCount,
-                "ACorrelationId")
+                123456,
+                "ACorrelationId",
+                DateTime.UtcNow.AddDays(-123)
+                )
             {
-                _timestamp = DateTime.UtcNow.AddDays(-123),
-                MessageTtlMs = 123456
+                Version = 67890,
+                Persisted = true
             };
 
 
@@ -61,7 +64,7 @@ namespace DeviceRichState.Tests
         {
             Assert.AreEqual(OriginalMessage.MessageSubType, DeserializedMessage.MessageSubType);
         }
-                [TestMethod()]
+        [TestMethod()]
         public void WhenDeserializingDeviceMessage_MessageTypeMatches()
         {
             Assert.AreEqual(OriginalMessage.MessageType, DeserializedMessage.MessageType);
@@ -80,6 +83,11 @@ namespace DeviceRichState.Tests
         public void WhenDeserializingDeviceMessage_MessageTtlMsMatches()
         {
             Assert.AreEqual(OriginalMessage.MessageTtlMs, DeserializedMessage.MessageTtlMs);
+        }
+        [TestMethod()]
+        public void WhenDeserializingDeviceMessage_VersionMatches()
+        {
+            Assert.AreEqual(OriginalMessage.Version, DeserializedMessage.Version);
         }
     }
 }

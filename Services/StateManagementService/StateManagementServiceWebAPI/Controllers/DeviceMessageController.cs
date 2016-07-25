@@ -91,7 +91,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// Get the last state reported by the device
         /// </summary>
         /// <param name="deviceId"></param>
-        /// param name="continuationToken"></param>
+        /// <param name="continuationToken"></param>
         /// <returns></returns>
         [Route("", Name ="GetMessages")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MessageListModel))]

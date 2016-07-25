@@ -163,11 +163,12 @@ namespace DeviceRepository.Tests
                 "{}",
                 "{}",
                 MessageType.Report,
-                MessageSubType.State
+                MessageSubType.State,
+                -1,
+                timestamp: timestamp
                 )
             {
                 Persisted = persisted,
-                _timestamp =timestamp
             };
             return message;
         }
@@ -179,11 +180,12 @@ namespace DeviceRepository.Tests
                 "{}",
                 MessageType.CommandResponse,
                 MessageSubType.Enqueued,
-                correlationId
+                -1,
+                correlationId,
+                timestamp
                 )
             {
                 Persisted = persisted,
-                _timestamp = timestamp
             };
             return message;
         }
@@ -196,11 +198,12 @@ namespace DeviceRepository.Tests
 #warning Need to sort out identifying a response message! Wait on implementation of Rachel's State notes
                 MessageType.CommandResponse,
                 MessageSubType.Acknowledged,
-                correlationId
+                -1,
+                correlationId,
+                timestamp
                 )
             {
                 Persisted = persisted,
-                _timestamp = timestamp
             };
             return message;
         }

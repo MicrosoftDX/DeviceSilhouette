@@ -190,18 +190,20 @@ namespace DeviceRepository
         /// This method is called whenever an actor is activated.
         /// An actor is activated the first time any of its methods are invoked.
         /// </summary>
-        protected override async Task OnActivateAsync()
+        protected override Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
             _purgeTimer = RegisterTimer(PurgeStates, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+            return Task.FromResult((object)null);
         }
 
-        protected override async Task OnDeactivateAsync()
+        protected override Task OnDeactivateAsync()
         {
             if (_purgeTimer != null)
             {
                 UnregisterTimer(_purgeTimer);
             }
+            return Task.FromResult((object)null);
         }
 
 

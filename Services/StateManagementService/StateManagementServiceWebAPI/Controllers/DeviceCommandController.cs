@@ -63,10 +63,8 @@ namespace StateManagementServiceWebAPI.Controllers
             // TODO - this is a temporary endpoint - it feels as though it should be just another command
             // TODO - this should return the Accepted Response
 
-            var deviceMessage = new DeviceMessage(deviceId, null, null, MessageType.CommandRequest, MessageSubType.ReportState)
-            {
-                MessageTtlMs = timeToLiveMilliSec
-            };
+            var deviceMessage = new DeviceMessage(deviceId, null, null, MessageType.CommandRequest, MessageSubType.ReportState, timeToLiveMilliSec);
+
             await _communicationProvider.SendCloudToDeviceMessageAsync(deviceMessage);
         }
 

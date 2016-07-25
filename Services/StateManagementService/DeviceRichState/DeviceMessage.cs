@@ -14,26 +14,17 @@ namespace DeviceRichState
     {
         // NOTE - when adding new properties, also add the related tests in DeviceMessage_SerializationTests
 
-        [DataMember]
-        private string _deviceId;
-        [DataMember]
-        private string _correlationId;
-        [DataMember]
-        internal DateTime _timestamp;
-        [DataMember]
-        private MessageType _messageType;
-
         /// <summary>
         /// Can only be set at DeviceMessage instantiation
         /// </summary>
         [DataMember]
-        public string DeviceId { get { return _deviceId; } set {; } }
+        public string DeviceId { get; private set; }
 
         /// <summary>
         /// Timestamp is UTC time, set automatically on creation
         /// </summary>
         [DataMember]
-        public DateTime Timestamp { get { return _timestamp; } set {; } }
+        public DateTime Timestamp { get; private set; }
 
         /// <summary>
         /// Version is set by silhouette actor, auto increment
@@ -42,33 +33,36 @@ namespace DeviceRichState
         public int Version { get; set; }
 
         [DataMember]
-        public string CorrelationId { get { return _correlationId; } set {; } }
+        public string CorrelationId { get; private set; }
 
         [DataMember]
-        public MessageType MessageType { get { return _messageType; } set {; } }
+        public MessageType MessageType { get; private set; }
 
         [DataMember]
-        public MessageSubType MessageSubType { get; set; }
+        public MessageSubType MessageSubType { get; private set; }
 
         /// <summary>
         /// Part of the state message that contains Application specific data
         /// </summary>
         [DataMember]
-        public string AppMetadata { get; set; }
-
-        public bool Persisted { get; set; }
+        public string AppMetadata { get; private set; }
 
         /// <summary>
         /// Part of the state message that contains device metrics
         /// </summary>
         [DataMember]
-        public string Values { get; set; }
+        public string Values { get; private set; }
 
         [DataMember]
         /// <summary>
         /// The TTL for the message in milliseconds
         /// </summary>
-        public long MessageTtlMs { get; set; }
+        public long MessageTtlMs { get; private set; }
+
+
+
+        [DataMember]
+        public bool Persisted { get; set; }
 
         public DeviceMessage()
         {
@@ -84,19 +78,30 @@ namespace DeviceRichState
         /// <param name="messageType">Who send the message; reported == device, requested == application</param>
         /// <param name="messageStatus">Indication of the status of this message instance</param>
         /// /// <param name="correlationId">Message id</param>
-        public DeviceMessage(string deviceId, string metadata, string values, MessageType messageType, MessageSubType messageSubType, string correlationId = null)
+        public DeviceMessage(
+            string deviceId, 
+            string metadata, 
+            string values, 
+            MessageType messageType, 
+            MessageSubType messageSubType, 
+            long messageTtlMs,
+            string correlationId = null,
+            DateTime? timestamp = null)
         {
             // To make these values immutable they are set through private field and get through public property
             // It is not possible to make the setter readonly because of [DataMember]
-            _deviceId = deviceId;
-            _timestamp = SystemTime.UtcNow();
-            _messageType = messageType;
-
-            _correlationId = String.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
-            MessageSubType = messageSubType;
-
+            DeviceId = deviceId;
             AppMetadata = metadata;
             Values = values;
+
+            MessageType = messageType;
+            MessageSubType = messageSubType;
+
+            MessageTtlMs = messageTtlMs;
+
+            CorrelationId = String.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
+
+            Timestamp =  timestamp ?? SystemTime.UtcNow();
         }
     }
 

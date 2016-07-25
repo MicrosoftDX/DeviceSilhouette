@@ -121,11 +121,8 @@ namespace StateProcessorService
         {
             //TODO: error handling - assert device id is not found
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            var deviceMessage = new DeviceMessage(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState)
-            {
-                MessageTtlMs = timeToLive
-            };            
-
+            var deviceMessage = new DeviceMessage(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState, timeToLive);
+            
             // update device with the new state (C2D endpoint)           
             return await CommunicationProviderServiceClient.SendCloudToDeviceMessageAsync(deviceMessage);
         }

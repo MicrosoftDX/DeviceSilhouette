@@ -120,7 +120,8 @@ namespace CommunicationProviderService
                         null,
                         lastReportedState.Values,
                         MessageType.InquiryResponse,
-                        MessageSubType.GetState
+                        MessageSubType.GetState,
+                        5000 // TODO - need to have a configurable TTL for InquiryResponse
                     );
                 await SendCloudToDeviceMessageAsync(newState);
             }
@@ -162,11 +163,10 @@ namespace CommunicationProviderService
                 message.Body,
                 message.MessageType,
                 message.MessageSubType,
-                message.CorrelationId
-                )
-            {
-                Timestamp = message.EnqueuedTimeUtc
-            };
+                -1, // don't have ttl for received messages
+                message.CorrelationId,
+                message.EnqueuedTimeUtc
+                );
         }
     }
 }
