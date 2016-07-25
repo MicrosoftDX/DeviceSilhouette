@@ -84,7 +84,7 @@ namespace CommunicationProviderService
                 JsonState jsonState = _jsonSerializer.Deserialize<JsonState>(message.Body);
 
                 // TODO - add assert if device id exist. Create if not?
-                switch (jsonState.SilhouetteProperties.Status)
+                switch (jsonState.SilhouetteProperties.MessageType)
                 {
                     case "Reported": // device reporting a state update                            
                         await UpdateDeviceSilhouetteAsync(jsonState);
