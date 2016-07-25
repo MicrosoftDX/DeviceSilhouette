@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace DeviceRichState.Tests
 {
@@ -35,7 +36,7 @@ namespace DeviceRichState.Tests
             };
 
 
-            var serializer = new DataContractJsonSerializer(typeof(DeviceMessage)); // TODO - can we find out the settings that SF uses to align the tests with those?
+            var serializer = new DataContractSerializer(typeof(DeviceMessage)); // TODO - can we find out the settings that SF uses to align the tests with those?
             using (var stream = new MemoryStream())
             {
                 serializer.WriteObject(stream, OriginalMessage);
