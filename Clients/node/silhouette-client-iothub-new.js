@@ -104,7 +104,9 @@ SilhouetteClientIoTHub.prototype.updateState = function(metadata, values, device
 	
   var data = JSON.stringify(full_state);
   var message = new Message(data);
-  message.properties.add('MessageType', 'State:Set');
+  message.properties.add('MessageType', 'Report');
+  message.properties.add('MessageSubType', 'State');
+  message.correlationId = "qwertyuiop";
   //console.log("outgoing message:");
   //console.log(message);
   client.sendEvent(message, function(err) {

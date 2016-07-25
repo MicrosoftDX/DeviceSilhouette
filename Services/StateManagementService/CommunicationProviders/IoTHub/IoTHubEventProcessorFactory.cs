@@ -9,9 +9,9 @@ namespace CommunicationProviders.IoTHub
 {
     class IoTHubEventProcessorFactory : IEventProcessorFactory
     {
-        private readonly Func<string, Task> _messageHandler;
+        private readonly Func<MessageInfo, Task> _messageHandler;
 
-        public IoTHubEventProcessorFactory(Func<string, Task> messageHandler)
+        public IoTHubEventProcessorFactory(Func<MessageInfo, Task> messageHandler)
         {
             _messageHandler = messageHandler;
         }

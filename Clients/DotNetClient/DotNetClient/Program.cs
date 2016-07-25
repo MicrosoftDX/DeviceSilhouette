@@ -34,6 +34,7 @@ namespace DotNetClient
             }
 
             string deviceId = "dotNetDevice"; // TODO parameter
+            //string deviceId = "device1"; // TODO parameter
 
             var device = new DeviceSimulator(connectionString, deviceId);
             await device.InitializeAsync();
@@ -102,9 +103,10 @@ namespace DotNetClient
             {
                 Properties =
                 {
-                    {"DeviceId" , _deviceId}, // is this needed - does the SDK not include it based on our auth?
+                    //{"DeviceId" , _deviceId}, // is this needed - does the SDK not include it based on our auth?
                     //{ "Timestamp" , DateTime.MinValue}, // TODO - shouldn't set this here
-                    { "Status", "Reported" }
+                    { "MessageType", "Report" },
+                    { "MessageSubType", "State" },
                 },
                 //CorrelationId = "asdas" // TODO - use this when responding to messages!
             };

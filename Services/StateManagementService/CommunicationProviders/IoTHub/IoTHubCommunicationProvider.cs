@@ -14,14 +14,14 @@ namespace CommunicationProviders.IoTHub
         string _storageConnectionString;
         const string _container = "silhouette-events";
 
-        private readonly Func<string, Task> _messageHandler;
+        private readonly Func<MessageInfo, Task> _messageHandler;
         private readonly EventProcessorHost _eventProcessorHost;
         private readonly IoTHubEventProcessorFactory _factory;
 
         public IoTHubMessageReceiver(
             string IoTHubConnectionString,
             string StorageConnectionString,
-            Func<string, Task> messageHandler)
+            Func<MessageInfo, Task> messageHandler)
         {
             _iotHubConnectionString = IoTHubConnectionString;
             _storageConnectionString = StorageConnectionString;

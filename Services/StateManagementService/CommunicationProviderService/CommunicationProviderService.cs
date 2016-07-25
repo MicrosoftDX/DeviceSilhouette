@@ -77,31 +77,29 @@ namespace CommunicationProviderService
         }
 
         // process messages from communication provider - D2C endpoint 
-        private async Task ProcessCommunicationProviderMessageAsync(string message)
+        private async Task ProcessCommunicationProviderMessageAsync(MessageInfo message)
         {
-            if (!String.IsNullOrEmpty(message))
+            try
             {
-                try
-                {
-                    JsonState jsonState = _jsonSerializer.Deserialize<JsonState>(message);
+                JsonState jsonState = _jsonSerializer.Deserialize<JsonState>(message.Body);
 
-                    // TODO - add assert if device id exist. Create if not?
-                    switch (jsonState.SilhouetteProperties.MessageType)
-                    {
-                        case "Reported": // device reporting a state update                            
-                            await UpdateDeviceSilhouetteAsync(jsonState);
-                            break;
-                        case "Get": // device requesting last stored state
-                            await UpdateDeviceStateAsync(jsonState);
-                            break;
-                    }
-                }
-                catch (Exception)
+                // TODO - add assert if device id exist. Create if not?
+                switch (jsonState.SilhouetteProperties.Status)
                 {
-                    // TODO: better error handling                    
+                    case "Reported": // device reporting a state update                            
+                        await UpdateDeviceSilhouetteAsync(jsonState);
+                        break;
+                    case "Get": // device requesting last stored state
+                        await UpdateDeviceStateAsync(jsonState);
+                        break;
                 }
             }
+            catch (Exception)
+            {
+                // TODO: better error handling                    
+            }
         }
+
 
         // send a message to the device using the C2D endpoint. called when a device is requesting the last stored state
         private async Task UpdateDeviceStateAsync(JsonState jsonState)
