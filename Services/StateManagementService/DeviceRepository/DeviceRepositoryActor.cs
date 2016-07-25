@@ -51,21 +51,6 @@ namespace DeviceRepository
             }
         }
 
-        public Task<string> GetDeviceStatus()
-        {
-            var status = StateManager.TryGetStateAsync<string>("deviceStatus").Result;
-            if (status.HasValue)
-                return Task.FromResult(status.Value);
-            else
-                return Task.FromResult(String.Empty);
-        }
-
-        public Task SetDeviceStatus(string status)
-        {
-            StateManager.SetStateAsync<string>("deviceStatus", status);
-            return Task.FromResult(true);
-        }
-
         public async Task<DeviceMessage> GetLastKnownReportedStateAsync()
         {
             DeviceMessage state = null;
