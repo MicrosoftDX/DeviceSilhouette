@@ -34,7 +34,9 @@ namespace TestDotNetClient
             //string deviceId = "device1"; // TODO parameterise
 
             var device = new DeviceSimulator(connectionString, deviceId);
+            device.ReceivedMessage += Device_ReceivedMessage;
             await device.InitializeAsync();
+            device.StartReceiveMessageLoop();
 
             int i = 0;
             while (true)
@@ -42,8 +44,19 @@ namespace TestDotNetClient
                 Console.WriteLine($"Sending state counterValue={i}");
                 await device.SendStateMessageAsync(new { counterValue = i });
                 i++;
-                await Task.Delay(1500);
+                await Task.Delay(2000);
             }
+        }
+
+        private static void Device_ReceivedMessage(object sender, ReceiveMessageEventArgs e)
+        {
+            var message = e.Message;
+            Console.WriteLine("Received Message:");
+            Console.WriteLine($"\tMessageType\t{message.MessageType}");
+            Console.WriteLine($"\tMessageSubType\t{message.MessageSubType}");
+            Console.WriteLine($"\tBody\t{message.Body}");
+
+            e.Action = ReceiveMessageAction.Complete;
         }
     }
 

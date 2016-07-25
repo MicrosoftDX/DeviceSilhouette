@@ -136,8 +136,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeviceMessage.cs" />
     <Compile Include="DeviceSimulator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DeviceMessageEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

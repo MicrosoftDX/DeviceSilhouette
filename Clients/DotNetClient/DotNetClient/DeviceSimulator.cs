@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetClient
@@ -16,9 +17,13 @@ namespace DotNetClient
     // TODO - online/offline
     public class DeviceSimulator
     {
-        private string _connectionString;
-        private string _deviceId;
+        private readonly string _connectionString;
+        private readonly string _deviceId;
+
         private DeviceClient _deviceClient = null;
+        private CancellationTokenSource _receiveLoopCancellationTokenSource = null;
+
+        public event EventHandler<ReceiveMessageEventArgs> ReceivedMessage;
 
         public DeviceSimulator(string connectionString, string deviceId)
         {
@@ -72,6 +77,41 @@ namespace DotNetClient
             await _deviceClient.SendEventAsync(message);
         }
 
+        public void StartReceiveMessageLoop()
+        {
+            // TODO - check if already got cancellation token source etc
+
+            _receiveLoopCancellationTokenSource = new CancellationTokenSource();
+            Task.Run(() => ReceiveMessages(_receiveLoopCancellationTokenSource.Token));
+        }
+        // TODO - StopReceiveMessageLoopAsync
+
+        private async Task ReceiveMessages(CancellationToken cancellationToken)
+        {
+            while(!cancellationToken.IsCancellationRequested)
+            {
+                var message = await _deviceClient.ReceiveAsync();
+                if (message != null)
+                {
+                    var deviceMessage = new DeviceMessage(message);
+                    var args = new ReceiveMessageEventArgs(deviceMessage);
+                    ReceivedMessage?.Invoke(this, args);
+                    // complete, abandon, reject: https://msdn.microsoft.com/en-us/library/azure/mt590786.aspx
+                    switch (args.Action)
+                    {
+                        case ReceiveMessageAction.Complete:
+                            await _deviceClient.CompleteAsync(message);
+                            break;
+                        case ReceiveMessageAction.Abandon:
+                            await _deviceClient.AbandonAsync(message);
+                            break;
+                        case ReceiveMessageAction.Reject:
+                            await _deviceClient.RejectAsync(message);
+                            break;
+                    }
+                }
+            }            
+        }
 
         private static string GetHostNameFromConnectionString(string connectionString)
         {
