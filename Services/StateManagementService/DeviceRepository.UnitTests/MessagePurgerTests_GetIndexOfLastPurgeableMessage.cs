@@ -26,7 +26,7 @@ namespace DeviceRepository.Tests
 
 
         [TestMethod()]
-        public void WhenNoMessagesInTheList_ThenNoMessagesAreIdentifiedToPurge()
+        public void WithMessagePurger_WhenNoMessagesInTheList_ThenNoMessagesAreIdentifiedToPurge()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
             var messages = new List<DeviceMessage>();
@@ -38,7 +38,7 @@ namespace DeviceRepository.Tests
         }
 
         [TestMethod()]
-        public void WhenNoMessagesAreOutsideTheRetentionPeriod_ThenNoMessagesAreIdentifiedToPurge()
+        public void WithMessagePurger_WhenNoMessagesAreOutsideTheRetentionPeriod_ThenNoMessagesAreIdentifiedToPurge()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
 
@@ -54,7 +54,7 @@ namespace DeviceRepository.Tests
         }
 
         [TestMethod()]
-        public void WhenNoMessagesArePersisted_ThenNoMessagesAreIdentifiedToPurge()
+        public void WithMessagePurger_WhenNoMessagesArePersisted_ThenNoMessagesAreIdentifiedToPurge()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
 
@@ -70,7 +70,7 @@ namespace DeviceRepository.Tests
         }
 
         [TestMethod()]
-        public void WhenAllMessagesArePersisted_ThenOnlyMessagesOutsideTheRetentionWindowArePurged()
+        public void WithMessagePurger_WhenAllMessagesArePersisted_ThenOnlyMessagesOutsideTheRetentionWindowArePurged()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
 
@@ -89,7 +89,7 @@ namespace DeviceRepository.Tests
 
 
         [TestMethod()]
-        public void WhenAnEarlierMessageIsNotPersisted_ThenLaterMessagesAreNotPurged()
+        public void WithMessagePurger_WhenAnEarlierMessageIsNotPersisted_ThenLaterMessagesAreNotPurged()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
 
@@ -109,7 +109,7 @@ namespace DeviceRepository.Tests
         }
 
         [TestMethod()]
-        public void WhenACommandMessageHasNoResponse_ThenTheCommandMessageIsNotPurged()
+        public void WithMessagePurger_WhenACommandMessageHasNoResponse_ThenTheCommandMessageIsNotPurged()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
 
@@ -129,7 +129,7 @@ namespace DeviceRepository.Tests
 
 
         [TestMethod()]
-        public void WhenAMessageIsNotPurged_ThenOtherMessagesWithTheSameCorrelationIdAreNotPurged()
+        public void WithMessagePurger_WhenAMessageIsNotPurged_ThenOtherMessagesWithTheSameCorrelationIdAreNotPurged()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
 
