@@ -38,7 +38,7 @@ namespace IoTHubFeedbackService
                 Timestamp = feedbackRecord.EnqueuedTimeUtc,                
             
             };
-            await silhouette.SetDeviceStateAsync(state);
+            await silhouette.StoreDeviceMessageAsync(state);
         }
 
         private static IDeviceRepositoryActor GetDeviceActor(string deviceId)

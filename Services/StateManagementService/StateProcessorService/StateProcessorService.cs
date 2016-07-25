@@ -121,23 +121,14 @@ namespace StateProcessorService
         {
             //TODO: error handling - assert device id is not found
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceMessage deviceState = new DeviceMessage(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState)
+            var deviceMessage = new DeviceMessage(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState)
             {
                 MessageTtlMs = timeToLive
             };            
 
             // update device with the new state (C2D endpoint)           
-            await CommunicationProviderServiceClient.SendCloudToDeviceAsync(deviceState);
-            // update device repository
-            return await silhouette.SetDeviceStateAsync(deviceState);
+            return await CommunicationProviderServiceClient.SendCloudToDeviceMessageAsync(deviceMessage);
         }
-
-        private static async Task<DeviceMessage> UpdateRepositoryAsync(IDeviceRepositoryActor silhouette, DeviceMessage deviceState)
-        {
-            await silhouette.SetDeviceStateAsync(deviceState);
-            var newState = await silhouette.GetDeviceStateAsync();
-            return newState;
-        }        
 
         private static IDeviceRepositoryActor GetDeviceActor(string deviceId)
         {

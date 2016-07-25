@@ -16,17 +16,17 @@ namespace StateManagementServiceWebAPI.Models
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="deviceState"></param>
-        public DeviceStateModel(DeviceRichState.DeviceMessage deviceState)
+        /// <param name="deviceMessage"></param>
+        public DeviceStateModel(DeviceRichState.DeviceMessage deviceMessage)
         {
-            DeviceId = deviceState.DeviceId;
-            Timestamp = deviceState.Timestamp;
-            Version = deviceState.Version;
-            CorrelationId = deviceState.CorrelationId;
-            MessageType = deviceState.MessageType.ToString("F");
-            MessageSubType = deviceState.MessageSubType.ToString("F");
-            AppMetadata = deviceState.AppMetadata;
-            DeviceValues = deviceState.Values;
+            DeviceId = deviceMessage.DeviceId;
+            Timestamp = deviceMessage.Timestamp;
+            Version = deviceMessage.Version;
+            CorrelationId = deviceMessage.CorrelationId;
+            MessageType = deviceMessage.MessageType.ToString("F");
+            MessageSubType = deviceMessage.MessageSubType.ToString("F");
+            AppMetadata = deviceMessage.AppMetadata;
+            DeviceValues = deviceMessage.Values; 
         }
 
         /// <summary>

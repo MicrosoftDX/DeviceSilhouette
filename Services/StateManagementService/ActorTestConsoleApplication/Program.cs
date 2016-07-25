@@ -21,9 +21,9 @@ namespace ActorTestConsoleApplication
         {
             var jsonState = @"{ ""silhouetteProperties"": { },""appMetadata"": { },""deviceValues"": { } }";
             var deviceId = "RichSilhouette1";
-            var deviceState = new DeviceMessage(deviceId, "", "", MessageType.Report, MessageSubType.State);
+            var deviceMessage = new DeviceMessage(deviceId, "", "", MessageType.Report, MessageSubType.State);
 
-            var id = deviceState.CorrelationId;
+            var id = deviceMessage.CorrelationId;
             bool cont = true;
 
             while (cont)
@@ -43,20 +43,20 @@ namespace ActorTestConsoleApplication
 
                     if (method == "Put" || method == "Set")
                     {
-                        DeviceMessage state = new DeviceMessage(actorId.GetStringId(), "", "", MessageType.Report, MessageSubType.State);
-                        currentstate = silhouette.SetDeviceStateAsync(state).Result;
+                        DeviceMessage message = new DeviceMessage(actorId.GetStringId(), "", "", MessageType.Report, MessageSubType.State);
+                        currentstate = silhouette.StoreDeviceMessageAsync(message).Result;
                     }
 
                     if (method == "Get")
                     {
-                        currentstate = silhouette.GetDeviceStateAsync().Result;
-
                         //State history
-                        var stateMessages = silhouette.GetDeviceStateMessagesAsync().Result;
+                        var stateMessages = silhouette.GetDeviceMessagesAsync().Result;
+
+                        currentstate = stateMessages.Last();
                     }
 
                     //Display device silhouette state
-                    Console.WriteLine("Current state");
+                    Console.WriteLine("Latest state");
                     if (currentstate != null)
                     {
                         Console.WriteLine("Device : {0}", currentstate.DeviceId);

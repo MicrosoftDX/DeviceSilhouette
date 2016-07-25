@@ -12,7 +12,7 @@ namespace DeviceRichState
     [DataContract]
     public class DeviceMessage
     {
-        // NOTE - when adding new properties, also add the related tests in DeviceState_SerializationTests
+        // NOTE - when adding new properties, also add the related tests in DeviceMessage_SerializationTests
 
         [DataMember]
         private string _deviceId;
@@ -24,7 +24,7 @@ namespace DeviceRichState
         private MessageType _messageType;
 
         /// <summary>
-        /// Can only be set at DeviceState instantiation
+        /// Can only be set at DeviceMessage instantiation
         /// </summary>
         [DataMember]
         public string DeviceId { get { return _deviceId; } set {; } }

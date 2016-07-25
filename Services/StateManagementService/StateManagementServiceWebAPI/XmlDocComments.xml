@@ -200,7 +200,7 @@
             <summary>
             
             </summary>
-            <param name="deviceState"></param>
+            <param name="deviceMessage"></param>
         </member>
         <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.DeviceId">
             <summary>

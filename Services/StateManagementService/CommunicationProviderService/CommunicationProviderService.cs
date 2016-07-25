@@ -23,9 +23,9 @@ namespace CommunicationProviderService
         /// <summary>
         /// Send a message to the device (and log it)
         /// </summary>
-        /// <param name="deviceState"></param>
+        /// <param name="deviceMessage"></param>
         /// <returns></returns>
-        Task SendCloudToDeviceAsync(DeviceMessage deviceState);
+        Task<DeviceMessage> SendCloudToDeviceMessageAsync(DeviceMessage deviceMessage);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ namespace CommunicationProviderService
         {
             try
             {
-                DeviceMessage deviceMessage = ToDeviceState(message);
+                DeviceMessage deviceMessage = ToDeviceMessage(message);
                 await StoreMessageInActor(deviceMessage);
 
                 // Any actions to take on the message (should this be handled here?)
@@ -122,7 +122,7 @@ namespace CommunicationProviderService
                         MessageType.InquiryResponse,
                         MessageSubType.GetState
                     );
-                await SendCloudToDeviceAsync(newState);
+                await SendCloudToDeviceMessageAsync(newState);
             }
             catch (Exception e)
             {
@@ -131,19 +131,21 @@ namespace CommunicationProviderService
         }
 
 
-        public async Task SendCloudToDeviceAsync(DeviceMessage deviceMessage)
+        public async Task<DeviceMessage> SendCloudToDeviceMessageAsync(DeviceMessage deviceMessage)
         {
-            await StoreMessageInActor(deviceMessage);
+            deviceMessage = await StoreMessageInActor(deviceMessage);
 
             // update C2D end point with the request to state update
             await _messageSender.SendCloudToDeviceAsync(deviceMessage);
+
+            return deviceMessage;
         }
 
-        private async Task StoreMessageInActor(DeviceMessage deviceMessage)
+        private async Task<DeviceMessage> StoreMessageInActor(DeviceMessage deviceMessage)
         {
             // update the state repository with the new message
             IDeviceRepositoryActor actor = GetDeviceActor(deviceMessage.DeviceId);
-            await actor.SetDeviceStateAsync(deviceMessage);
+            return await actor.StoreDeviceMessageAsync(deviceMessage);
         }
         private static IDeviceRepositoryActor GetDeviceActor(string deviceId)
         {
@@ -152,7 +154,7 @@ namespace CommunicationProviderService
             return silhouette;
         }
 
-        private DeviceMessage ToDeviceState(MessageInfo message)
+        private DeviceMessage ToDeviceMessage(MessageInfo message)
         {
             return new DeviceMessage(
                 message.DeviceId,

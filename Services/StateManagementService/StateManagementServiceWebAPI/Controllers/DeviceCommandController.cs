@@ -48,7 +48,6 @@ namespace StateManagementServiceWebAPI.Controllers
             _communicationProvider = communicationProvider;
         }
 
-
         /// <summary>
         /// Trigger a DeepGet (i.e. invoke getting the current state from the device
         /// NOTE: this endpoint is temporary and will likely change!
@@ -68,7 +67,7 @@ namespace StateManagementServiceWebAPI.Controllers
             {
                 MessageTtlMs = timeToLiveMilliSec
             };
-            await _communicationProvider.SendCloudToDeviceAsync(deviceMessage);
+            await _communicationProvider.SendCloudToDeviceMessageAsync(deviceMessage);
         }
 
         /// <summary>
@@ -91,13 +90,13 @@ namespace StateManagementServiceWebAPI.Controllers
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
             try
             {
-                var deviceState = await _stateProcessor.SetStateValueAsync(
+                var deviceMessage = await _stateProcessor.SetStateValueAsync(
                     deviceId,
                     requestedState.AppMetadata.ToString(),
                     requestedState.Values.ToString(),
                     requestedState.TimeToLiveMilliSec);
 
-                return Ok(new DeviceStateModel(deviceState)); // TODO - should be a CommandResponse model
+                return Ok(new DeviceStateModel(deviceMessage)); // TODO - should be a CommandResponse model
             }
             catch (Exception e) // TODO - filter the exceptions that we catch, add logging, ...
             {

@@ -18,23 +18,17 @@ namespace DeviceRepository.Interfaces
         Task<DeviceMessage> GetLastKnownRequestedStateAsync();
 
         /// <summary>
-        /// This method reads the most recent state message from the Silhouette
+        /// This method stores a device message in the Silhouette
         /// </summary>
-        /// <returns>Object that contains the last stored requested or reported device state</returns>
-        Task<DeviceMessage> GetDeviceStateAsync();
-
-        /// <summary>
-        /// This method stores a state message in the Silhouette
-        /// </summary>
-        /// <param name="state">Object that contains the requested or reported device state</param>
+        /// <param name="message">the message to store</param>
         /// <returns></returns>
-        Task<DeviceMessage> SetDeviceStateAsync(DeviceMessage state);
+        Task<DeviceMessage> StoreDeviceMessageAsync(DeviceMessage message);
 
         /// <summary>
-        /// This method reads the available state history from the Silhouette
+        /// This method reads the available message history from the Silhouette
         /// </summary>
-        /// <returns>List of DeviceState objects</returns>
-        Task<List<DeviceMessage>> GetDeviceStateMessagesAsync();
+        /// <returns>List of DeviceMessage objects</returns>
+        Task<List<DeviceMessage>> GetDeviceMessagesAsync();
         /// <summary>
         /// Get a specific message by version number
         /// </summary>

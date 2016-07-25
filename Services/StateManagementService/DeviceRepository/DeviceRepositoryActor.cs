@@ -55,14 +55,13 @@ namespace DeviceRepository
         {
             DeviceMessage state = null;
             // search in silhouetteMessages
-            var stateMessages = await GetDeviceStateMessagesAsync();
-            if (stateMessages != null)
+            var messages = await GetDeviceMessagesAsync();
+            if (messages != null)
             {
-                state = stateMessages.OrderByDescending(m => m.Timestamp)
+                state = messages.OrderByDescending(m => m.Timestamp)
                                                     .Where(m => m.MessageType == MessageType.Report)
                                                     .FirstOrDefault();
             }
-
             return state;
         }
 
@@ -70,30 +69,22 @@ namespace DeviceRepository
         {
             DeviceMessage state = null;
             // search in silhouetteMessages
-            var stateMessages = await GetDeviceStateMessagesAsync();
-            if (stateMessages != null)
+            var messages = await GetDeviceMessagesAsync();
+            if (messages != null)
             {
-                state = stateMessages.OrderByDescending(m => m.Timestamp)
-                                        .Where(m => m.MessageType == MessageType.CommandRequest && m.MessageSubType == MessageSubType.New)
+                state = messages.OrderByDescending(m => m.Timestamp)
+                                        .Where(m => {
+                                            return (m.MessageType == MessageType.CommandRequest
+                                                        && m.MessageSubType == MessageSubType.SetState)
+                                                    || (m.MessageType == MessageType.Report && m.MessageSubType == MessageSubType.State);
+                                            })
                                         .FirstOrDefault();
             }
-
             return state;
         }
 
 
-
-        public async Task<DeviceMessage> GetDeviceStateAsync()
-        {
-            var stateMessage = await StateManager.TryGetStateAsync<DeviceMessage>(StateName);
-
-            if (stateMessage.HasValue)
-                return stateMessage.Value;
-            else
-                return null;
-        }
-
-        public async Task<List<DeviceMessage>> GetDeviceStateMessagesAsync()
+        public async Task<List<DeviceMessage>> GetDeviceMessagesAsync()
         {
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
             if (stateMessages.HasValue)
@@ -104,7 +95,7 @@ namespace DeviceRepository
 
         public async Task<DeviceMessage> GetMessageByVersionAsync(int version)
         {
-            var messages = await GetDeviceStateMessagesAsync();
+            var messages = await GetDeviceMessagesAsync();
             if (messages == null)
             {
                 return null;
@@ -114,7 +105,7 @@ namespace DeviceRepository
         }
         public async Task<MessageList> GetMessagesAsync(int pageSize, int? continuation)
         {
-            var messages = await GetDeviceStateMessagesAsync();
+            var messages = await GetDeviceMessagesAsync();
             if (messages == null)
             {
                 return null;
@@ -139,28 +130,28 @@ namespace DeviceRepository
 
         }
 
-        public async Task<DeviceMessage> SetDeviceStateAsync(DeviceMessage state)
+        public async Task<DeviceMessage> StoreDeviceMessageAsync(DeviceMessage message)
         {
             // check if this state is for this actor : DeviceID == ActorId
-            if (state.DeviceId == this.GetActorId().ToString())
+            if (message.DeviceId == this.GetActorId().ToString())
             {
                 var lastState = await StateManager.TryGetStateAsync<DeviceMessage>(StateName);
 
                 if (lastState.HasValue)
-                    state.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
+                    message.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
 
                 // persist the message and add to actor state (in parallel)
                 await Task.WhenAll(
-                    PersistMessage(state),
-                    AddDeviceMessageToMessageListAsync(state)
+                    PersistMessage(message),
+                    AddDeviceMessageToMessageListAsync(message)
                     );
 
-                await StateManager.SetStateAsync(StateName, state);
-                return state;
+                await StateManager.SetStateAsync(StateName, message);
+                return message;
             }
             else
             {
-                ActorEventSource.Current.ActorMessage(this, "State invalid, device is {0} silhouette is {1}.", state.DeviceId, this.GetActorId().ToString());
+                ActorEventSource.Current.ActorMessage(this, "State invalid, device is {0} silhouette is {1}.", message.DeviceId, this.GetActorId().ToString());
                 return null;
             }
 
