@@ -56,7 +56,7 @@ namespace CommunicationProviders.IoTHub
             // TODO SL - get the message Id - assume that this will become the correlation id for responses if correlationId not set
 
             string messageTypeString;
-            if (!TryGetStringValue(eventData.SystemProperties, "MessageType", out messageTypeString))
+            if (!TryGetStringValue(eventData.Properties, "MessageType", out messageTypeString))
             {
                 // TODO - log failure. (also move to alternative queue for handling?)
                 return null;
@@ -69,7 +69,7 @@ namespace CommunicationProviders.IoTHub
             }
 
             string messageSubTypeString;
-            if (!TryGetStringValue(eventData.SystemProperties, "MessageSubType", out messageSubTypeString))
+            if (!TryGetStringValue(eventData.Properties, "MessageSubType", out messageSubTypeString))
             {
                 // TODO - log failure. (also move to alternative queue for handling?)
                 return null;
