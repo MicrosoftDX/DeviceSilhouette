@@ -11,7 +11,7 @@ using System.IO;
 namespace DeviceRichState.Tests
 {
     [TestClass()]
-    public class DeviceState_SerializationTests
+    public class DeviceMessage_SerializationTests
     {
         private DeviceMessage OriginalMessage;
         private DeviceMessage DeserializedMessage;
