@@ -35,8 +35,8 @@ namespace StateManagementServiceWebAPI.Controllers
         /// Lazy DI constructor ;-)
         /// </summary>
         public DeviceMessageController()
-            : this (
-                  stateProcessor:ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
+            : this(
+                  stateProcessor: ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
                   communicationProvider: ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"))
                   )
         {
@@ -63,27 +63,20 @@ namespace StateManagementServiceWebAPI.Controllers
         public async Task<IHttpActionResult> GetMessage(string deviceId, int version)
         {
             IHttpActionResult result;
-            try
+            var message = await _stateProcessor.GetMessageAsync(deviceId, version);
+            if (message == null)
             {
-                var message = await _stateProcessor.GetMessageAsync(deviceId, version);
-                if (message == null)
-                {
-                    result = NotFound();
-                }
-                else
-                {
-                    result = Ok(ToMessageModel(message));
-                }
-            }
-            catch (Exception e)
-            {
-                // TODO: return different response according to exception. For now assuming deviceId not found.
                 result = this.NotFound(new ErrorModel
                 {
                     Code = ErrorCode.InvalidDeviceId,
                     Message = ErrorMessage.InvalidDeviceId(deviceId)
                 });
             }
+            else
+            {
+                result = Ok(ToMessageModel(message));
+            }
+
             return result;
         }
 
@@ -93,30 +86,30 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <param name="deviceId"></param>
         /// <param name="continuationToken"></param>
         /// <returns></returns>
-        [Route("", Name ="GetMessages")]
+        [Route("", Name = "GetMessages")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MessageListModel))]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
-        public async Task<IHttpActionResult> GetMessages(string deviceId, [FromUri]int? continuationToken=null)
+        public async Task<IHttpActionResult> GetMessages(string deviceId, [FromUri]int? continuationToken = null)
         {
             IHttpActionResult result;
-            try
+            var messages = await _stateProcessor.GetMessagesAsync(deviceId, MessageResultPageSize, continuationToken);
+            if (messages == null)
             {
-                var messages = await _stateProcessor.GetMessagesAsync(deviceId, MessageResultPageSize, continuationToken);
-                var resultModel = new MessageListModel
-                {
-                    Values = messages.Messages.Select(ToMessageModel),
-                    NextLink =  Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
-                };
-                result = Ok(resultModel);
-            }
-            catch (Exception e)
-            {
-                // TODO: return different response according to exception. For now assuming deviceId not found.
                 result = this.NotFound(new ErrorModel
                 {
                     Code = ErrorCode.InvalidDeviceId,
                     Message = ErrorMessage.InvalidDeviceId(deviceId)
                 });
+            }
+            else
+            {
+                var resultModel = new MessageListModel
+                {
+                    Values = messages.Messages.Select(ToMessageModel),
+                    NextLink = Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
+                };
+                result = Ok(resultModel);
+
             }
             return result;
         }

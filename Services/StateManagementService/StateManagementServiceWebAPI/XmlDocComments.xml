@@ -138,6 +138,17 @@
             <param name="content"></param>
             <returns></returns>
         </member>
+        <member name="T:StateManagementServiceWebAPI.Helpers.UnhandledErrorModelExceptionHandler">
+            <summary>
+            Catch-all handler as a last resort
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Helpers.UnhandledErrorModelExceptionHandler.Handle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)">
+            <summary>
+            convert the exception into a result object
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceStateRequestModel">
             <summary>
             Data model used to capture the State Request command added through the API
@@ -334,6 +345,11 @@
             The request body/parameters are not valid
             </summary>
         </member>
+        <member name="F:StateManagementServiceWebAPI.Models.ErrorCode.UnhandledError">
+            <summary>
+            Generic unhandled error - this should be the LAST RESORT of error handling!!
+            </summary>
+        </member>
         <member name="T:StateManagementServiceWebAPI.Models.ErrorMessage">
             <summary>
             List of error messages
@@ -351,6 +367,11 @@
             The request body/parameters are not valid
             </summary>>
             <returns></returns>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Models.ErrorMessage.UnhandledError">
+            <summary>
+            Generic unhandled error - this should be the LAST RESORT of error handling!!
+            </summary>
         </member>
         <member name="T:StateManagementServiceWebAPI.StateManagementServiceWebAPI">
             <summary>

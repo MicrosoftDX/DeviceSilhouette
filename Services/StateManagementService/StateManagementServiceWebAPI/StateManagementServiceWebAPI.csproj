@@ -113,6 +113,7 @@
     <Compile Include="Controllers\DeviceCommandController.cs" />
     <Compile Include="Filters\HandleInvalidModelAttribute.cs" />
     <Compile Include="Helpers\ApiControllerResponseExtensions.cs" />
+    <Compile Include="Helpers\UnhandledErrorModelExceptionHandler.cs" />
     <Compile Include="Models\DeviceCommand\DeviceStateRequestModel.cs" />
     <Compile Include="Models\DeviceMessage\MessageModel.cs" />
     <Compile Include="Models\DeviceState\DeviceStateModel.cs" />

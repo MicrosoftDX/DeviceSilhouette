@@ -31,8 +31,8 @@ namespace StateManagementServiceWebAPI.Controllers
         /// Lazy DI constructor ;-)
         /// </summary>
         public DeviceStateController()
-            : this (
-                  stateProcessor:ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
+            : this(
+                  stateProcessor: ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
                   communicationProvider: ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"))
                   )
         {
@@ -60,20 +60,20 @@ namespace StateManagementServiceWebAPI.Controllers
         public async Task<IHttpActionResult> GetLastReportedState([FromUri]string deviceId)
         {
             IHttpActionResult result;
-            try
+            var state = await _stateProcessor.GetLastReportedStateAsync(deviceId);
+            if (state == null)
             {
-                var state = await _stateProcessor.GetLastReportedStateAsync(deviceId);
-                result = Ok(new DeviceStateModel(state));
-            }
-            catch (Exception e)
-            {
-                // TODO: return different response according to exception. For now assuming deviceId not found.
                 result = this.NotFound(new ErrorModel
                 {
                     Code = ErrorCode.InvalidDeviceId,
                     Message = ErrorMessage.InvalidDeviceId(deviceId)
                 });
             }
+            else
+            {
+                result = Ok(new DeviceStateModel(state));
+            }
+
             return result;
         }
 
@@ -88,19 +88,18 @@ namespace StateManagementServiceWebAPI.Controllers
         public async Task<IHttpActionResult> GetLastRequestedState([FromUri]string deviceId)
         {
             IHttpActionResult result;
-            try
+            var state = await _stateProcessor.GetLastRequestedStateAsync(deviceId);
+            if (state == null)
             {
-                var state = await _stateProcessor.GetLastRequestedStateAsync(deviceId);
-                result = Ok(new DeviceStateModel(state));
-            }
-            catch (Exception e)
-            {
-                // TODO: return different response according to exception. For now assuming deviceId not found.
                 result = this.NotFound(new ErrorModel
                 {
                     Code = ErrorCode.InvalidDeviceId,
                     Message = ErrorMessage.InvalidDeviceId(deviceId)
                 });
+            }
+            else
+            {
+                result = Ok(new DeviceStateModel(state));
             }
             return result;
         }

@@ -25,8 +25,8 @@ namespace StateManagementServiceWebAPI.Models
             CorrelationId = deviceMessage.CorrelationId;
             MessageType = deviceMessage.MessageType.ToString("F");
             MessageSubType = deviceMessage.MessageSubType.ToString("F");
-            AppMetadata = deviceMessage.AppMetadata;
-            DeviceValues = deviceMessage.Values; 
+            AppMetadata = string.IsNullOrEmpty(deviceMessage.AppMetadata) ? null : JToken.Parse(deviceMessage.AppMetadata);
+            DeviceValues = string.IsNullOrEmpty(deviceMessage.Values) ? null : JToken.Parse(deviceMessage.Values); 
         }
 
         /// <summary>

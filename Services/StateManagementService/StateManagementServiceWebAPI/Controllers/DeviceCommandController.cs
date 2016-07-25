@@ -30,8 +30,8 @@ namespace StateManagementServiceWebAPI.Controllers
         /// Lazy DI constructor ;-)
         /// </summary>
         public DeviceCommandController()
-            : this (
-                  stateProcessor:ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
+            : this(
+                  stateProcessor: ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
                   communicationProvider: ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"))
                   )
         {
@@ -56,7 +56,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <param name="deviceId"></param>
         /// <param name="timeToLiveMilliSec"></param>
         /// <returns></returns>
-        [Route("deepget")] 
+        [Route("deepget")]
         [HttpPost]
         public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] long timeToLiveMilliSec)
         {
@@ -86,21 +86,13 @@ namespace StateManagementServiceWebAPI.Controllers
             // TODO - this should return the Accepted Response
 
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
-            try
-            {
-                var deviceMessage = await _stateProcessor.SetStateValueAsync(
-                    deviceId,
-                    requestedState.AppMetadata.ToString(),
-                    requestedState.Values.ToString(),
-                    requestedState.TimeToLiveMilliSec);
+            var deviceMessage = await _stateProcessor.SetStateValueAsync(
+                deviceId,
+                requestedState.AppMetadata.ToString(),
+                requestedState.Values.ToString(),
+                requestedState.TimeToLiveMilliSec);
 
-                return Ok(new DeviceStateModel(deviceMessage)); // TODO - should be a CommandResponse model
-            }
-            catch (Exception e) // TODO - filter the exceptions that we catch, add logging, ...
-            {
-                throw;
-            }
-
+            return Ok(new DeviceStateModel(deviceMessage)); // TODO - should be a CommandResponse model
         }
     }
 }

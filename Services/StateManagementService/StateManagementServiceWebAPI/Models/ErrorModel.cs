@@ -19,9 +19,13 @@ namespace StateManagementServiceWebAPI.Models
         /// Non-localized error description
         /// </summary>
         public string Message { get; set; }
+
         // TODO - need to implement logging and include tracking id in error message
         //public string TrackingId { get; set; }
     }
+
+
+
 
     /// <summary>
     /// Error model for ModelState validation errors
@@ -48,6 +52,21 @@ namespace StateManagementServiceWebAPI.Models
         public List<string> Messages { get; set; }
     }
 
+
+
+
+    public class UnhandledErrorModel : ErrorModel
+    {
+        public InnerErrorModel InnerError { get; set; }
+    }
+    public class InnerErrorModel
+    {
+        public string Message { get; set; }
+    }
+
+
+
+
     /// <summary>
     /// List of error codes
     /// </summary>
@@ -61,6 +80,12 @@ namespace StateManagementServiceWebAPI.Models
         /// The request body/parameters are not valid
         /// </summary>
         public const string InvalidRequest = "invalid-request";
+
+
+        /// <summary>
+        /// Generic unhandled error - this should be the LAST RESORT of error handling!!
+        /// </summary>
+        public const string UnhandledError = "unhandled-error";
     }
 
     /// <summary>
@@ -85,6 +110,14 @@ namespace StateManagementServiceWebAPI.Models
         public static string InvalidRequest()
         {
             return "The request body was invalid";
+        }
+
+        /// <summary>
+        /// Generic unhandled error - this should be the LAST RESORT of error handling!!
+        /// </summary>
+        public static string UnhandledError()
+        {
+            return "Unhandled error";
         }
     }
 
