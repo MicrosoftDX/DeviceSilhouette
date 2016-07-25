@@ -15,9 +15,9 @@ namespace StorageProviderService
 {
     public interface IStorageProviderRemoting : IService
     {
-        Task StoreStateMessageAsync(DeviceState stateMessage);
+        Task StoreStateMessageAsync(DeviceMessage stateMessage);
 
-        Task StoreStateMessagesAsync(List<DeviceState> stateMessages);
+        Task StoreStateMessagesAsync(List<DeviceMessage> stateMessages);
     }
 
     /// <summary>
@@ -33,12 +33,12 @@ namespace StorageProviderService
             _storageProvider = new BlobStorageProvider(storageConnectionString);
         }
 
-        public async Task StoreStateMessageAsync(DeviceState stateMessage)
+        public async Task StoreStateMessageAsync(DeviceMessage stateMessage)
         {
             await _storageProvider.StoreStateMessageAsync(stateMessage);
         }
 
-        public async Task StoreStateMessagesAsync(List<DeviceState> stateMessages)
+        public async Task StoreStateMessagesAsync(List<DeviceMessage> stateMessages)
         {
             await _storageProvider.StoreStateMessagesAsync(stateMessages);
         }

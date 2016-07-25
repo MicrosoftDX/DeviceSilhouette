@@ -13,13 +13,13 @@ namespace DeviceRichState.Tests
     [TestClass()]
     public class DeviceState_SerializationTests
     {
-        private DeviceState OriginalMessage;
-        private DeviceState DeserializedMessage;
+        private DeviceMessage OriginalMessage;
+        private DeviceMessage DeserializedMessage;
 
         [TestInitialize]
         public void Initialize()
         {
-            OriginalMessage = new DeviceState(
+            OriginalMessage = new DeviceMessage(
                 "deviceIdWibble",
                 "{\"metadataValue\":123}",
                 "{\"state\":123}",
@@ -31,12 +31,12 @@ namespace DeviceRichState.Tests
             };
 
 
-            var serializer = new DataContractJsonSerializer(typeof(DeviceState)); // TODO - can we find out the settings that SF uses to align the tests with those?
+            var serializer = new DataContractJsonSerializer(typeof(DeviceMessage)); // TODO - can we find out the settings that SF uses to align the tests with those?
             using (var stream = new MemoryStream())
             {
                 serializer.WriteObject(stream, OriginalMessage);
                 stream.Seek(0, SeekOrigin.Begin);
-                DeserializedMessage = (DeviceState) serializer.ReadObject(stream);
+                DeserializedMessage = (DeviceMessage) serializer.ReadObject(stream);
             }
         }
 

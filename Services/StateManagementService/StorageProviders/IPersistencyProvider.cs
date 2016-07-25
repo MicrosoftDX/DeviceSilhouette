@@ -9,9 +9,9 @@ namespace PersistencyProviders
 {
     public interface IHistoryStorage
     {
-        Task StoreStateMessageAsync(DeviceState stateMessage);
+        Task StoreStateMessageAsync(DeviceMessage stateMessage);
 
-        Task StoreStateMessagesAsync(List<DeviceState> stateMessages);
+        Task StoreStateMessagesAsync(List<DeviceMessage> stateMessages);
     }
 
 }

@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 namespace DeviceRichState
 {
     [DataContract]
-    public class DeviceState
+    public class DeviceMessage
     {
         // NOTE - when adding new properties, also add the related tests in DeviceState_SerializationTests
 
@@ -68,7 +68,7 @@ namespace DeviceRichState
         /// </summary>
         public long MessageTtlMs { get; set; }
 
-        public DeviceState()
+        public DeviceMessage()
         {
             // empty constructor for serialization
         }
@@ -82,7 +82,7 @@ namespace DeviceRichState
         /// <param name="messageType">Who send the message; reported == device, requested == application</param>
         /// <param name="messageStatus">Indication of the status of this message instance</param>
         /// /// <param name="correlationId">Message id</param>
-        public DeviceState(string deviceId, string metadata, string values, MessageType messageType, MessageSubType messageSubType, string correlationId = null)
+        public DeviceMessage(string deviceId, string metadata, string values, MessageType messageType, MessageSubType messageSubType, string correlationId = null)
         {
             // To make these values immutable they are set through private field and get through public property
             // It is not possible to make the setter readonly because of [DataMember]

@@ -64,7 +64,7 @@ namespace StateManagementServiceWebAPI.Controllers
             // TODO - this is a temporary endpoint - it feels as though it should be just another command
             // TODO - this should return the Accepted Response
 
-            var deviceMessage = new DeviceState(deviceId, null, null, MessageType.CommandRequest, MessageSubType.ReportState)
+            var deviceMessage = new DeviceMessage(deviceId, null, null, MessageType.CommandRequest, MessageSubType.ReportState)
             {
                 MessageTtlMs = timeToLiveMilliSec
             };

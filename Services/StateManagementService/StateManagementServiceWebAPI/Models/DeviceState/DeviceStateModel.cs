@@ -17,7 +17,7 @@ namespace StateManagementServiceWebAPI.Models
         /// 
         /// </summary>
         /// <param name="deviceState"></param>
-        public DeviceStateModel(DeviceState deviceState)
+        public DeviceStateModel(DeviceRichState.DeviceMessage deviceState)
         {
             DeviceId = deviceState.DeviceId;
             Timestamp = deviceState.Timestamp;

@@ -44,9 +44,9 @@ namespace PersistencyProviders.BlobStorage
             container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
         }
 
-        private MemoryStream SerializeToStream(DeviceState stateMessage)
+        private MemoryStream SerializeToStream(DeviceMessage stateMessage)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(DeviceState));
+            XmlSerializer serializer = new XmlSerializer(typeof(DeviceMessage));
             MemoryStream stream = new MemoryStream();
             serializer.Serialize(XmlWriter.Create(stream), stateMessage);
             stream.Seek(0, SeekOrigin.Begin);
@@ -58,7 +58,7 @@ namespace PersistencyProviders.BlobStorage
         /// </summary>
         /// <param name="stateMessage">the device state message to store</param>
         /// <returns></returns>
-        public async Task StoreStateMessageAsync(DeviceState stateMessage)
+        public async Task StoreStateMessageAsync(DeviceMessage stateMessage)
         {
             await internalStoreMessageAsync(stateMessage);
         }
@@ -68,13 +68,13 @@ namespace PersistencyProviders.BlobStorage
         /// </summary>
         /// <param name="stateMessages">device state messages to store</param>
         /// <returns></returns>
-        public async Task StoreStateMessagesAsync(List<DeviceState> stateMessages)
+        public async Task StoreStateMessagesAsync(List<DeviceMessage> stateMessages)
         {
             var processingTasks = stateMessages.Select(internalStoreMessageAsync);
             await Task.WhenAll(processingTasks);
         }
 
-        private async Task internalStoreMessageAsync(DeviceState stateMessage)
+        private async Task internalStoreMessageAsync(DeviceMessage stateMessage)
         {
             // create a unique name for the blob based on device id and message stamptime
             String folderPath = String.Concat(stateMessage.Timestamp.Year, "/", stateMessage.Timestamp.Month, "/", stateMessage.Timestamp.Day, "/", stateMessage.MessageType.ToString(), "_", "/");

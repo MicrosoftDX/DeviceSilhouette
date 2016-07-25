@@ -42,7 +42,7 @@ namespace DeviceRepository
 
         private async Task PurgeStates(object arg)
         {
-            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
             if (stateMessages.HasValue)
             {
                 var messages = stateMessages.Value;
@@ -66,9 +66,9 @@ namespace DeviceRepository
             return Task.FromResult(true);
         }
 
-        public async Task<DeviceState> GetLastKnownReportedStateAsync()
+        public async Task<DeviceMessage> GetLastKnownReportedStateAsync()
         {
-            DeviceState state = null;
+            DeviceMessage state = null;
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
             if (stateMessages != null)
@@ -81,9 +81,9 @@ namespace DeviceRepository
             return state;
         }
 
-        public async Task<DeviceState> GetLastKnownRequestedStateAsync()
+        public async Task<DeviceMessage> GetLastKnownRequestedStateAsync()
         {
-            DeviceState state = null;
+            DeviceMessage state = null;
             // search in silhouetteMessages
             var stateMessages = await GetDeviceStateMessagesAsync();
             if (stateMessages != null)
@@ -98,9 +98,9 @@ namespace DeviceRepository
 
 
 
-        public async Task<DeviceState> GetDeviceStateAsync()
+        public async Task<DeviceMessage> GetDeviceStateAsync()
         {
-            var stateMessage = await StateManager.TryGetStateAsync<DeviceState>(StateName);
+            var stateMessage = await StateManager.TryGetStateAsync<DeviceMessage>(StateName);
 
             if (stateMessage.HasValue)
                 return stateMessage.Value;
@@ -108,16 +108,16 @@ namespace DeviceRepository
                 return null;
         }
 
-        public async Task<List<DeviceState>> GetDeviceStateMessagesAsync()
+        public async Task<List<DeviceMessage>> GetDeviceStateMessagesAsync()
         {
-            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
             if (stateMessages.HasValue)
                 return stateMessages.Value;
             else
                 return null;
         }
 
-        public async Task<DeviceState> GetMessageByVersionAsync(int version)
+        public async Task<DeviceMessage> GetMessageByVersionAsync(int version)
         {
             var messages = await GetDeviceStateMessagesAsync();
             if (messages == null)
@@ -154,12 +154,12 @@ namespace DeviceRepository
 
         }
 
-        public async Task<DeviceState> SetDeviceStateAsync(DeviceState state)
+        public async Task<DeviceMessage> SetDeviceStateAsync(DeviceMessage state)
         {
             // check if this state is for this actor : DeviceID == ActorId
             if (state.DeviceId == this.GetActorId().ToString())
             {
-                var lastState = await StateManager.TryGetStateAsync<DeviceState>(StateName);
+                var lastState = await StateManager.TryGetStateAsync<DeviceMessage>(StateName);
 
                 if (lastState.HasValue)
                     state.Version = (lastState.Value.Version < Int32.MaxValue) ? (lastState.Value.Version + 1) : 1;
@@ -181,7 +181,7 @@ namespace DeviceRepository
 
         }
 
-        private async Task PersistMessage(DeviceState state)
+        private async Task PersistMessage(DeviceMessage state)
         {
             if (!state.Persisted)
             {
@@ -190,10 +190,10 @@ namespace DeviceRepository
             }
         }
 
-        private async Task AddDeviceMessageToMessageListAsync(DeviceState state)
+        private async Task AddDeviceMessageToMessageListAsync(DeviceMessage state)
         {
-            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceState>>(StateName);
-            var messages = stateMessages.HasValue ? stateMessages.Value : new List<DeviceState>();
+            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
+            var messages = stateMessages.HasValue ? stateMessages.Value : new List<DeviceMessage>();
             
             messages.Add(state);
             await StateManager.SetStateAsync(StateName, messages);

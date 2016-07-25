@@ -121,7 +121,7 @@ namespace StateManagementServiceWebAPI.Controllers
             return result;
         }
 
-        private static MessageModel ToMessageModel(DeviceState message)
+        private static MessageModel ToMessageModel(DeviceMessage message)
         {
             return new MessageModel
             {

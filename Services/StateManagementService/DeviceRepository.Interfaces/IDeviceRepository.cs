@@ -14,33 +14,33 @@ namespace DeviceRepository.Interfaces
     /// </summary>
     public interface IDeviceRepositoryActor : IActor
     {
-        Task<DeviceState> GetLastKnownReportedStateAsync();
-        Task<DeviceState> GetLastKnownRequestedStateAsync();
+        Task<DeviceMessage> GetLastKnownReportedStateAsync();
+        Task<DeviceMessage> GetLastKnownRequestedStateAsync();
 
         /// <summary>
         /// This method reads the most recent state message from the Silhouette
         /// </summary>
         /// <returns>Object that contains the last stored requested or reported device state</returns>
-        Task<DeviceState> GetDeviceStateAsync();
+        Task<DeviceMessage> GetDeviceStateAsync();
 
         /// <summary>
         /// This method stores a state message in the Silhouette
         /// </summary>
         /// <param name="state">Object that contains the requested or reported device state</param>
         /// <returns></returns>
-        Task<DeviceState> SetDeviceStateAsync(DeviceState state);
+        Task<DeviceMessage> SetDeviceStateAsync(DeviceMessage state);
 
         /// <summary>
         /// This method reads the available state history from the Silhouette
         /// </summary>
         /// <returns>List of DeviceState objects</returns>
-        Task<List<DeviceState>> GetDeviceStateMessagesAsync();
+        Task<List<DeviceMessage>> GetDeviceStateMessagesAsync();
         /// <summary>
         /// Get a specific message by version number
         /// </summary>
         /// <param name="version"></param>
         /// <returns></returns>
-        Task<DeviceState> GetMessageByVersionAsync(int version);
+        Task<DeviceMessage> GetMessageByVersionAsync(int version);
         /// <summary>
         /// Get a paged set of messages from the actor
         /// </summary>
@@ -55,7 +55,7 @@ namespace DeviceRepository.Interfaces
         /// <summary>
         /// The set of messages
         /// </summary>
-        public List<DeviceState> Messages { get; set; }
+        public List<DeviceMessage> Messages { get; set; }
         /// <summary>
         /// The continuation token to pass to retrieve the next set of messages
         /// </summary>

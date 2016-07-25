@@ -51,7 +51,7 @@ namespace CommunicationProviders.IoTHub
         {
             _serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
         }
-        public async Task SendCloudToDeviceAsync(DeviceState silhouetteMessage)
+        public async Task SendCloudToDeviceAsync(DeviceMessage silhouetteMessage)
         {
             var commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(silhouetteMessage.Values))
             {

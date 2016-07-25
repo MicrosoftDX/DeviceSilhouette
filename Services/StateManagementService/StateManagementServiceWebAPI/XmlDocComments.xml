@@ -196,7 +196,7 @@
             Represents the device state
             </summary>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Models.DeviceStateModel.#ctor(DeviceRichState.DeviceState)">
+        <member name="M:StateManagementServiceWebAPI.Models.DeviceStateModel.#ctor(DeviceRichState.DeviceMessage)">
             <summary>
             
             </summary>

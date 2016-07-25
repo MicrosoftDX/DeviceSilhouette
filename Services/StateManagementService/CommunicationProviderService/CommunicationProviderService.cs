@@ -25,7 +25,7 @@ namespace CommunicationProviderService
         /// </summary>
         /// <param name="deviceState"></param>
         /// <returns></returns>
-        Task SendCloudToDeviceAsync(DeviceState deviceState);
+        Task SendCloudToDeviceAsync(DeviceMessage deviceState);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ namespace CommunicationProviderService
         {
             try
             {
-                DeviceState deviceMessage = ToDeviceState(message);
+                DeviceMessage deviceMessage = ToDeviceState(message);
                 await StoreMessageInActor(deviceMessage);
 
                 // Any actions to take on the message (should this be handled here?)
@@ -112,10 +112,10 @@ namespace CommunicationProviderService
             try
             {
                 IDeviceRepositoryActor actor = GetDeviceActor(message.DeviceId);
-                DeviceState lastReportedState = await actor.GetLastKnownReportedStateAsync();
+                DeviceMessage lastReportedState = await actor.GetLastKnownReportedStateAsync();
 
                 // create a new DeviceState with new correlation id, send to the device and store in the repository   
-                var newState = new DeviceState(
+                var newState = new DeviceMessage(
                         message.DeviceId,
                         null,
                         lastReportedState.Values,
@@ -131,7 +131,7 @@ namespace CommunicationProviderService
         }
 
 
-        public async Task SendCloudToDeviceAsync(DeviceState deviceMessage)
+        public async Task SendCloudToDeviceAsync(DeviceMessage deviceMessage)
         {
             await StoreMessageInActor(deviceMessage);
 
@@ -139,7 +139,7 @@ namespace CommunicationProviderService
             await _messageSender.SendCloudToDeviceAsync(deviceMessage);
         }
 
-        private async Task StoreMessageInActor(DeviceState deviceMessage)
+        private async Task StoreMessageInActor(DeviceMessage deviceMessage)
         {
             // update the state repository with the new message
             IDeviceRepositoryActor actor = GetDeviceActor(deviceMessage.DeviceId);
@@ -152,9 +152,9 @@ namespace CommunicationProviderService
             return silhouette;
         }
 
-        private DeviceState ToDeviceState(MessageInfo message)
+        private DeviceMessage ToDeviceState(MessageInfo message)
         {
-            return new DeviceState(
+            return new DeviceMessage(
                 message.DeviceId,
                 null,
                 message.Body,

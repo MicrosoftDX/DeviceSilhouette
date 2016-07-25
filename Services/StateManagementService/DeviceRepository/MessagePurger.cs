@@ -16,7 +16,7 @@ namespace DeviceRepository
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
         }
 
-        public int GetIndexOfLastPurgeableMessage(List<DeviceState> messages)
+        public int GetIndexOfLastPurgeableMessage(List<DeviceMessage> messages)
         {
             var latestReportedStateMessageIndex = messages.FindLastIndex(m => m.MessageType == MessageType.Report);
             var latestMessageTimeStampToPurge = SystemTime.UtcNow().AddMilliseconds(-_messagesRetentionMilliseconds);

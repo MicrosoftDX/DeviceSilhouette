@@ -29,7 +29,7 @@ namespace DeviceRepository.Tests
         public void WhenNoMessagesInTheList_ThenNoMessagesAreIdentifiedToPurge()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
-            var messages = new List<DeviceState>();
+            var messages = new List<DeviceMessage>();
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
@@ -44,7 +44,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            var messages = new List<DeviceState>
+            var messages = new List<DeviceMessage>
             {
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-9), persisted:true),
                 /* index 1 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-8), persisted:true),
@@ -60,7 +60,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            var messages = new List<DeviceState>
+            var messages = new List<DeviceMessage>
             {
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-20), persisted:false), // not persisted
                 /* index 1 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-9), persisted:false),  // in retention window
@@ -76,7 +76,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            var messages = new List<DeviceState>
+            var messages = new List<DeviceMessage>
             {
                 // Index 0 is before the retention window, is persisted, and has later StateReport => can be purged
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), 
@@ -95,7 +95,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            var messages = new List<DeviceState>
+            var messages = new List<DeviceMessage>
             {
                 // All messages are outside the retention window, but the initial message isn't persisted so can't be purged
                 // There is a constraint that for any message retained, later messages must be retained
@@ -115,7 +115,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            var messages = new List<DeviceState>
+            var messages = new List<DeviceMessage>
             {
                 // Whilst the command is persisted and outside the retention window, it doesn't have a response so cannot be purged
                 /* index 0 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), // safe to purge
@@ -135,7 +135,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            var messages = new List<DeviceState>
+            var messages = new List<DeviceMessage>
             {
                 // Whilst the command is persisted and outside the retention window, 
                 // it has a response that is in the retention window so can't be purged
@@ -150,15 +150,15 @@ namespace DeviceRepository.Tests
 
         #region helpers
         private int _messageRetentionInMilliseconds;
-        private List<DeviceState> _messages;
+        private List<DeviceMessage> _messages;
 
         private const int Seconds = 1000;
         private const int Minutes = 60 * Seconds;
 
         private const string DeviceId = "a-device";
-        private DeviceState ReportedState(DateTime timestamp, bool persisted)
+        private DeviceMessage ReportedState(DateTime timestamp, bool persisted)
         {
-            var message = new DeviceState(
+            var message = new DeviceMessage(
                 DeviceId,
                 "{}",
                 "{}",
@@ -171,9 +171,9 @@ namespace DeviceRepository.Tests
             };
             return message;
         }
-        private DeviceState Command(DateTime timestamp, bool persisted, string correlationId)
+        private DeviceMessage Command(DateTime timestamp, bool persisted, string correlationId)
         {
-            var message = new DeviceState(
+            var message = new DeviceMessage(
                 DeviceId,
                 "{}",
                 "{}",
@@ -187,9 +187,9 @@ namespace DeviceRepository.Tests
             };
             return message;
         }
-        private DeviceState Response(DateTime timestamp, bool persisted, string correlationId)
+        private DeviceMessage Response(DateTime timestamp, bool persisted, string correlationId)
         {
-            var message = new DeviceState(
+            var message = new DeviceMessage(
                 DeviceId,
                 "{}",
                 "{}",
@@ -213,7 +213,7 @@ namespace DeviceRepository.Tests
         {
             _messageRetentionInMilliseconds = messageRetentionInMilliseconds;
         }
-        private void WithMessages(List<DeviceState> messages)
+        private void WithMessages(List<DeviceMessage> messages)
         {
             _messages = messages;
         }

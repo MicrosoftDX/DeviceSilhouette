@@ -20,17 +20,17 @@ namespace StateProcessorService
     public interface IStateProcessorRemoting : IService
     {
 
-        Task<DeviceState> GetStateAsync(string deviceId);
-        Task<DeviceState> GetLastRequestedStateAsync(string deviceId);
-        Task<DeviceState> GetLastReportedStateAsync(string deviceId);
-        Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, long timeToLiveMs);
+        Task<DeviceMessage> GetStateAsync(string deviceId);
+        Task<DeviceMessage> GetLastRequestedStateAsync(string deviceId);
+        Task<DeviceMessage> GetLastReportedStateAsync(string deviceId);
+        Task<DeviceMessage> SetStateValueAsync(string deviceId, string metadata, string values, long timeToLiveMs);
         /// <summary>
         /// Get specific message by device id and message version
         /// </summary>
         /// <param name="deviceId"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        Task<DeviceState> GetMessageAsync(string deviceId, int version);
+        Task<DeviceMessage> GetMessageAsync(string deviceId, int version);
         /// <summary>
         /// Get Paged messages
         /// </summary>
@@ -84,7 +84,7 @@ namespace StateProcessorService
         }                
 
         // This API is used by the REST call
-        public async Task<DeviceState> GetStateAsync(string deviceId)
+        public async Task<DeviceMessage> GetStateAsync(string deviceId)
         {
             //TODO: error handling
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
@@ -94,7 +94,7 @@ namespace StateProcessorService
         }
 
         // This API is used by the REST call
-        public async Task<DeviceState> GetLastRequestedStateAsync(string deviceId)
+        public async Task<DeviceMessage> GetLastRequestedStateAsync(string deviceId)
         {
             //TODO: error handling
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
@@ -104,7 +104,7 @@ namespace StateProcessorService
         }
 
         // This API is used by the REST call
-        public async Task<DeviceState> GetLastReportedStateAsync(string deviceId)
+        public async Task<DeviceMessage> GetLastReportedStateAsync(string deviceId)
         {
             //TODO: error handling
             //TODO: Check if ActorId(DeviceId) exist - if not through exception and dont create it
@@ -113,7 +113,7 @@ namespace StateProcessorService
             return newState;
         }
 
-        public async Task<DeviceState> GetMessageAsync(string deviceId, int version)
+        public async Task<DeviceMessage> GetMessageAsync(string deviceId, int version)
         {
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
             return await silhouette.GetMessageByVersionAsync(version);
@@ -130,11 +130,11 @@ namespace StateProcessorService
 
         // This API is used by the REST call
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
-        public async Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, long timeToLive)
+        public async Task<DeviceMessage> SetStateValueAsync(string deviceId, string metadata, string values, long timeToLive)
         {
             //TODO: error handling - assert device id is not found
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState)
+            DeviceMessage deviceState = new DeviceMessage(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState)
             {
                 MessageTtlMs = timeToLive
             };            
@@ -145,7 +145,7 @@ namespace StateProcessorService
             return await silhouette.SetDeviceStateAsync(deviceState);
         }
 
-        private static async Task<DeviceState> UpdateRepositoryAsync(IDeviceRepositoryActor silhouette, DeviceState deviceState)
+        private static async Task<DeviceMessage> UpdateRepositoryAsync(IDeviceRepositoryActor silhouette, DeviceMessage deviceState)
         {
             await silhouette.SetDeviceStateAsync(deviceState);
             var newState = await silhouette.GetDeviceStateAsync();
