@@ -27,7 +27,8 @@ namespace DeviceRichState.Tests
                 MessageSubType.ExceededRetryCount,
                 "ACorrelationId")
             {
-                _timestamp = DateTime.UtcNow.AddDays(-123)
+                _timestamp = DateTime.UtcNow.AddDays(-123),
+                MessageTtlMs = 123456
             };
 
 
@@ -74,6 +75,11 @@ namespace DeviceRichState.Tests
         public void WhenDeserializingDeviceMessage_ValuesMatches()
         {
             Assert.AreEqual(OriginalMessage.Values, DeserializedMessage.Values);
+        }
+        [TestMethod()]
+        public void WhenDeserializingDeviceMessage_MessageTtlMsMatches()
+        {
+            Assert.AreEqual(OriginalMessage.MessageTtlMs, DeserializedMessage.MessageTtlMs);
         }
     }
 }
