@@ -63,6 +63,8 @@ namespace DeviceRichState
         /// </summary>
         [DataMember]
         public string Values { get; set; }
+
+        [DataMember]
         /// <summary>
         /// The TTL for the message in milliseconds
         /// </summary>
