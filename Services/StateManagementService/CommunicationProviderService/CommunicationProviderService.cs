@@ -156,13 +156,6 @@ namespace CommunicationProviderService
         //}
         public async Task InvokeDeepReadStateAsync(string deviceId, long timeToLive)
         {
-            JsonState state = new JsonState();
-            state.SilhouetteProperties.DeviceId = deviceId;
-            state.SilhouetteProperties.Timestamp = DateTime.Now;
-            state.SilhouetteProperties.MessageType = MessageType.CommandRequest.ToString(); // TODO SL: this should be in message properties
-            state.SilhouetteProperties.MessageSubType = MessageSubType.ReportState.ToString();
-            string message = _jsonSerializer.Serialize(state);
-
             // update the state repository with the new message
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
             DeviceState deviceState = new DeviceState(deviceId, "", "", MessageType.CommandResponse, MessageSubType.Enqueued);
