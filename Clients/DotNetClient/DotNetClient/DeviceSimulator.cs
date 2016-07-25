@@ -10,46 +10,7 @@ using System.Threading.Tasks;
 
 namespace DotNetClient
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Starting...");
-            try
-            {
-                MainAsync(args).Wait();
-            }
-            catch (AggregateException ae)
-            {
-                Console.WriteLine(ae.InnerException);
-            }
-        }
-        static async Task MainAsync(string[] args)
-        {
-            const string templateConnectionString = "%Silhouette_IotHubConnectionString%";
-            string connectionString = Environment.ExpandEnvironmentVariables(templateConnectionString);
-            if (connectionString == templateConnectionString)
-            {
-                throw new Exception("Ensure that the Silhouette_IotHubConnectionString environment variable is set");
-            }
-
-            string deviceId = "dotNetDevice"; // TODO parameter
-            //string deviceId = "device1"; // TODO parameter
-
-            var device = new DeviceSimulator(connectionString, deviceId);
-            await device.InitializeAsync();
-
-            int i = 0;
-            while(true)
-            {
-                Console.WriteLine($"Sending state counterValue={i}");
-                await device.SendStateMessageAsync(new { counterValue = i });
-                i++;
-                await Task.Delay(1500);
-            }
-        }
-    }
-
+    
     // TODO move this into a class library :-)
     // TODO - handle receiving messages
     // TODO - online/offline
@@ -103,8 +64,6 @@ namespace DotNetClient
             {
                 Properties =
                 {
-                    //{"DeviceId" , _deviceId}, // is this needed - does the SDK not include it based on our auth?
-                    //{ "Timestamp" , DateTime.MinValue}, // TODO - shouldn't set this here
                     { "MessageType", "Report" },
                     { "MessageSubType", "State" },
                 },
