@@ -95,7 +95,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IoTHub\IoTHubCommunicationProvider.cs" />
+    <Compile Include="IoTHub\IoTHubMessageSender.cs" />
+    <Compile Include="IoTHub\IoTHubMessageReceiver.cs" />
     <Compile Include="ICommunicationProvider.cs" />
     <Compile Include="IoTHub\IoTHubEventProcessor.cs" />
     <Compile Include="IoTHub\IoTHubEventProcessorFactory.cs" />
