@@ -63,7 +63,11 @@ namespace DeviceRichState
         /// </summary>
         [DataMember]
         public string Values { get; set; }
-        
+        /// <summary>
+        /// The TTL for the message in milliseconds
+        /// </summary>
+        public long MessageTtlMs { get; set; }
+
         public DeviceState()
         {
             // empty constructor for serialization
@@ -78,7 +82,7 @@ namespace DeviceRichState
         /// <param name="messageType">Who send the message; reported == device, requested == application</param>
         /// <param name="messageStatus">Indication of the status of this message instance</param>
         /// /// <param name="correlationId">Message id</param>
-        public DeviceState(string deviceId, string metadata, string values, MessageType messageType, MessageSubType messageSubType = MessageSubType.Unknown, string correlationId = null)
+        public DeviceState(string deviceId, string metadata, string values, MessageType messageType, MessageSubType messageSubType, string correlationId = null)
         {
             // To make these values immutable they are set through private field and get through public property
             // It is not possible to make the setter readonly because of [DataMember]
@@ -86,21 +90,8 @@ namespace DeviceRichState
             _timestamp = SystemTime.UtcNow();
             _messageType = messageType;
 
-            if (messageSubType == MessageSubType.Unknown)
-            {
-                _correlationId = Guid.NewGuid().ToString();
-
-                if (messageType == MessageType.Report)
-                    MessageSubType = MessageSubType.State;
-
-                if (messageType == MessageType.CommandRequest)
-                    MessageSubType = MessageSubType.New;
-            }
-            else
-            {
-                _correlationId = String.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
-                MessageSubType = messageSubType;
-            }
+            _correlationId = String.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
+            MessageSubType = messageSubType;
 
             AppMetadata = metadata;
             Values = values;
@@ -150,7 +141,6 @@ namespace DeviceRichState
         ReportState,
 
         New,
-        Unknown,
         /// <summary>
         /// CommandResponse/InquiryResponse: Device sent ACK
         /// </summary>

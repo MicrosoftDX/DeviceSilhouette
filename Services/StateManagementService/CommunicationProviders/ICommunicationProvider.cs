@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeviceRichState;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace CommunicationProviders
          * MessageType - State:Set or State:Get
          * Meesage - message json string         
         */
-        Task SendCloudToDeviceAsync(string deviceId, string messageType, string message, double timeToLive, string correlationId);
+        Task SendCloudToDeviceAsync(DeviceState silhouetteMessage);
     }
 
     public interface IFeedbackReceiver

@@ -20,8 +20,8 @@ namespace CommunicationProviderService
 {
     public interface ICommunicationProviderRemoting : IService
     {
-        Task InvokeDeepReadStateAsync(string deviceId, double timeToLive);
-        Task SendCloudToDeviceAsync(DeviceState deviceState, string messageType, double timeToLive);
+        Task InvokeDeepReadStateAsync(string deviceId, long timeToLive);
+        Task SendCloudToDeviceAsync(DeviceState deviceState);
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ namespace CommunicationProviderService
         {
             // init communicaition provider for Azure IoTHub
             _messageReceiver = new IoTHubMessageReceiver(
-                iotHubConnectionString, 
+                iotHubConnectionString,
                 storageConnectionString,
                 ProcessCommunicationProviderMessageAsync
                 );
@@ -86,7 +86,7 @@ namespace CommunicationProviderService
                     JsonState jsonState = _jsonSerializer.Deserialize<JsonState>(message);
 
                     // TODO - add assert if device id exist. Create if not?
-                    switch (jsonState.SilhouetteProperties.Status)
+                    switch (jsonState.SilhouetteProperties.MessageType)
                     {
                         case "Reported": // device reporting a state update                            
                             await UpdateDeviceSilhouetteAsync(jsonState);
@@ -106,13 +106,14 @@ namespace CommunicationProviderService
         // send a message to the device using the C2D endpoint. called when a device is requesting the last stored state
         private async Task UpdateDeviceStateAsync(JsonState jsonState)
         {
-            try { 
+            try
+            {
                 IDeviceRepositoryActor silhouette = GetDeviceActor(jsonState.SilhouetteProperties.DeviceId);
-                DeviceState deviceState = await silhouette.GetDeviceStateAsync();
+                DeviceState lastReportedState = await silhouette.GetLastKnownReportedStateAsync();
 
                 // create a new DeviceState with new correlation id, send to the device and store in the repository   
-                DeviceState newState = new DeviceState(deviceState.DeviceId, deviceState.AppMetadata, deviceState.Values, MessageType.InquiryRequest, MessageSubType.GetState);                
-                await _messageSender.SendCloudToDeviceAsync(newState.DeviceId, "State:Get", newState.Values,  jsonState.SilhouetteProperties.MessageTTL, newState.CorrelationId);
+                var newState = new DeviceState(lastReportedState.DeviceId, null, lastReportedState.Values, MessageType.InquiryResponse, MessageSubType.GetState);
+                await _messageSender.SendCloudToDeviceAsync(newState);
                 await silhouette.SetDeviceStateAsync(newState);
             }
             catch (Exception e)
@@ -127,11 +128,12 @@ namespace CommunicationProviderService
         {
             //TODO: error handling
             var deviceId = jsonState.SilhouetteProperties.DeviceId;
-            MessageType messageType = Enum.TryParse<MessageType>(jsonState.SilhouetteProperties.Status, true, out messageType) ? messageType : MessageType.Report;
+            MessageType messageType = (MessageType)Enum.Parse(typeof(MessageType), jsonState.SilhouetteProperties.MessageType, ignoreCase: true);
+            MessageSubType messageSubType = (MessageSubType)Enum.Parse(typeof(MessageSubType), jsonState.SilhouetteProperties.MessageSubType, ignoreCase: true);
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
 
-            DeviceState deviceState = new DeviceState(deviceId, jsonState.AppMetadata.ToString(), jsonState.DeviceValues.ToString(), messageType)
-            {                   
+            DeviceState deviceState = new DeviceState(deviceId, jsonState.AppMetadata.ToString(), jsonState.DeviceValues.ToString(), messageType, messageSubType)
+            {
                 Timestamp = jsonState.SilhouetteProperties.Timestamp
             };
 
@@ -154,13 +156,14 @@ namespace CommunicationProviderService
         //"Timestamp" : "2009-06-15T13:45:30",
         //"Status" : "GetInfo" 
         //}
-        public async Task InvokeDeepReadStateAsync(string deviceId, double timeToLive)
+        public async Task InvokeDeepReadStateAsync(string deviceId, long timeToLive)
         {
             JsonState state = new JsonState();
             state.SilhouetteProperties.DeviceId = deviceId;
             state.SilhouetteProperties.Timestamp = DateTime.Now;
-            state.SilhouetteProperties.Status = "GetInfo";
-            string message = _jsonSerializer.Serialize(state);           
+            state.SilhouetteProperties.MessageType = MessageType.CommandRequest.ToString(); // TODO SL: this should be in message properties
+            state.SilhouetteProperties.MessageSubType = MessageSubType.ReportState.ToString();
+            string message = _jsonSerializer.Serialize(state);
 
             // update the state repository with the new message
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
@@ -168,18 +171,19 @@ namespace CommunicationProviderService
             await silhouette.SetDeviceStateAsync(deviceState);
 
             // update C2D end point with the request to state update
-            await _messageSender.SendCloudToDeviceAsync(deviceId, "State:Get", message, timeToLive, deviceState.CorrelationId);            
+            var deviceMessage = new DeviceState(deviceId, null, null, MessageType.CommandRequest, MessageSubType.ReportState)
+            {
+                MessageTtlMs = timeToLive
+            };
+            await _messageSender.SendCloudToDeviceAsync(deviceMessage);
         }
 
-        public async Task SendCloudToDeviceAsync(DeviceState deviceState, string messageType, double timeToLive)
+        public async Task SendCloudToDeviceAsync(DeviceState deviceState)
         {
-            // update device with the new state (C2D endpoint)
-            string json = _jsonSerializer.Serialize(deviceState);
-            //await _messageSender.SendCloudToDeviceAsync(deviceState.DeviceId, messageType, json, timeToLive, deviceState.CorrelationId);
-            await _messageSender.SendCloudToDeviceAsync(deviceState.DeviceId, messageType, deviceState.Values, timeToLive, deviceState.CorrelationId);
+            await _messageSender.SendCloudToDeviceAsync(deviceState);
         }
 
-        private class JsonState
+        private class JsonState // TODO SL: align with message shape
         {
 
             public JsonState()
@@ -195,8 +199,9 @@ namespace CommunicationProviderService
                 public string DeviceId { get; set; }
                 public DateTime Timestamp { get; set; }
                 public int Version { get; set; }
-                public string Status { get; set; }
-                public double MessageTTL {get; set; }
+                public string MessageType { get; set; }
+                public string MessageSubType { get; set; }
+                public double MessageTTL { get; set; }
             }
 
 

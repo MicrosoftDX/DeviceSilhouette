@@ -47,7 +47,7 @@
             <param name="stateProcessor"></param>
             <param name="communicationProvider"></param>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.InvokeDeepRead(System.String,System.Double)">
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.InvokeDeepRead(System.String,System.Int64)">
             <summary>
             Trigger a DeepGet (i.e. invoke getting the current state from the device
             NOTE: this endpoint is temporary and will likely change!

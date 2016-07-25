@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Devices;
+﻿using DeviceRichState;
+using Microsoft.Azure.Devices;
 using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Threading;
@@ -50,20 +51,21 @@ namespace CommunicationProviders.IoTHub
         {
             _serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
         }
-        public async Task SendCloudToDeviceAsync(string deviceId, string messageType, string message, double timeToLive, string correlationId)
+        public async Task SendCloudToDeviceAsync(DeviceState silhouetteMessage)
         {
-            Message commandMessage;
-            commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(message));
-            commandMessage.Properties.Add("MessageType", messageType);
+            var commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(silhouetteMessage.Values))
+            {
+                Properties = {
+                    { "MessageType", silhouetteMessage.MessageType.ToString() },
+                    { "MessageSubType", silhouetteMessage.MessageSubType.ToString() }
+                },
+                // get full acknowledgement on message delivery
+                Ack = DeliveryAcknowledgement.Full,
+                ExpiryTimeUtc = DateTime.UtcNow.AddMilliseconds(silhouetteMessage.MessageTtlMs),
+                CorrelationId = silhouetteMessage.CorrelationId
+            };
 
-
-            // get full acknowledgement on message delivery
-            commandMessage.Ack = DeliveryAcknowledgement.Full;
-            // set message expiry time
-            commandMessage.ExpiryTimeUtc = DateTime.UtcNow.AddMilliseconds(timeToLive);
-            commandMessage.MessageId = correlationId;
-
-            await _serviceClient.SendAsync(deviceId, commandMessage);
+            await _serviceClient.SendAsync(silhouetteMessage.DeviceId, commandMessage);
         }
     }
 }

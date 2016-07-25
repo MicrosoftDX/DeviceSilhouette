@@ -59,7 +59,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <returns></returns>
         [Route("deepget")] 
         [HttpPost]
-        public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] double timeToLiveMilliSec)
+        public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] long timeToLiveMilliSec)
         {
             // TODO - this is a temporary endpoint - it feels as though it should be just another command
             // TODO - this should return the Accepted Response

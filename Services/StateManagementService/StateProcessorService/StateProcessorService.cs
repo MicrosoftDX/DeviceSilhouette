@@ -23,7 +23,7 @@ namespace StateProcessorService
         Task<DeviceState> GetStateAsync(string deviceId);
         Task<DeviceState> GetLastRequestedStateAsync(string deviceId);
         Task<DeviceState> GetLastReportedStateAsync(string deviceId);
-        Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, double timeToLive);
+        Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, long timeToLiveMs);
         /// <summary>
         /// Get specific message by device id and message version
         /// </summary>
@@ -130,14 +130,17 @@ namespace StateProcessorService
 
         // This API is used by the REST call
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
-        public async Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, double timeToLive)
+        public async Task<DeviceState> SetStateValueAsync(string deviceId, string metadata, string values, long timeToLive)
         {
             //TODO: error handling - assert device id is not found
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            DeviceState deviceState = new DeviceState(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState);            
+            DeviceState deviceState = new DeviceState(deviceId, metadata, values, MessageType.CommandRequest, MessageSubType.SetState)
+            {
+                MessageTtlMs = timeToLive
+            };            
 
             // update device with the new state (C2D endpoint)           
-            await CommunicationProviderServiceClient.SendCloudToDeviceAsync(deviceState, "State:Set", timeToLive);
+            await CommunicationProviderServiceClient.SendCloudToDeviceAsync(deviceState);
             // update device repository
             return await silhouette.SetDeviceStateAsync(deviceState);
         }
