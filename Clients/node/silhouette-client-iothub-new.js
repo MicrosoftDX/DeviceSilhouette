@@ -96,7 +96,7 @@ function getMessageType(properties)
 	
   for (var i=0; i<properties.count(); i++) {
 	
-    if (properties.getItem(i).key == "iothub-app-MessageType")
+    if (properties.getItem(i).key === "iothub-app-messagetype")
       return properties.getItem(i).value;
   }
   
@@ -108,7 +108,7 @@ function getMessageSubType(properties)
 	
   for (var i=0; i<properties.count(); i++) {
 	
-    if (properties.getItem(i).key == "iothub-app-MessageSubType")
+    if (properties.getItem(i).key === "iothub-app-messagesubtype")
       return properties.getItem(i).value;
   }
   

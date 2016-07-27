@@ -24,11 +24,10 @@ else if (item.toLowerCase() === "iothub-correlationid") {
 
 Paste this block of code right after the block of code mentioned above:
 ```javascript
-else if (item.toLowerCase() === "iothub-app-messagetype") {
-  msg.properties.add("MessageType", response.headers[item]);
-}
-else if (item.toLowerCase() === "iothub-app-messagesubtype") {
-  msg.properties.add("MessageSubType", response.headers[item]);
+  else if (item.search("iothub-app-") === 0) { // starts with iothub-app-
+      var propertyName = item.substring("iothub-app-".length);
+      msg.properties.add(propertyName, response.headers[item]);
+  }
 }
 ```
 
