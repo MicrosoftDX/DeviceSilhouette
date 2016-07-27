@@ -1,6 +1,7 @@
 ﻿using DotNetClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -44,7 +45,7 @@ namespace Silhouette.EndToEndTests
         [When]
         public void When_the_device_reports_its_state()
         {
-            RunAndBlock(async() =>
+            RunAndBlock(async () =>
             {
                 _testStateValue = _random.Next(1, 1000000);
                 await _device.SendStateMessageAsync(new { test = _testStateValue });
@@ -70,12 +71,10 @@ namespace Silhouette.EndToEndTests
                 _stateRequestHttpResponse = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
                     new
                     {
-                        appMetadata= new  { testMetadata = _appMetadataValue},
-                        values= new { test = _testStateValue },
+                        appMetadata = new { testMetadata = _appMetadataValue },
+                        values = new { test = _testStateValue },
                         timeToLiveMilliSec = 5000
                     });
-
-
             });
         }
 
@@ -93,6 +92,9 @@ namespace Silhouette.EndToEndTests
                 response.EnsureSuccessStatusCode();
                 dynamic state = await response.Content.ReadAsAsync<dynamic>();
 
+                Assert.IsNotNull(state, "state should not be null");
+                Assert.IsNotNull(state.values, "state.values should not be null");
+                Assert.IsNotNull(state.values.test, "state.values.test should not be null");
                 Assert.AreEqual(_testStateValue, (int)state.values.test); // Check that we get the value back
             });
         }
@@ -112,11 +114,56 @@ namespace Silhouette.EndToEndTests
         }
 
 
-        //[Then]
-        //public void Then_the_messages_API_should_contain_the_reported_state_message()
-        //{
-        //    ScenarioContext.Current.Pending();
-        //}
+        [Then]
+        public void Then_the_messages_API_should_contain_the_reported_state_message_for_device_DEVICEID(string deviceId)
+        {
+            RunAndBlock(async () =>
+            {
+
+                Func<dynamic, bool> messagePredicate = m => m.values != null && m.values.test != null && m.values.test == _testStateValue;
+
+                dynamic message = await FindMessageAsync(deviceId, messagePredicate);
+
+                Assert.IsNotNull(message, "Message should not be null");
+            });
+        }
+
+        private static async Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate)
+        {
+            var client = GetApiClient();
+            string messagesUrl = $"devices/{deviceId}/messages";
+            Func<dynamic, dynamic> findMessageInMessagesList = messageList =>
+            {
+                foreach (dynamic m in messageList)
+                {
+                    if (messagePredicate(m))
+                    {
+                        return m;
+                    }
+                }
+                return null;
+            };
+
+            while (!string.IsNullOrEmpty(messagesUrl))
+            {
+                var response = await client.GetAsync(messagesUrl);
+                response.EnsureSuccessStatusCode();
+                dynamic messages = await response.Content.ReadAsAsync<dynamic>();
+                dynamic message = findMessageInMessagesList(messages.values);
+                if (message != null)
+                {
+                    return message;
+                }
+                messagesUrl = (string)((JToken)messages)["@nextLink"];
+            }
+            return null;
+        }
+
+        [Then]
+        public void Then_the_device_receieves_and_accepts_the_state_request()
+        {
+            ScenarioContext.Current.Pending();
+        }
 
 
         private void RunAndBlock(Func<Task> asyncAction)
