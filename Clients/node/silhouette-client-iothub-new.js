@@ -143,20 +143,7 @@ SilhouetteClientIoTHub.prototype.updateState = function(metadata, values, device
 
 SilhouetteClientIoTHub.prototype.getState = function(state, deviceID)
 {	
-  var formattedDate = new Date().toISOString();  
-  var getStateMsg = 
-  {
-	"SilhouetteProperties": {
-			"DeviceId": deviceID,
-			"Timestamp" : formattedDate,
-			"Status" : "Get",
-			"MessageTTL" : "5000"				
-	}		
-  };
-  
-  var data = JSON.stringify(getStateMsg);
-  
-  var message = new Message(data);
+  var message = new Message("");
   message.properties.add('MessageType', 'InquiryRequest');
   message.properties.add('MessageSubType', 'GetState');
   client.sendEvent(message, function(err) {
