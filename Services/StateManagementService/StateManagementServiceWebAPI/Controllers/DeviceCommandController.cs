@@ -75,7 +75,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <param name="deviceId">The id of the device</param>
         /// <param name="commandId">The id of the command to retrieve (this is the correlation id for the command messages)</param>
         /// <returns></returns>
-        [Route("{commandId}")]
+        [Route("{commandId}", Name="GetCommand")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(CommandModel))]
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public async Task<IHttpActionResult> Get([FromUri] string deviceId,
@@ -115,7 +115,7 @@ namespace StateManagementServiceWebAPI.Controllers
                 requestedState.TimeToLiveMilliSec);
 
             return Created(
-                "",
+                Url.Link("GetCommand", new { commandId = deviceMessage.CorrelationId }),
                 new DeviceStateModel(deviceMessage)); // TODO - should be a CommandResponse model
         }
     }
