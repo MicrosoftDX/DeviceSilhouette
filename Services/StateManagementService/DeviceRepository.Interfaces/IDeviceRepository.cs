@@ -42,6 +42,12 @@ namespace DeviceRepository.Interfaces
         /// <param name="continuation">A token that indicates the next message to start at</param>
         /// <returns></returns>
         Task<MessageList> GetMessagesAsync(int pageSize, int? continuation);
+        /// <summary>
+        /// Get all messages by correlationId
+        /// </summary>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string correlationId);
     }
 
     public class MessageList

@@ -14,6 +14,7 @@ using CommunicationProviderService;
 using StateManagementServiceWebAPI.Models;
 using System.Web.Http.Results;
 using StateManagementServiceWebAPI.Filters;
+using StateManagementServiceWebAPI.Models.DeviceCommand;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -69,10 +70,31 @@ namespace StateManagementServiceWebAPI.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceId">The id of the device</param>
+        /// <param name="commandId">The id of the command to retrieve (this is the correlation id for the command messages)</param>
+        /// <returns></returns>
+        [Route("{commandId}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(CommandModel))]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
+        public async Task<IHttpActionResult> Get([FromUri] string deviceId,
+            string commandId)
+        {
+            var messages = await _stateProcessor.GetMessagesByCorrelationIdAsync(deviceId, commandId);
+            if (messages == null || messages.Length == 0)
+            {
+                return NotFound();
+            }
+            return Ok(new CommandModel(messages));
+        }
+
+
+        /// <summary>
         /// Add a new command
         /// NB Currently this only supports creating a state request command
         /// </summary>
-        /// <param name="deviceId"></param>
+        /// <param name="deviceId">The id of the device</param>
         /// <param name="requestedState"></param>
         /// <returns></returns>
         [Route("")]

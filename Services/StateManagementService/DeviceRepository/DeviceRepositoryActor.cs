@@ -129,6 +129,18 @@ namespace DeviceRepository
             };
 
         }
+        public async Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string correlationId)
+        {
+            var messages = await GetDeviceMessagesAsync();
+            if (messages == null)
+            {
+                return null;
+            }
+            return  messages
+                        .Where(m=>m.CorrelationId == correlationId)
+                        .OrderBy(m => m.Timestamp)
+                        .ToArray();
+        }
 
         public async Task<DeviceMessage> StoreDeviceMessageAsync(DeviceMessage message)
         {

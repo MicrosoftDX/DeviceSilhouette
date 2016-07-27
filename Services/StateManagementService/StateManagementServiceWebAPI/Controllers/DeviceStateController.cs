@@ -52,7 +52,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <summary>
         /// Get the last state reported by the device
         /// </summary>
-        /// <param name="deviceId"></param>
+        /// <param name="deviceId">The id of the device</param>
         /// <returns></returns>
         [Route("latest-reported")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateModel))]
@@ -80,7 +80,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <summary>
         /// Get the last state reported by the device or requested by the client (but not negatively acknowledged, expired, ...)
         /// </summary>
-        /// <param name="deviceId"></param>
+        /// <param name="deviceId">The id of the device</param>
         /// <returns></returns>
         [Route("latest-requested")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateModel))]

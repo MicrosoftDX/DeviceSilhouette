@@ -38,6 +38,13 @@ namespace StateProcessorService
         /// <param name="continuation"></param>
         /// <returns></returns>
         Task<MessageList> GetMessagesAsync(string deviceId, int pageSize, int? continuation);
+        /// <summary>
+        /// Get the messages with the specified correlationId
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string deviceId, string correlationId);
     }
 
     /// <summary>
@@ -114,6 +121,13 @@ namespace StateProcessorService
             return await silhouette.GetMessagesAsync(pageSize, continuation);
         }
 
+        public async Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string deviceId, string correlationId)
+        {
+            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
+            return await silhouette.GetMessagesByCorrelationIdAsync(correlationId);
+        }
+
+
 
         // This API is used by the REST call
         // StateValue example: {"Xaxis":"0","Yaxis":"0","Zaxis":"0"}
@@ -133,5 +147,6 @@ namespace StateProcessorService
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoryUri);
             return silhouette;
         }
+
     }
 }

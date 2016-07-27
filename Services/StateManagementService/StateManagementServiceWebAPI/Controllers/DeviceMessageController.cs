@@ -56,8 +56,8 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <summary>
         /// Get a specific message by device id and version
         /// </summary>
-        /// <param name="deviceId"></param>
-        /// <param name="version"></param>
+        /// <param name="deviceId">The id of the device</param>
+        /// <param name="version">The version (message identifier) for the message to return</param>
         /// <returns></returns>
         [Route("{version:int}")]
         public async Task<IHttpActionResult> GetMessage(string deviceId, int version)
@@ -83,7 +83,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <summary>
         /// Get the last state reported by the device
         /// </summary>
-        /// <param name="deviceId"></param>
+        /// <param name="deviceId">The id of the device</param>
         /// <param name="continuationToken"></param>
         /// <returns></returns>
         [Route("", Name = "GetMessages")]
