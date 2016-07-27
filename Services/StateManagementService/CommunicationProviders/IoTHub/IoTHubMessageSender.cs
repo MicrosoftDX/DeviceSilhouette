@@ -26,6 +26,7 @@ namespace CommunicationProviders.IoTHub
                 // get full acknowledgement on message delivery
                 Ack = DeliveryAcknowledgement.Full,
                 ExpiryTimeUtc = DateTime.UtcNow.AddMilliseconds(silhouetteMessage.MessageTtlMs),
+                MessageId = silhouetteMessage.CorrelationId,
                 CorrelationId = silhouetteMessage.CorrelationId
             };
 
