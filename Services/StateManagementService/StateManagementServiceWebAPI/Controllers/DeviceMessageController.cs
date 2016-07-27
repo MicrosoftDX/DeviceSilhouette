@@ -126,7 +126,7 @@ namespace StateManagementServiceWebAPI.Controllers
                 CorrelationId = message.CorrelationId,
                 AppMetadata = message.AppMetadata,
                 MessageTtlMs = message.MessageTtlMs,
-                Values = message.Values
+                DeviceValues = message.Values
             };
         }
     }

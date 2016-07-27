@@ -7,15 +7,10 @@ using StateManagementServiceWebAPI.Helpers;
 
 namespace StateManagementServiceWebAPI
 {
-    /// <summary>
-    /// API pipeline configuration
-    /// </summary>
     public static class Startup
     {
-        /// <summary>
-        /// This code configures Web API. The Startup class is specified as a type parameter in the WebApp.Start method.
-        /// </summary>
-        /// <param name="appBuilder"></param>
+        // This code configures Web API. The Startup class is specified as a type
+        // parameter in the WebApp.Start method.
         public static void ConfigureApp(IAppBuilder appBuilder)
         {
             // Configure Web API for self-host. 
