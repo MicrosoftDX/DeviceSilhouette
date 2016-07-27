@@ -26,7 +26,7 @@ namespace StateManagementServiceWebAPI.Models
             MessageType = deviceMessage.MessageType.ToString("F");
             MessageSubType = deviceMessage.MessageSubType.ToString("F");
             AppMetadata = string.IsNullOrEmpty(deviceMessage.AppMetadata) ? null : JToken.Parse(deviceMessage.AppMetadata);
-            DeviceValues = string.IsNullOrEmpty(deviceMessage.Values) ? null : JToken.Parse(deviceMessage.Values); 
+            Values = string.IsNullOrEmpty(deviceMessage.Values) ? null : JToken.Parse(deviceMessage.Values); 
         }
 
         /// <summary>
@@ -69,6 +69,6 @@ namespace StateManagementServiceWebAPI.Models
         /// <summary>
         /// 
         /// </summary>
-        public JToken DeviceValues { get; set; }
+        public JToken Values { get; set; }
     }
 }

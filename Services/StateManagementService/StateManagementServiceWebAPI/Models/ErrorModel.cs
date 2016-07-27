@@ -54,13 +54,24 @@ namespace StateManagementServiceWebAPI.Models
 
 
 
-
+    /// <summary>
+    /// Representation for unhandled errors
+    /// </summary>
     public class UnhandledErrorModel : ErrorModel
     {
+        /// <summary>
+        /// Provide details on the cause of the error
+        /// </summary>
         public InnerErrorModel InnerError { get; set; }
     }
+    /// <summary>
+    /// Representation of the error info for unhandled errors
+    /// </summary>
     public class InnerErrorModel
     {
+        /// <summary>
+        /// The message for an unhandled error
+        /// </summary>
         public string Message { get; set; }
     }
 
