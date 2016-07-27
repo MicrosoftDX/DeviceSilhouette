@@ -47,7 +47,7 @@ namespace StateManagementServiceWebAPI.Models.DeviceMessage
         /// <summary>
         /// The message body. For state reports this is the state
         /// </summary>
-        public string DeviceValues { get; set; }
+        public string Values { get; set; }
 
         /// <summary>
         /// The message time-to-live (TTL) in milliseconds
