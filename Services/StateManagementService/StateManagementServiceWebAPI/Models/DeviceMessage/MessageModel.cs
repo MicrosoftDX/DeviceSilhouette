@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace StateManagementServiceWebAPI.Models.DeviceMessage
 {
     /// <summary>
-    /// 
+    /// API representation of a message
     /// </summary>
     public class MessageModel
     {
@@ -42,12 +43,12 @@ namespace StateManagementServiceWebAPI.Models.DeviceMessage
         /// <summary>
         /// Application metadata (used by the application to store data associated with a command, e.g. the origin or reason)
         /// </summary>
-        public string AppMetadata { get; set; }
+        public JToken AppMetadata { get; set; }
 
         /// <summary>
         /// The message body. For state reports this is the state
         /// </summary>
-        public string Values { get; set; }
+        public JToken Values { get; set; }
 
         /// <summary>
         /// The message time-to-live (TTL) in milliseconds

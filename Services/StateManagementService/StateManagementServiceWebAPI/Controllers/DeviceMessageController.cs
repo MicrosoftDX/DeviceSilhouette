@@ -124,9 +124,9 @@ namespace StateManagementServiceWebAPI.Controllers
                 MessageType = message.MessageType.ToString(),
                 MessageSubType = message.MessageSubType.ToString(),
                 CorrelationId = message.CorrelationId,
-                AppMetadata = message.AppMetadata,
+                AppMetadata = string.IsNullOrEmpty(message.AppMetadata) ? null : JToken.Parse(message.AppMetadata),
                 MessageTtlMs = message.MessageTtlMs,
-                Values = message.Values
+                Values = string.IsNullOrEmpty(message.Values) ? null : JToken.Parse(message.Values)
             };
         }
     }
