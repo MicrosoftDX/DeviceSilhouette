@@ -24,6 +24,7 @@ namespace TestDotNetClient
         static async Task MainAsync(string[] args)
         {
             const string templateConnectionString = "%Silhouette_IotHubConnectionString%";
+                                                      
             string connectionString = Environment.ExpandEnvironmentVariables(templateConnectionString);
             if (connectionString == templateConnectionString)
             {

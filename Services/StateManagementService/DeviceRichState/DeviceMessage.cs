@@ -187,6 +187,12 @@ namespace DeviceRichState
         ExceededRetryCount,
         Received,
 
+        //DeliveryCountExceeded,
+        //Expired,
+        //Rejected,
+        //Success,
+
+
         /// <summary>
         /// Report: The device is reporting its state
         /// </summary>
@@ -197,6 +203,8 @@ namespace DeviceRichState
         /// InquiryRequest: The device is requesting its last state
         /// </summary>
         GetState,
+
+        Unknown
 
     }
 }

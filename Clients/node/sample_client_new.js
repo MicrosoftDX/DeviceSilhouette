@@ -45,8 +45,8 @@ function C2D_getState()
 var deviceID = "device1";
 //var connectionString = 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKey=rkGFp9PKEr7UjeKn/MFG2dpDpNajopSg0h6FhP0jFHo='
 //car connectionString = 'HostName=SilhouetteHub.azure-devices.net;DeviceId=silhouette1;SharedAccessKeyName=device;SharedAccessKey=5l0nsPi3d8ggCdEeYTQi5YkWWuYKsUxSEPEpJMBslqA='
-// var connectionString= 'HostName=iothubfordm.azure-devices.net;DeviceId=device1;SharedAccessKey=04g/nPZLnk+O+8hy8yMPwe1xhpx9Z3SI0+QEa1tNSKE='
-var connectionString = process.env.Silhouette_DeviceIotHubConnectionString
+var connectionString= 'HostName=iothubfordm.azure-devices.net;DeviceId=device1;SharedAccessKey=04g/nPZLnk+O+8hy8yMPwe1xhpx9Z3SI0+QEa1tNSKE='
+//var connectionString = process.env.Silhouette_DeviceIotHubConnectionString
 // var connectionString = 'HostName=silhouette-tests.azure-devices.net;DeviceId=device1;SharedAccessKey=PWb2zbcIRvWTxpLeqYqJh2xDOZmXm1/FOv02l160BpU='
 
 var silhouette = silhouetteClient.create('iothub', {

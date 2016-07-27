@@ -149,6 +149,13 @@
             </summary>
             <param name="context"></param>
         </member>
+        <member name="M:StateManagementServiceWebAPI.Helpers.UnhandledErrorModelExceptionHandler.ShouldHandle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceStateRequestModel">
             <summary>
             Data model used to capture the State Request command added through the API
