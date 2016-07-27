@@ -287,7 +287,7 @@
         </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel">
             <summary>
-            
+            API representation of a message
             </summary>
         </member>
         <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.DeviceId">
@@ -325,7 +325,7 @@
             Application metadata (used by the application to store data associated with a command, e.g. the origin or reason)
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.DeviceValues">
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.Values">
             <summary>
             The message body. For state reports this is the state
             </summary>
@@ -396,7 +396,7 @@
             
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.DeviceValues">
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateModel.Values">
             <summary>
             
             </summary>
@@ -439,6 +439,26 @@
         <member name="P:StateManagementServiceWebAPI.Models.ValidationMessage.Messages">
             <summary>
             The ModelState validation failure messages for the property 
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.UnhandledErrorModel">
+            <summary>
+            Representation for unhandled errors
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.UnhandledErrorModel.InnerError">
+            <summary>
+            Provide details on the cause of the error
+            </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Models.InnerErrorModel">
+            <summary>
+            Representation of the error info for unhandled errors
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.InnerErrorModel.Message">
+            <summary>
+            The message for an unhandled error
             </summary>
         </member>
         <member name="T:StateManagementServiceWebAPI.Models.ErrorCode">
@@ -499,6 +519,14 @@
             <summary>
             This is the entry point of the service host process.
             </summary>
+        </member>
+        <member name="T:StateManagementServiceWebAPI.Startup">
+            <summary>
+            API pipeline configuration
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Startup.ConfigureApp(Owin.IAppBuilder)">
+            <param name="appBuilder"></param>
         </member>
     </members>
 </doc>
