@@ -70,14 +70,7 @@
       <DependentUpon>SimpleEndToEnd.feature</DependentUpon>
     </Compile>
     <Compile Include="SimpleEndToEndSteps.cs" />
-    <Compile Include="SimpleEndToEndTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Clients\DotNetClient\DotNetClient\DotNetClient.csproj">
-      <Project>{1B1831DB-3B76-407F-9262-AB76C33D2ECC}</Project>
-      <Name>DotNetClient</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -86,6 +79,12 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>SimpleEndToEnd.feature.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Clients\DotNetClient\DotNetClient\DotNetClient.csproj">
+      <Project>{1b1831db-3b76-407f-9262-ab76c33d2ecc}</Project>
+      <Name>DotNetClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

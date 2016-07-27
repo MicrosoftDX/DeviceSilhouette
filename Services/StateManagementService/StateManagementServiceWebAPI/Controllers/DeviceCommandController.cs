@@ -92,7 +92,9 @@ namespace StateManagementServiceWebAPI.Controllers
                 requestedState.Values.ToString(),
                 requestedState.TimeToLiveMilliSec);
 
-            return Ok(new DeviceStateModel(deviceMessage)); // TODO - should be a CommandResponse model
+            return Created(
+                "",
+                new DeviceStateModel(deviceMessage)); // TODO - should be a CommandResponse model
         }
     }
 }

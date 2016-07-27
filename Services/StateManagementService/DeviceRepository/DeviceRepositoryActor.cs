@@ -155,11 +155,12 @@ namespace DeviceRepository
 
         private async Task<int> GetNextMessageVersionAsync()
         {
-            var lastState = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
+            var messagesConditional = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
             int nextMessageVersion;
-            if (lastState.HasValue)
+            if (messagesConditional.HasValue && messagesConditional.Value.Count>0)
             {
-                nextMessageVersion = lastState.Value.Last().Version + 1;
+                var messages = messagesConditional.Value;
+                nextMessageVersion = messages[messages.Count-1].Version + 1;
             }
             else
             {
