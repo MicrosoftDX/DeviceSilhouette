@@ -4,6 +4,7 @@ using DotNetClient;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace Silhouette.EndToEndTests
 {
@@ -36,30 +37,61 @@ namespace Silhouette.EndToEndTests
 
             const string deviceId = "e2eDevice1";
             var device = await GetDeviceAsync(deviceId);
+
+
             var random = new Random();
             int testValue = random.Next(1, 1000000);
-            await device.SendStateMessageAsync(new { test = testValue });
-
+            await device.SendStateMessageAsync(new { test = testValue }); // report state
 
 
             await Task.Delay(2000); // TODO need to handle retrying state query until update is seen
-
-
-
-            var client = new HttpClient()
-            {
-                BaseAddress = new Uri(BaseUrlAddress)
-            };
+            var client = GetApiClient();
 
             var response = await client.GetAsync($"devices/{deviceId}/state/latest-reported");
             response.EnsureSuccessStatusCode();
-            //var content = await response.Content.ReadAsAsync<LatestReportedState>();
+            //dynamic state = await response.Content.ReadAsAsync<LatestReportedState>();
             var content = await response.Content.ReadAsStringAsync();
             dynamic state = JsonConvert.DeserializeObject(content);
 
             Assert.AreEqual(testValue, (int)state.deviceValues.test); // Check that we get the value back
         }
 
+
+        //[TestMethod]
+        //public async Task WhenStateRequestIsSentViaApi_ThenDeviceReceivesIt()
+        //{
+        //    const string deviceId = "e2eDevice1";
+        //    var device = await GetDeviceAsync(deviceId);
+        //    var random = new Random();
+        //    int testValue = random.Next(1, 1000000);
+
+        //    var client = GetApiClient();
+
+        //    var response = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
+        //            new
+        //            {
+        //                appMetadata = (object)null,
+        //                values = new { test = testValue },
+        //                timeToLiveMs = 5000
+        //            }
+        //        );
+
+        //    Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+            
+            
+            
+
+        //}
+
+
+
+        private static HttpClient GetApiClient()
+        {
+            return new HttpClient()
+            {
+                BaseAddress = new Uri(BaseUrlAddress)
+            };
+        }
 
 
         public class LatestReportedState
