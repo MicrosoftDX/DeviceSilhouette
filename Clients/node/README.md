@@ -27,6 +27,9 @@ Paste this block of code right after the block of code mentioned above:
 else if (item.toLowerCase() === "iothub-app-messagetype") {
   msg.properties.add("MessageType", response.headers[item]);
 }
+else if (item.toLowerCase() === "iothub-app-messagesubtype") {
+  msg.properties.add("MessageSubType", response.headers[item]);
+}
 ```
 
 
