@@ -15,7 +15,7 @@ Node.JS SDK have not yet implemented system properties properly in the SDK. Belo
 Modify the file node_modules\azure-iot-device-http\node_modules\azure-iot-http-base\lib\http.js as follows:
 
 Find this block of code:
-```
+```javascript
 /*Codes_SRS_NODE_HTTP_05_010: [If the HTTP response has an 'iothub-correlationid' header, it shall be saved as the correlationId property on the created Message.]*/
 else if (item.toLowerCase() === "iothub-correlationid") {
   msg.correlationId = response.headers[item];
@@ -23,7 +23,7 @@ else if (item.toLowerCase() === "iothub-correlationid") {
 ```
 
 Paste this block of code right after the block of code mentioned above:
-```
+```javascript
 else if (item.toLowerCase() === "iothub-app-messagetype") {
   msg.properties.add("MessageType", response.headers[item]);
 }
@@ -32,4 +32,5 @@ else if (item.toLowerCase() === "iothub-app-messagesubtype") {
 }
 ```
 
+For more details, see [azure-iot-sdks #414 - EventData Properties dictionary empty ](https://github.com/Azure/azure-iot-sdks/issues/414)
 
