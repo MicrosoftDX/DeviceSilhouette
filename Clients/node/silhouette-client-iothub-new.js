@@ -39,10 +39,12 @@ function processMessage(msg)
   // var msgType = msg.transportObj.applicationProperties.MessageType;
 
   var msgType = getMessageType(msg.properties);
+  var msgSubType = getMessageSubType(msg.properties);
  
   // TODO: what if we can't find the messageType? i.e. it's not a Silhouette message?
   // TODO: should we forward the message to some other callback?
   
+  /*
   switch (msgType) {
 	 
     case 'State:Set':
@@ -57,6 +59,26 @@ function processMessage(msg)
     default:
       console.log("Unknown MessageType.");
       break;
+  }
+  */
+
+  if (msgType == 'CommandRequest')
+  {
+    switch (msgSubType) 
+    {
+      case 'SetState':
+      console.log("C2D_UpdateState");
+      self.emit('C2D_updateState', JSON.parse(msg.data));
+	    //self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
+      break;
+    case 'ReportState':
+      console.log("C2D_GetState");
+      self.emit('C2D_getState');
+      break;
+    default:
+      console.log("Unknown MessageType.");
+      break;
+    }
   }
   client.complete(msg, function(err) {
     // TODO: Handle errors
@@ -75,6 +97,18 @@ function getMessageType(properties)
   for (var i=0; i<properties.count(); i++) {
 	
     if (properties.getItem(i).key == "iothub-app-MessageType")
+      return properties.getItem(i).value;
+  }
+  
+  return null;
+}
+
+function getMessageSubType(properties)
+{
+	
+  for (var i=0; i<properties.count(); i++) {
+	
+    if (properties.getItem(i).key == "iothub-app-MessageSubType")
       return properties.getItem(i).value;
   }
   
@@ -123,7 +157,8 @@ SilhouetteClientIoTHub.prototype.getState = function(state, deviceID)
   var data = JSON.stringify(getStateMsg);
   
   var message = new Message(data);
-  message.properties.add('MessageType', 'State:Get');
+  message.properties.add('MessageType', 'InquiryRequest');
+  message.properties.add('MessageSubType', 'GetState');
   client.sendEvent(message, function(err) {
     console.log("failed to get state with error: " + err);
   });

@@ -38,12 +38,27 @@ namespace IoTHubFeedbackService
                 "",
                 "",
                 MessageType.CommandResponse,
-                (MessageSubType)feedbackRecord.StatusCode,
+                GetMessageSubTypeFromFeedbck(feedbackRecord.StatusCode),
                 -1,
                 feedbackRecord.OriginalMessageId,
                 feedbackRecord.EnqueuedTimeUtc
                 );
             await silhouette.StoreDeviceMessageAsync(state);
+        }
+
+        private MessageSubType GetMessageSubTypeFromFeedbck(FeedbackStatusCode status)
+        {
+            switch (status) {
+                case FeedbackStatusCode.Success:
+                    return MessageSubType.Acknowledged;
+                case FeedbackStatusCode.Rejected:
+                    return MessageSubType.NotAcknowledged;
+                case FeedbackStatusCode.Expired:
+                    return MessageSubType.Expired;
+                case FeedbackStatusCode.DeliveryCountExceeded:
+                    return MessageSubType.ExceededRetryCount;
+            }
+            return MessageSubType.Unknown;
         }
 
         private static IDeviceRepositoryActor GetDeviceActor(string deviceId)
