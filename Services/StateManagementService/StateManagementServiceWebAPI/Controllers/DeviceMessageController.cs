@@ -106,7 +106,7 @@ namespace StateManagementServiceWebAPI.Controllers
                 var resultModel = new MessageListModel
                 {
                     Values = messages.Messages.Select(ToMessageModel),
-                    NextLink = Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
+                    NextLink = continuationToken == null ? null : Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
                 };
                 result = Ok(resultModel);
 
