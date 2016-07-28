@@ -86,6 +86,20 @@ namespace DotNetClient
         }
         // TODO - StopReceiveMessageLoopAsync
 
+        public async Task CompleteReceivedMessageAsync(DeviceMessage message)
+        {
+            await _deviceClient.CompleteAsync(message.Message);
+        }
+        public async Task RejectReceivedMessageAsync(DeviceMessage message)
+        {
+            await _deviceClient.RejectAsync(message.Message);
+        }
+        public async Task AbandonReceivedMessageAsync(DeviceMessage message)
+        {
+            await _deviceClient.AbandonAsync(message.Message);
+        }
+
+
         private async Task ReceiveMessages(CancellationToken cancellationToken)
         {
             while(!cancellationToken.IsCancellationRequested)
@@ -99,6 +113,9 @@ namespace DotNetClient
                     // complete, abandon, reject: https://msdn.microsoft.com/en-us/library/azure/mt590786.aspx
                     switch (args.Action)
                     {
+                        case ReceiveMessageAction.None:
+                            // no action :-)
+                            break;
                         case ReceiveMessageAction.Complete:
                             await _deviceClient.CompleteAsync(message);
                             break;
@@ -108,6 +125,8 @@ namespace DotNetClient
                         case ReceiveMessageAction.Reject:
                             await _deviceClient.RejectAsync(message);
                             break;
+                        default:
+                            throw new NotImplementedException($"Unhandled ReceiveMessageAction: '{args.Action}'");
                     }
                 }
             }            
