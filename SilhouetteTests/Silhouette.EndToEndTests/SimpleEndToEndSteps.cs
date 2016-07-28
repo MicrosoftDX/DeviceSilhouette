@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -23,11 +24,19 @@ namespace Silhouette.EndToEndTests
         private string _appMetadataValue;
         private HttpResponseMessage _stateRequestHttpResponse;
         private string _commandUrl;
+        private List<DeviceMessage> _receivedMessages;
+        private string _stateRequestCorrelationId;
 
         // The slightly odd style of test method is because SpecFlow currently doesn't support async tests _yet_ :-( 
         // See https://github.com/techtalk/SpecFlow/issues/542
         // Update: in PR https://github.com/techtalk/SpecFlow/pull/647
 
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // Given
+        //
 
         [Given]
         public void Given_a_registered_and_connected_device_with_id_DEVICEID(string deviceId)
@@ -35,12 +44,21 @@ namespace Silhouette.EndToEndTests
             RunAndBlock(async () =>
             {
                 _device = await GetDeviceAsync(deviceId);
+                _receivedMessages = new List<DeviceMessage>();
+                _device.ReceivedMessage += _device_ReceivedMessage;
             });
+        }
+        private void _device_ReceivedMessage(object sender, ReceiveMessageEventArgs e)
+        {
+            _receivedMessages.Add(e.Message);
+            e.Action = ReceiveMessageAction.None;
         }
 
 
-
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // When
+        //
 
         [When]
         public void When_the_device_reports_its_state()
@@ -80,9 +98,13 @@ namespace Silhouette.EndToEndTests
 
 
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // Then
+        //
 
         [Then]
-        public void Then_the_reported_state_Api_should_contain_the_reported_state_for_device_DEVICEID(string deviceId)
+        public void Then_the_reported_state_Api_contains_the_reported_state_for_device_DEVICEID(string deviceId)
         {
             RunAndBlock(async () =>
             {
@@ -115,11 +137,10 @@ namespace Silhouette.EndToEndTests
 
 
         [Then]
-        public void Then_the_messages_API_should_contain_the_reported_state_message_for_device_DEVICEID(string deviceId)
+        public void Then_the_messages_API_contains_the_reported_state_message_for_device_DEVICEID(string deviceId)
         {
             RunAndBlock(async () =>
             {
-
                 Func<dynamic, bool> messagePredicate = m => m.values != null && m.values.test != null && m.values.test == _testStateValue;
 
                 dynamic message = await FindMessageAsync(deviceId, messagePredicate);
@@ -127,6 +148,47 @@ namespace Silhouette.EndToEndTests
                 Assert.IsNotNull(message, "Message should not be null");
             });
         }
+
+        [Then]
+        public void Then_the_messages_API_contains_the_command_request_message_for_the_state_for_device_DEVICEID(string deviceId)
+        {
+            RunAndBlock(async () =>
+            {
+                Func<dynamic, bool> messagePredicate = m => m.type == "CommandRequest"
+                                && m.subtype == "SetState"
+                                && m.values != null && m.values.test != null && m.values.test == _testStateValue;
+
+                dynamic message = await FindMessageAsync(deviceId, messagePredicate);
+
+                Assert.IsNotNull(message, "Message should not be null");
+                _stateRequestCorrelationId = (string)message.correlationId;
+                Assert.IsNotNull(_stateRequestCorrelationId, "CorrelationId should not be null");
+            });
+        }
+
+
+        [Then]
+        public void Then_the_device_receieves_the_state_request()
+        {
+            Assert.AreEqual(1, _receivedMessages.Count, "Device should have receieved one message");
+
+            var message = _receivedMessages[0];
+
+            Assert.AreEqual(_stateRequestCorrelationId, message.CorrelationId, "The message received by the device should match the request CorrelationId");
+            Assert.AreEqual("CommandRequest", message.MessageType, "The message received by the device should have type CommandRequest");
+            Assert.AreEqual("SetState", message.MessageSubType, "The message received by the device should have subtype SetState");
+
+            dynamic body = JToken.Parse(message.Body);
+            Assert.IsNotNull(body.test, "The message received by the device should have a test property");
+            Assert.AreEqual(_testStateValue, body.test, "The message received by the device should hace the same property value as the requested state");
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // Helpers
+        //
+
 
         private static async Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate)
         {
@@ -157,12 +219,6 @@ namespace Silhouette.EndToEndTests
                 messagesUrl = (string)((JToken)messages)["@nextLink"];
             }
             return null;
-        }
-
-        [Then]
-        public void Then_the_device_receieves_and_accepts_the_state_request()
-        {
-            ScenarioContext.Current.Pending();
         }
 
 
