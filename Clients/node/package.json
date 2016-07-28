@@ -9,8 +9,8 @@
   "author": "Thomas Conté <tconte@microsoft.com>",
   "license": "ISC",
   "dependencies": {
-    "azure-iot-device": "^1.0.5",
-    "azure-iot-device-amqp": "^1.0.5",
-    "azure-iot-device-http": "^1.0.7"
+    "azure-iot-device": "^1.0.10",
+    "azure-iot-device-amqp": "^1.0.10",
+    "azure-iot-device-http": "^1.0.11"
   }
 }
