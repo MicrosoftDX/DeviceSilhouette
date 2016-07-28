@@ -10,12 +10,13 @@ namespace DotNetClient
         public ReceiveMessageEventArgs(DeviceMessage deviceMessage)
         {
             Message = deviceMessage;
-            Action = ReceiveMessageAction.Complete;
+            Action = ReceiveMessageAction.None;
         }
     }
 
     public enum ReceiveMessageAction
     {
+        None,
         Complete,
         Reject,
         Abandon

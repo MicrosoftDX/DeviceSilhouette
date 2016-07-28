@@ -13,6 +13,8 @@ namespace DotNetClient
 
         public DeviceMessage(Message message)
         {
+            Message = message;
+
             CorrelationId = message.CorrelationId;
 
             MessageType = message.Properties["MessageType"];
@@ -31,5 +33,8 @@ namespace DotNetClient
         public DateTime EnqueuedTimeUtc { get; set; }
         public string MessageType { get; internal set; }
         public string MessageSubType { get; internal set; }
+
+
+        internal Message Message { get; set; }
     }
 }
