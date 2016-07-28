@@ -15,6 +15,7 @@ function SilhouetteClientIoTHub(config)
   // Remember "this"
   self = this;
 
+  
   client = Client.fromConnectionString(config.connectionString, Protocol);
   client.on('message', processMessage);
   client.open(function(err) {
@@ -33,24 +34,51 @@ util.inherits(SilhouetteClientIoTHub, EventEmitter);
 
 function processMessage(msg)
 {
-  console.log("message");
+	
   // With AMQP, use this trick
   // var msgType = msg.transportObj.applicationProperties.MessageType;
+
   var msgType = getMessageType(msg.properties);
+  var msgSubType = getMessageSubType(msg.properties);
+ 
   // TODO: what if we can't find the messageType? i.e. it's not a Silhouette message?
   // TODO: should we forward the message to some other callback?
+  
+  /*
   switch (msgType) {
-    case 'C2D_UpdateState':
+	 
+    case 'State:Set':
       console.log("C2D_UpdateState");
-      self.emit('C2D_updateState', JSON.parse(msg.data).state);
+      self.emit('C2D_updateState', JSON.parse(msg.data));
+	    //self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
       break;
-    case 'C2D_GetState':
+    case 'State:Get':
       console.log("C2D_GetState");
       self.emit('C2D_getState');
       break;
     default:
       console.log("Unknown MessageType.");
       break;
+  }
+  */
+
+  if (msgType == 'CommandRequest')
+  {
+    switch (msgSubType) 
+    {
+      case 'SetState':
+      console.log("C2D_UpdateState");
+      self.emit('C2D_updateState', JSON.parse(msg.data));
+	    //self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
+      break;
+    case 'ReportState':
+      console.log("C2D_GetState");
+      self.emit('C2D_getState');
+      break;
+    default:
+      console.log("Unknown MessageType.");
+      break;
+    }
   }
   client.complete(msg, function(err) {
     // TODO: Handle errors
@@ -65,8 +93,22 @@ function processMessage(msg)
 
 function getMessageType(properties)
 {
+	
   for (var i=0; i<properties.count(); i++) {
-    if (properties.getItem(i).key == "iothub-app-MessageType")
+	
+    if (properties.getItem(i).key.toLowerCase()  === "iothub-app-messagetype")
+      return properties.getItem(i).value;
+  }
+  
+  return null;
+}
+
+function getMessageSubType(properties)
+{
+	
+  for (var i=0; i<properties.count(); i++) {
+	
+    if (properties.getItem(i).key.toLowerCase()  === "iothub-app-messagesubtype")
       return properties.getItem(i).value;
   }
   
@@ -77,11 +119,19 @@ function getMessageType(properties)
 ** D2C Update State
 */
 
-SilhouetteClientIoTHub.prototype.updateState = function(state)
+SilhouetteClientIoTHub.prototype.updateState = function(metadata, values, deviceID)
 {
-  var data = JSON.stringify({ state: state });
+  // TODO: Make sure timestamp in UTC and not in local computer timezone	
+  var formattedDate = new Date().toISOString();
+
+	
+  var data = JSON.stringify(values);
   var message = new Message(data);
-  message.properties.add('MessageType', 'D2C_UpdateState');
+  message.properties.add('MessageType', 'Report');
+  message.properties.add('MessageSubType', 'State');
+  // message.correlationId = "qwertyuiop"; // TODO set correlationId when responding to messages
+  //console.log("outgoing message:");
+  //console.log(message);
   client.sendEvent(message, function(err) {
     // TODO: what if we have an error here ?
   });
@@ -91,13 +141,13 @@ SilhouetteClientIoTHub.prototype.updateState = function(state)
 ** D2C Get State
 */
 
-SilhouetteClientIoTHub.prototype.getState = function(state)
-{
-  var data = JSON.stringify({ state: state });
-  var message = new Message(data);
-  message.properties.add('MessageType', 'D2C_GetState');
+SilhouetteClientIoTHub.prototype.getState = function(state, deviceID)
+{	
+  var message = new Message("");
+  message.properties.add('MessageType', 'InquiryRequest');
+  message.properties.add('MessageSubType', 'GetState');
   client.sendEvent(message, function(err) {
-    // TODO: what if we have an error here ?
+    console.log("failed to get state with error: " + err);
   });
 }
 
