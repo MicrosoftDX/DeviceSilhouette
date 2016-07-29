@@ -15,11 +15,13 @@ function SilhouetteClientIoTHub(config)
   // Remember "this"
   self = this;
 
-  
   client = Client.fromConnectionString(config.connectionString, Protocol);
-  client.on('message', processMessage);
   client.open(function(err) {
     console.log("Client connected.");
+    client.on('message', processMessage);
+    client.on('error', function(err) {
+      console.log(err);
+    });
   });
   
   // TODO: make sure the client object can be accessed from the caller
@@ -34,7 +36,6 @@ util.inherits(SilhouetteClientIoTHub, EventEmitter);
 
 function processMessage(msg)
 {
-	
   // With AMQP, use this trick
   // var msgType = msg.transportObj.applicationProperties.MessageType;
 
@@ -44,35 +45,14 @@ function processMessage(msg)
   // TODO: what if we can't find the messageType? i.e. it's not a Silhouette message?
   // TODO: should we forward the message to some other callback?
   
-  /*
-  switch (msgType) {
-	 
-    case 'State:Set':
-      console.log("C2D_UpdateState");
-      self.emit('C2D_updateState', JSON.parse(msg.data));
-	    //self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
-      break;
-    case 'State:Get':
-      console.log("C2D_GetState");
-      self.emit('C2D_getState');
-      break;
-    default:
-      console.log("Unknown MessageType.");
-      break;
-  }
-  */
-
   if (msgType == 'CommandRequest')
   {
     switch (msgSubType) 
     {
       case 'SetState':
-      console.log("C2D_UpdateState");
       self.emit('C2D_updateState', JSON.parse(msg.data));
-	    //self.emit('C2D_updateState', JSON.parse(JSON.parse(msg.data).State));
       break;
     case 'ReportState':
-      console.log("C2D_GetState");
       self.emit('C2D_getState');
       break;
     default:
@@ -93,9 +73,7 @@ function processMessage(msg)
 
 function getMessageType(properties)
 {
-	
   for (var i=0; i<properties.count(); i++) {
-	
     if (properties.getItem(i).key.toLowerCase()  === "iothub-app-messagetype")
       return properties.getItem(i).value;
   }
@@ -105,9 +83,7 @@ function getMessageType(properties)
 
 function getMessageSubType(properties)
 {
-	
   for (var i=0; i<properties.count(); i++) {
-	
     if (properties.getItem(i).key.toLowerCase()  === "iothub-app-messagesubtype")
       return properties.getItem(i).value;
   }
@@ -123,15 +99,12 @@ SilhouetteClientIoTHub.prototype.updateState = function(metadata, values, device
 {
   // TODO: Make sure timestamp in UTC and not in local computer timezone	
   var formattedDate = new Date().toISOString();
-
 	
   var data = JSON.stringify(values);
   var message = new Message(data);
   message.properties.add('MessageType', 'Report');
   message.properties.add('MessageSubType', 'State');
   // message.correlationId = "qwertyuiop"; // TODO set correlationId when responding to messages
-  //console.log("outgoing message:");
-  //console.log(message);
   client.sendEvent(message, function(err) {
     // TODO: what if we have an error here ?
   });
