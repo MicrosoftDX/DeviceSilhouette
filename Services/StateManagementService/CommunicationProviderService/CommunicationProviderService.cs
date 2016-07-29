@@ -113,8 +113,8 @@ namespace CommunicationProviderService
                     message.DeviceId,
                     null,
                     lastReportedState.Values,
-                    MessageType.InquiryResponse,
-                    MessageSubType.GetState,
+                    MessageType.CommandRequest,
+                    MessageSubType.LatestState,
                     5000 // TODO - need to have a configurable TTL for InquiryResponse
                 );
             await SendCloudToDeviceMessageAsync(newState);

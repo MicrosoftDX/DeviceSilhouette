@@ -149,11 +149,6 @@ namespace DeviceRichState
         /// </summary>
         InquiryRequest,
 
-        /// <summary>
-        /// Used for ACK/NAK etc responses to a InquiryRequest
-        /// </summary>
-        InquiryResponse
-
     }
 
     public enum MessageSubType
@@ -166,23 +161,27 @@ namespace DeviceRichState
         /// CommandRequest: request for the device to report its state
         /// </summary>
         ReportState,
+        /// <summary>
+        /// CommandRequest: sent in response to to a device sending an InquiryRequest
+        /// </summary>
+        LatestState,
 
         New,
         /// <summary>
-        /// CommandResponse/InquiryResponse: Device sent ACK
+        /// CommandResponse: Device sent ACK
         /// </summary>
         Acknowledged,
         Enqueued,
         /// <summary>
-        /// CommandResponse/InquiryResponse: the request message was not delivered before the message TTL
+        /// CommandResponse: the request message was not delivered before the message TTL
         /// </summary>
         Expired,
         /// <summary>
-        /// CommandResponse/InquiryResponse: Device sent NAK
+        /// CommandResponse: Device sent NAK
         /// </summary>
         NotAcknowledged,
         /// <summary>
-        /// CommandResponse/InquiryResponse: the number of delivery attempts for the request message exceeded the retry count
+        /// CommandResponse: the number of delivery attempts for the request message exceeded the retry count
         /// </summary>
         ExceededRetryCount,
         Received,

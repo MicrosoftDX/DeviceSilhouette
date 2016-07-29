@@ -50,6 +50,9 @@ function processMessage(msg)
       case 'SetState':
         self.emit('C2D_updateState', JSON.parse(msg.data));
         break;
+      case 'LatestState':
+        self.emit('C2D_latestState', JSON.parse(msg.data));
+        break;
       case 'ReportState':
         self.emit('C2D_getState');
         break;

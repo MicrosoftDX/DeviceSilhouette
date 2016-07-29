@@ -22,6 +22,14 @@ function C2D_updateState(state)
   box_state.content = JSON.stringify(my_state);
   screen.render();
 }
+function C2D_latestState(state)
+{
+  box_log.log("received CommandRequest:LatestState");
+  my_state = state;
+  // Update UI
+  box_state.content = JSON.stringify(my_state);
+  screen.render();
+}
 
 function C2D_getState()
 {
@@ -39,6 +47,7 @@ var silhouette = silhouetteClient.create('iothub', {
 });
 
 silhouette.on('C2D_updateState', C2D_updateState);
+silhouette.on('C2D_latestState', C2D_latestState);
 silhouette.on('C2D_getState', C2D_getState);
 silhouette.on('error', function() {
   box_log.log('error');

@@ -33,6 +33,7 @@ namespace TestDotNetClient
 
             string deviceId = "dotNetDevice"; // TODO parameterise
             //string deviceId = "device1"; // TODO parameterise
+            //string deviceId = "device42"; // TODO parameterise
 
             var device = new DeviceSimulator(connectionString, deviceId);
             device.ReceivedMessage += Device_ReceivedMessage;
