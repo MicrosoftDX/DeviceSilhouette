@@ -28,12 +28,12 @@ namespace StateManagementServiceWebAPI.Models.DeviceMessage
         /// <summary>
         /// The main type for the message (e.g. CommandRequest, Report)
         /// </summary>
-        public string MessageType { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// The subtype for the message (e.g. SetState for CommandRequest messages)
         /// </summary>
-        public string MessageSubType { get; set; }
+        public string Subtype { get; set; }
 
         /// <summary>
         /// The correlation id for messages. Used to link related messages

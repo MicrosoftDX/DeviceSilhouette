@@ -18,14 +18,21 @@ namespace Silhouette.EndToEndTests
         private const string BaseUrlAddress = "http://localhost:9013/v0.1/";
         private readonly Random _random = new Random();
 
-
         private DeviceSimulator _device;
+
+        private List<DeviceMessage> _deviceReceivedMessages;
+        private DeviceMessage _deviceReceivedMessage;
+
+
         private int _testStateValue;
         private string _appMetadataValue;
+
         private HttpResponseMessage _stateRequestHttpResponse;
         private string _commandUrl;
-        private List<DeviceMessage> _receivedMessages;
         private string _stateRequestCorrelationId;
+        private dynamic _command;
+
+
 
         // The slightly odd style of test method is because SpecFlow currently doesn't support async tests _yet_ :-( 
         // See https://github.com/techtalk/SpecFlow/issues/542
@@ -44,13 +51,14 @@ namespace Silhouette.EndToEndTests
             RunAndBlock(async () =>
             {
                 _device = await GetDeviceAsync(deviceId);
-                _receivedMessages = new List<DeviceMessage>();
-                _device.ReceivedMessage += _device_ReceivedMessage;
+                _deviceReceivedMessages = new List<DeviceMessage>();
+                _device.ReceivedMessage += device_OnMessageReceived;
+                _device.StartReceiveMessageLoop();
             });
         }
-        private void _device_ReceivedMessage(object sender, ReceiveMessageEventArgs e)
+        private void device_OnMessageReceived(object sender, ReceiveMessageEventArgs e)
         {
-            _receivedMessages.Add(e.Message);
+            _deviceReceivedMessages.Add(e.Message);
             e.Action = ReceiveMessageAction.None;
         }
 
@@ -66,6 +74,8 @@ namespace Silhouette.EndToEndTests
             RunAndBlock(async () =>
             {
                 _testStateValue = _random.Next(1, 1000000);
+                Console.WriteLine($"Using state value {_testStateValue}");
+
                 await _device.SendStateMessageAsync(new { test = _testStateValue });
             });
         }
@@ -75,13 +85,11 @@ namespace Silhouette.EndToEndTests
             Thread.Sleep(TimeSpan.FromSeconds(secondsToWait));
         }
 
-
         [When]
-        public void When_a_state_request_is_sent_through_the_Api_for_device_DEVICEID(string deviceId)
+        public void When_a_state_request_is_sent_through_the_Api_for_device_DEVICEID_with_timeoutMs_TIMEOUTMS(string deviceId, int timeoutMs)
         {
             RunAndBlock(async () =>
             {
-
                 _testStateValue = _random.Next(1, 1000000);
                 _appMetadataValue = Guid.NewGuid().ToString();
 
@@ -91,11 +99,20 @@ namespace Silhouette.EndToEndTests
                     {
                         appMetadata = new { testMetadata = _appMetadataValue },
                         values = new { test = _testStateValue },
-                        timeToLiveMilliSec = 5000
+                        timeToLiveMilliSec = timeoutMs
                     });
             });
         }
 
+        [When]
+        public void When_the_device_accepts_the_state_request()
+        {
+            RunAndBlock(async () =>
+            {
+                Assert.IsNotNull(_deviceReceivedMessage, "Should have a received message from a previous step");
+                await _device.CompleteReceivedMessageAsync(_deviceReceivedMessage);
+            });
+        }
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +149,8 @@ namespace Silhouette.EndToEndTests
         {
             Assert.IsNotNull(_stateRequestHttpResponse.Headers.Location, "Location should not be null");
             _commandUrl = _stateRequestHttpResponse.Headers.Location.ToString();
+            Console.WriteLine($"CommandUrl: {_commandUrl}");
+
             Assert.IsFalse(string.IsNullOrEmpty(_commandUrl), "Location should not be empty");
         }
 
@@ -162,25 +181,83 @@ namespace Silhouette.EndToEndTests
 
                 Assert.IsNotNull(message, "Message should not be null");
                 _stateRequestCorrelationId = (string)message.correlationId;
+                Console.WriteLine($"CorrelationId: {_stateRequestCorrelationId}");
+
                 Assert.IsNotNull(_stateRequestCorrelationId, "CorrelationId should not be null");
             });
         }
 
+        [Then]
+        public void Then_the_messages_API_contains_the_command_response_ACK_for_the_state_request_for_device_DEVICEID(string deviceId)
+        {
+            RunAndBlock(async () =>
+            {
+                Assert.IsNotNull(_stateRequestCorrelationId, "Should have a correlationId saved from a previous step");
+                Func<dynamic, bool> messagePredicate = m => ((string)m.type) == "CommandResponse"
+                                && ((string)m.correlationId) == _stateRequestCorrelationId;
+
+                dynamic message = await FindMessageAsync(deviceId, messagePredicate);
+
+                Assert.IsNotNull(message, "Message should not be null");
+
+                Assert.AreEqual("Acknowledged", (string)message.subtype, "Response SubType should be Acknowledged");
+            });
+        }
 
         [Then]
         public void Then_the_device_receieves_the_state_request()
         {
-            Assert.AreEqual(1, _receivedMessages.Count, "Device should have receieved one message");
+            Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have receieved one message");
 
-            var message = _receivedMessages[0];
+            _deviceReceivedMessage = _deviceReceivedMessages[0];
 
-            Assert.AreEqual(_stateRequestCorrelationId, message.CorrelationId, "The message received by the device should match the request CorrelationId");
-            Assert.AreEqual("CommandRequest", message.MessageType, "The message received by the device should have type CommandRequest");
-            Assert.AreEqual("SetState", message.MessageSubType, "The message received by the device should have subtype SetState");
+            Assert.AreEqual(_stateRequestCorrelationId, _deviceReceivedMessage.CorrelationId, "The message received by the device should match the request CorrelationId");
+            Assert.AreEqual("CommandRequest", _deviceReceivedMessage.MessageType, "The message received by the device should have type CommandRequest");
+            Assert.AreEqual("SetState", _deviceReceivedMessage.MessageSubType, "The message received by the device should have subtype SetState");
 
-            dynamic body = JToken.Parse(message.Body);
-            Assert.IsNotNull(body.test, "The message received by the device should have a test property");
-            Assert.AreEqual(_testStateValue, body.test, "The message received by the device should hace the same property value as the requested state");
+            dynamic body = JToken.Parse(_deviceReceivedMessage.Body);
+            Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
+            Assert.AreEqual(_testStateValue, (int)body.test, "The message received by the device should hace the same property value as the requested state");
+        }
+
+
+        [Then]
+        public void Then_the_command_API_contains_the_command_for_the_state_request_for_device_DEVICEID(string deviceId)
+        {
+            RunAndBlock(async () =>
+            {
+                var client = GetApiClient();
+                Assert.IsFalse(string.IsNullOrEmpty(_stateRequestCorrelationId), "State request correlation id should be set before invoking this test method");
+                Assert.IsFalse(string.IsNullOrEmpty(_commandUrl), "command url should be set before invoking this test method");
+
+                var response = await client.GetAsync(_commandUrl);
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+                _command = await response.Content.ReadAsAsync<dynamic>();
+                
+
+                Assert.IsNotNull(_command, "Command should not be null");
+                Assert.IsNotNull(_command.request, "Command.Request should not be null");
+
+                Assert.IsNotNull(_command.id, "CorrelationId should not be null");
+                Assert.AreEqual(_stateRequestCorrelationId, (string)_command.id, "Command id should match state request correlation id");
+                Assert.AreEqual("CommandRequest", (string)_command.request.type, "Command request type should be CommandRequest");
+                Assert.AreEqual("SetState", (string)_command.request.subtype, "Command request subtype should be SetState");
+                Assert.IsTrue(_command.request.values != null, "Command request values should be set");
+                Assert.IsTrue(_command.request.values.test != null, "Command request values test property should be set");
+                Assert.AreEqual(_testStateValue, (int)_command.request.values.test, "Command request values test property should be the requested value");
+            });
+        }
+
+        [Then]
+        public void Then_the_command_received_from_the_API_has_no_response()
+        {
+            Assert.IsTrue(_command.response == null, "Command.Response should be null");
+        }
+        [Then]
+        public void Then_the_command_received_from_the_API_has_an_ACK_response()
+        {
+            Assert.AreEqual("Acknowledged", (string)_command.response.subtype, "Command.Response.Subtype should be Acknowledged");
         }
 
 

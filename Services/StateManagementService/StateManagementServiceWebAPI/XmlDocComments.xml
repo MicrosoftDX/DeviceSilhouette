@@ -305,12 +305,12 @@
             The version number for the message. This is a unique identifier for the message within a device id
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.MessageType">
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.Type">
             <summary>
             The main type for the message (e.g. CommandRequest, Report)
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.MessageSubType">
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageModel.Subtype">
             <summary>
             The subtype for the message (e.g. SetState for CommandRequest messages)
             </summary>

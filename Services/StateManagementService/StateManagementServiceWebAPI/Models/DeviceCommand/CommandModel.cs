@@ -48,7 +48,11 @@ namespace StateManagementServiceWebAPI.Models.DeviceCommand
             Id = request.CorrelationId;
             DeviceId = request.DeviceId;
             Request = new CommandRequestModel(request);
-            if (response != null)
+            if (response == null)
+            {
+                Response = null;
+            }
+            else
             {
                 Response = new CommandResponseModel(response);
             }
