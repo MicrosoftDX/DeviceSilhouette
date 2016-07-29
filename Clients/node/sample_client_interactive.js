@@ -67,7 +67,7 @@ var box_usage = blessed.box({
   left: '50%',
   width: '50%',
   height: '50%',
-  content: 's: switch light on/off\nc: cycle color\n\ng: get state\nu: update state\n\nq: quit',
+  content: 's: switch light on/off\nc: cycle color\n\ng: get state\nu: update state\n\nt: start/stop tasks\n\nq: quit',
   tags: true,
   border: {
     type: 'line'
@@ -131,13 +131,7 @@ function doWork()
   // Update UI
   box_log.log('sending updated state:');
   box_log.log(my_state);
-
 }
-
-// get the state from the cloud service
-//console.log('sending get state');
-//check_state = silhouette.getState();
-//console.log(check_state);
 
 // TODO: we can use the native client to do other stuff
 // silhouette.client.on('someEvent', doSomething)
