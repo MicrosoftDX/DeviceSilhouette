@@ -116,11 +116,12 @@ SilhouetteClientIoTHub.prototype.updateState = function(metadata, values, device
 
 SilhouetteClientIoTHub.prototype.getState = function(state, deviceID)
 {	
-  var message = new Message("");
+  var message = new Message("{}");
   message.properties.add('MessageType', 'InquiryRequest');
   message.properties.add('MessageSubType', 'GetState');
-  client.sendEvent(message, function(err) {
-    console.log("failed to get state with error: " + err);
+  client.sendEvent(message, function(err, res) {
+    // TODO: add callback for error handling
+    if (err) console.log("failed to get state with error: " + err);
   });
 }
 
