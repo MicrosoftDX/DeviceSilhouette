@@ -83,25 +83,19 @@ namespace CommunicationProviderService
         // process messages from communication provider - D2C endpoint 
         private async Task ProcessCommunicationProviderMessageAsync(MessageInfo message)
         {
-            try
-            {
-                DeviceMessage deviceMessage = ToDeviceMessage(message);
-                await StoreMessageInActor(deviceMessage);
+            // TODO: error handling!
+            DeviceMessage deviceMessage = ToDeviceMessage(message);
+            await StoreMessageInActor(deviceMessage);
 
-                // Any actions to take on the message (should this be handled here?)
-                switch (message.MessageType)
-                {
-                    case MessageType.InquiryRequest: // device requesting last stored state
-                        if (message.MessageSubType == MessageSubType.GetState)
-                        {
-                            await SendLastReportedStateToDeviceAsync(message);
-                        }
-                        break;
-                }
-            }
-            catch (Exception)
+            // Any actions to take on the message (should this be handled here?)
+            switch (message.MessageType)
             {
-                // TODO: better error handling                    
+                case MessageType.InquiryRequest: // device requesting last stored state
+                    if (message.MessageSubType == MessageSubType.GetState)
+                    {
+                        await SendLastReportedStateToDeviceAsync(message);
+                    }
+                    break;
             }
         }
 
@@ -109,26 +103,21 @@ namespace CommunicationProviderService
         // send a message to the device using the C2D endpoint. called when a device is requesting the last stored state
         private async Task SendLastReportedStateToDeviceAsync(MessageInfo message)
         {
-            try
-            {
-                IDeviceRepositoryActor actor = GetDeviceActor(message.DeviceId);
-                DeviceMessage lastReportedState = await actor.GetLastKnownReportedStateAsync();
+            // TODO: error handling!
 
-                // create a new DeviceState with new correlation id, send to the device and store in the repository   
-                var newState = new DeviceMessage(
-                        message.DeviceId,
-                        null,
-                        lastReportedState.Values,
-                        MessageType.InquiryResponse,
-                        MessageSubType.GetState,
-                        5000 // TODO - need to have a configurable TTL for InquiryResponse
-                    );
-                await SendCloudToDeviceMessageAsync(newState);
-            }
-            catch (Exception e)
-            {
-                // TODO: handle cases when the device is not found in the state repository
-            }
+            IDeviceRepositoryActor actor = GetDeviceActor(message.DeviceId);
+            DeviceMessage lastReportedState = await actor.GetLastKnownReportedStateAsync();
+
+            // create a new DeviceState with new correlation id, send to the device and store in the repository   
+            var newState = new DeviceMessage(
+                    message.DeviceId,
+                    null,
+                    lastReportedState.Values,
+                    MessageType.InquiryResponse,
+                    MessageSubType.GetState,
+                    5000 // TODO - need to have a configurable TTL for InquiryResponse
+                );
+            await SendCloudToDeviceMessageAsync(newState);
         }
 
 
