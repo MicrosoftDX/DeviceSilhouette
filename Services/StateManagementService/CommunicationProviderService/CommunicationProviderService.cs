@@ -106,13 +106,13 @@ namespace CommunicationProviderService
             // TODO: error handling!
 
             IDeviceRepositoryActor actor = GetDeviceActor(message.DeviceId);
-            DeviceMessage lastReportedState = await actor.GetLastKnownReportedStateAsync();
+            DeviceMessage lastReportedStateMessage = await actor.GetLastKnownReportedStateAsync();
 
             // create a new DeviceState with new correlation id, send to the device and store in the repository   
             var newState = new DeviceMessage(
                     message.DeviceId,
                     null,
-                    lastReportedState.Values,
+                    lastReportedStateMessage?.Values, // send null if no lastReportedStateMessage
                     MessageType.CommandRequest,
                     MessageSubType.LatestState,
                     5000 // TODO - need to have a configurable TTL for InquiryResponse
