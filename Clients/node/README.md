@@ -41,7 +41,10 @@ Same as the service, the config for sample_client_simple.js and sample_client_in
 This client expect to find environment variable for "Silhouette_DeviceIotHubConnectionString".
 This should be the IoTHub connection string for device with ID "device1" for sample_client_simple.js and "device42" sample_client_interactive.js.
 
+The connection string expected format is:
+```
 HostName=<IoTHubName>.azure-devices.net;DeviceId=device1;SharedAccessKey=<The_Device_SAS_Token_for_IoTHub>
+```
 
 
 
