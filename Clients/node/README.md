@@ -9,7 +9,7 @@ You only have to implement two callback (get/update state from cloud to device) 
 The state itself is just a JavaScript object, e.g. a JSON object.
 
 
-#### Note:
+### Important Note - update node module:
 Node.JS SDK have not yet implemented system properties properly in the SDK. Below is a workaround in order to be able to access the MessageType.
 
 Modify the file node_modules\azure-iot-device-http\node_modules\azure-iot-http-base\lib\http.js as follows:
@@ -32,4 +32,14 @@ Paste this block of code right after the block of code mentioned above:
 ```
 
 For more details, see [azure-iot-sdks #414 - EventData Properties dictionary empty ](https://github.com/Azure/azure-iot-sdks/issues/414)
+
+### Environment variables
+
+Same as the service, the client uses the environment variables for setting connection strings.
+This client expect to find environment variable for "Silhouette_DeviceIotHubConnectionString".
+This should be the IoTHub connection string for device with ID "device1"
+
+HostName=<IoTHubName>.azure-devices.net;DeviceId=device1;SharedAccessKey=<The_Device_SAS_Token_for_IoTHub>
+
+
 
