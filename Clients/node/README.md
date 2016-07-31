@@ -35,9 +35,11 @@ For more details, see [azure-iot-sdks #414 - EventData Properties dictionary emp
 
 ### Environment variables
 
-Same as the service, the client uses the environment variables for setting connection strings.
+
+
+Same as the service, the config for sample_client_simple.js and sample_client_interactive.js use the environment variables.
 This client expect to find environment variable for "Silhouette_DeviceIotHubConnectionString".
-This should be the IoTHub connection string for device with ID "device1"
+This should be the IoTHub connection string for device with ID "device1" for sample_client_simple.js and "device42" sample_client_interactive.js.
 
 HostName=<IoTHubName>.azure-devices.net;DeviceId=device1;SharedAccessKey=<The_Device_SAS_Token_for_IoTHub>
 
