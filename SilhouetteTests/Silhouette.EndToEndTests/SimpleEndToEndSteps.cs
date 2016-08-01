@@ -218,6 +218,8 @@ namespace Silhouette.EndToEndTests
                 var elapsedTime = stopwatch.Elapsed;
 
                 Assert.IsNotNull(message, "Message should not be null");
+                Log($"elapsed time: {elapsedTime}");
+
                 _stateRequestCorrelationId = (string)message.correlationId;
                 Log($"CorrelationId: {_stateRequestCorrelationId}");
 
@@ -279,7 +281,7 @@ namespace Silhouette.EndToEndTests
                 {
                     Assert.Fail("Timed out waiting for device to receive message");
                 }
-                var messageElapsedTime = stopwatch.Elapsed;
+                var elapsedTime = stopwatch.Elapsed;
 
 
                 Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
@@ -293,12 +295,12 @@ namespace Silhouette.EndToEndTests
                 Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
                 Assert.AreEqual(_testStateValue, (int)body.test, "The message received by the device should hace the same property value as the requested state");
 
-                Log($"Message wait time: {messageElapsedTime}");
+                Log($"Elapsed time: {elapsedTime}");
                 // Got here, so the message looks ok
-                var targetTimespan = TimeSpan.FromSeconds(targetTime);
-                if (messageElapsedTime > targetTimespan)
+                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
+                if (elapsedTime > targetTimeSpan)
                 {
-                    AddTimeoutMessage($"Waited {messageElapsedTime} for message. Target: {targetTimespan}");
+                    AddTimeoutMessage($"Waited {elapsedTime} for message. Target: {targetTimeSpan}");
                 }
             });
         }
