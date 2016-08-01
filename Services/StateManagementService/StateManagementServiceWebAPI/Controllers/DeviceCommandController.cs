@@ -95,7 +95,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// NB Currently this only supports creating a state request command
         /// </summary>
         /// <param name="deviceId">The id of the device</param>
-        /// <param name="requestedState"></param>
+        /// <param name="command"></param>
         /// <returns></returns>
         [Route("")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(CommandModel))] 
@@ -103,16 +103,16 @@ namespace StateManagementServiceWebAPI.Controllers
         [HandleInvalidModel]
         public async Task<IHttpActionResult> Post(
             [FromUri]string deviceId,
-            [FromBody]DeviceStateRequestModel requestedState) // TODO -= should be a CommandRequestModel
+            [FromBody] Models.CommandRequestModel command) // TODO -= should be a CommandRequestModel
         {
             // TODO - this should return the Accepted Response
 
             // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
             var deviceMessage = await _stateProcessor.SetStateValueAsync(
                 deviceId,
-                requestedState.AppMetadata.ToString(),
-                requestedState.Values.ToString(),
-                requestedState.TimeToLiveMilliSec);
+                command.AppMetadata.ToString(),
+                command.Values.ToString(),
+                command.TimeToLiveMilliSec);
 
             return Created(
                 Url.Link("GetCommand", new { commandId = deviceMessage.CorrelationId }),

@@ -6,12 +6,12 @@ namespace StateManagementServiceWebAPI.Models
     /// <summary>
     /// Data model used to capture the State Request command added through the API
     /// </summary>
-    public class DeviceStateRequestModel
+    public class CommandRequestModel
     {
         /// <summary>
         ///     
         /// </summary>
-        public DeviceStateRequestModel()
+        public CommandRequestModel()
         {
             //empty ctor for WebAPI model binding
         }
