@@ -195,7 +195,6 @@ namespace DeviceRepository.Tests
                 DeviceId,
                 "{}",
                 "{}",
-#warning Need to sort out identifying a response message! Wait on implementation of Rachel's State notes
                 MessageType.CommandResponse,
                 MessageSubType.Acknowledged,
                 -1,

@@ -103,6 +103,14 @@ namespace DeviceRepository
             bool gotNonPersistedMessage = false;
             int lastPersistedMessageInSequenceIndex = -1;
 
+            // Track the first index for a message with a given correlation Id
+            // key = correlation Id, value = earliest index
+            var earliestIndexForCorrelationIdLookup = new Dictionary<string, int>();
+            int earliestCorrelatedMessageIndex = -1;
+
+            //
+            // Loop over messages tracking states above
+            //
             for (int messageIndex = 0; messageIndex < messages.Count; messageIndex++)
             {
                 var message = messages[messageIndex];
@@ -127,24 +135,69 @@ namespace DeviceRepository
                     gotMessageInRetentionTimeWindow = true;
                     latestMessageBeforeRetentionTimeWindowIndex = messageIndex - 1;
                 }
-            }
 
+                // earliestIndexForCorrelationId
+                if (!string.IsNullOrEmpty(message.CorrelationId))
+                {
+                    if (message.Timestamp > latestMessageTimeStampToPurge)
+                    {
+                        // we're in the retention window
+                        // we don't need to track the correlation IDs any more, 
+                        // but we need to check that we retain messages with this correlation ID outside the retention window
+                        int earliestIndexForCurrentCorrelationId;
+                        if (earliestIndexForCorrelationIdLookup.TryGetValue(message.CorrelationId, out earliestIndexForCurrentCorrelationId))
+                        {
+                            earliestCorrelatedMessageIndex = earliestIndexForCurrentCorrelationId;
+                        }
+                    }
+                    else
+                    {
+                        if (!earliestIndexForCorrelationIdLookup.ContainsKey(message.CorrelationId))
+                        {
+                            // this correlation id isn't in the dictionary, so this is the first index
+                            earliestIndexForCorrelationIdLookup[message.CorrelationId] = messageIndex;
+                        }
+                    }
+                }
+            }
             if (!gotNonPersistedMessage)
             {
                 lastPersistedMessageInSequenceIndex = messages.Count - 1;
             }
+            if (earliestCorrelatedMessageIndex == -1)
+            {
+                earliestCorrelatedMessageIndex = messages.Count;
+            }
 
+            //
+            // Now combine the states
+            //
+            
+            // TODO  - handle earliestCorrelatedMessageIndex
             if (latestReportedStateMessageIndex < 0)
             {
                 // no reported state messages
-                return Min(latestMessageBeforeRetentionTimeWindowIndex, lastPersistedMessageInSequenceIndex);
+                return Min(
+                        latestMessageBeforeRetentionTimeWindowIndex, 
+                        lastPersistedMessageInSequenceIndex,
+                        earliestCorrelatedMessageIndex - 1
+                    );
             }
             else
             {
-                return Min(latestReportedStateMessageIndex, latestMessageBeforeRetentionTimeWindowIndex, lastPersistedMessageInSequenceIndex);
+                return Min(
+                    latestReportedStateMessageIndex, 
+                    latestMessageBeforeRetentionTimeWindowIndex, 
+                    lastPersistedMessageInSequenceIndex,
+                    earliestCorrelatedMessageIndex - 1
+                );
             }
         }
-        
+
+        public int Min(int value1, int value2, int value3, int value4)
+        {
+            return Min(Min(value1, value2), Min(value3, value4));
+        }
         public int Min(int value1, int value2, int value3)
         {
             return Min(Min(value1, value2), value3);
@@ -155,3 +208,4 @@ namespace DeviceRepository
         }
     }
 }
+
