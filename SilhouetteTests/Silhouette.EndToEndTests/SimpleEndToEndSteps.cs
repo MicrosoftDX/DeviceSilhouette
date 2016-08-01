@@ -54,13 +54,13 @@ namespace Silhouette.EndToEndTests
                 _deviceReceivedMessages = new List<DeviceMessage>();
                 _device.ReceivedMessage += device_OnMessageReceived;
                 _device.StartReceiveMessageLoop();
-                Console.WriteLine($"\tStarted device '{deviceId}' and listening for messages");
+                Log($"\tStarted device '{deviceId}' and listening for messages");
             });
         }
         private void device_OnMessageReceived(object sender, ReceiveMessageEventArgs e)
         {
             var device = (DeviceSimulator)sender;
-            Console.WriteLine($"\tDevice '{device.DeviceId}', received message with correlationId '{e.Message.CorrelationId}'");
+            Log($"Device '{device.DeviceId}', received message with correlationId '{e.Message.CorrelationId}'");
             _deviceReceivedMessages.Add(e.Message);
             e.Action = ReceiveMessageAction.None;
         }
@@ -77,7 +77,7 @@ namespace Silhouette.EndToEndTests
             RunAndBlock(async () =>
             {
                 _testStateValue = _random.Next(1, 1000000);
-                Console.WriteLine($"\tDevice reporting state: test value {_testStateValue}");
+                Log($"Device reporting state: test value {_testStateValue}");
 
                 await _device.SendStateMessageAsync(new { test = _testStateValue });
             });
@@ -96,7 +96,7 @@ namespace Silhouette.EndToEndTests
                 _testStateValue = _random.Next(1, 1000000);
                 _appMetadataValue = Guid.NewGuid().ToString();
 
-                Console.WriteLine($"\tSending state request via API. Test value {_testStateValue}, metadata value {_appMetadataValue}");
+                Log($"Sending state request via API. Test value {_testStateValue}, metadata value {_appMetadataValue}");
 
                 var client = GetApiClient();
                 _stateRequestHttpResponse = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
@@ -116,7 +116,7 @@ namespace Silhouette.EndToEndTests
             {
                 Assert.IsNotNull(_deviceReceivedMessage, "Should have a received message from a previous step");
 
-                Console.WriteLine($"\tDevice completing message. CorrelationId '{_deviceReceivedMessage.CorrelationId}'");
+                Log($"Device completing message. CorrelationId '{_deviceReceivedMessage.CorrelationId}'");
                 await _device.CompleteReceivedMessageAsync(_deviceReceivedMessage);
             });
         }
@@ -156,7 +156,7 @@ namespace Silhouette.EndToEndTests
         {
             Assert.IsNotNull(_stateRequestHttpResponse.Headers.Location, "Location should not be null");
             _commandUrl = _stateRequestHttpResponse.Headers.Location.ToString();
-            Console.WriteLine($"\tAPI response. CommandUrl: {_commandUrl}");
+            Log($"API response. CommandUrl: {_commandUrl}");
 
             Assert.IsFalse(string.IsNullOrEmpty(_commandUrl), "Location should not be empty");
         }
@@ -188,7 +188,7 @@ namespace Silhouette.EndToEndTests
 
                 Assert.IsNotNull(message, "Message should not be null");
                 _stateRequestCorrelationId = (string)message.correlationId;
-                Console.WriteLine($"\tCorrelationId: {_stateRequestCorrelationId}");
+                Log($"CorrelationId: {_stateRequestCorrelationId}");
 
                 Assert.IsNotNull(_stateRequestCorrelationId, "CorrelationId should not be null");
             });
@@ -342,6 +342,11 @@ namespace Silhouette.EndToEndTests
             {
                 BaseAddress = new Uri(BaseUrlAddress)
             };
+        }
+
+        private static void Log(string message)
+        {
+            Console.WriteLine($"\t{DateTime.Now:yyyy-MM-dd-HH-mm-ss} {message}");
         }
 
     }
