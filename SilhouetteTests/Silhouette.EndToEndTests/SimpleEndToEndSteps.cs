@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -133,7 +134,7 @@ namespace Silhouette.EndToEndTests
         public void When_we_set_up_a_trigger_for_the_device_receiving_messages()
         {
             _deviceReceivedMessageTaskCompletionSource = new TaskCompletionSource<int>();
-            _deviceReceivedMessageTask = _deviceReceivedMessageTaskCompletionSource.Task;   
+            _deviceReceivedMessageTask = _deviceReceivedMessageTaskCompletionSource.Task;
         }
 
 
@@ -227,16 +228,23 @@ namespace Silhouette.EndToEndTests
         }
 
         [Then]
-        public void Then_the_device_receieves_the_state_request_within_TIMEOUT_seconds(int timeout)
+        public void Then_the_device_receieves_the_state_request_within_TARGETTIME_seconds_but_wait_up_to_TIMEOUT_seconds_to_verify(int targetTime, int timeout)
         {
-            RunAndBlock(async() =>
+            // target time - this is the elapsed time that we assert against
+            // timeout - this is the maximum time that the test will wait. Useful to assess whether the message arrived or not
+
+            RunAndBlock(async () =>
             {
+                var stopwatch = Stopwatch.StartNew();
+
                 var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeout));
                 var task = await Task.WhenAny(_deviceReceivedMessageTask, timeoutTask);
                 if (task == timeoutTask)
                 {
                     Assert.Fail("Timed out waiting for device to receive message");
                 }
+                var messageElapsedTime = stopwatch.Elapsed;
+
 
                 Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
 
@@ -248,6 +256,10 @@ namespace Silhouette.EndToEndTests
                 dynamic body = JToken.Parse(_deviceReceivedMessage.Body);
                 Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
                 Assert.AreEqual(_testStateValue, (int)body.test, "The message received by the device should hace the same property value as the requested state");
+
+                Log($"Message wait time: {messageElapsedTime}");
+                // Got here, so the message looks ok
+                Assert.IsTrue(messageElapsedTime < TimeSpan.FromSeconds(targetTime), $"Waited {messageElapsedTime} for message");
             });
         }
         [Then]
@@ -272,7 +284,7 @@ namespace Silhouette.EndToEndTests
                 Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
                 _command = await response.Content.ReadAsAsync<dynamic>();
-                
+
 
                 Assert.IsNotNull(_command, "Command should not be null");
                 Assert.IsNotNull(_command.request, "Command.Request should not be null");
@@ -343,7 +355,7 @@ namespace Silhouette.EndToEndTests
             {
                 asyncAction().Wait();
             }
-            catch(AggregateException ae) when (ae.InnerException is AssertFailedException)
+            catch (AggregateException ae) when (ae.InnerException is AssertFailedException)
             {
                 var afe = (AssertFailedException)ae.InnerException;
                 throw new AssertFailedException("Wrapped: " + afe.Message, afe); // wrap the exception so that the inner exception preserves the stack trace

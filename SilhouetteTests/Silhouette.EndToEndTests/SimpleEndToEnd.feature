@@ -20,7 +20,7 @@ Scenario: State requests via the API are receieved by a connected device and the
 	And we set up a trigger for the device receiving messages
 	Then the API status code is created
 	And the API response includes a Location header with the command Url
-	Then the device receieves the state request within 10 seconds
+	Then the device receieves the state request within 1 seconds but wait up to 60 seconds to verify
 	# next step stores the correlationId
 	Then the messages API contains the command request message for the state for device e2eDevice2 
 	And the device message matches the messages API correlationId

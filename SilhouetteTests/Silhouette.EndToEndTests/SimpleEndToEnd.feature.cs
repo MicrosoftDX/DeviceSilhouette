@@ -111,7 +111,8 @@ this.ScenarioSetup(scenarioInfo);
 #line 22
  testRunner.And("the API response includes a Location header with the command Url", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 23
- testRunner.Then("the device receieves the state request within 10 seconds", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the device receieves the state request within 1 seconds but wait up to 60 seconds" +
+                    " to verify", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 25
  testRunner.Then("the messages API contains the command request message for the state for device e2" +
                     "eDevice2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
