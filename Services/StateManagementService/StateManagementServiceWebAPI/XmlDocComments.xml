@@ -526,6 +526,10 @@
             </summary>
         </member>
         <member name="M:StateManagementServiceWebAPI.Startup.ConfigureApp(Owin.IAppBuilder)">
+            <summary>
+            This code configures Web API. The Startup class is specified as a type
+            parameter in the WebApp.Start method.
+            </summary>
             <param name="appBuilder"></param>
         </member>
     </members>

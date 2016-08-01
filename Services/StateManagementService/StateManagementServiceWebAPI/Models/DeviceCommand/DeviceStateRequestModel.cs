@@ -16,6 +16,7 @@ namespace StateManagementServiceWebAPI.Models
             //empty ctor for WebAPI model binding
         }
         
+
         /// <summary>
         /// The application specific metadata
         /// </summary>
@@ -32,6 +33,7 @@ namespace StateManagementServiceWebAPI.Models
         /// The time-to-live for the command message
         /// </summary>
         [Required]
+        [Range(1, double.MaxValue, ErrorMessage = "Message TTL must be greater than zero")]
         public int TimeToLiveMilliSec { get; set; }
     }
 }
