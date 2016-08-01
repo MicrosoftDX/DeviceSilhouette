@@ -22,6 +22,8 @@ namespace Silhouette.EndToEndTests
 
         private List<DeviceMessage> _deviceReceivedMessages;
         private DeviceMessage _deviceReceivedMessage;
+        private Task _deviceReceivedMessageTask;
+        private TaskCompletionSource<int> _deviceReceivedMessageTaskCompletionSource;
 
 
         private int _testStateValue;
@@ -63,6 +65,12 @@ namespace Silhouette.EndToEndTests
             Log($"Device '{device.DeviceId}', received message with correlationId '{e.Message.CorrelationId}'");
             _deviceReceivedMessages.Add(e.Message);
             e.Action = ReceiveMessageAction.None;
+
+            // trigger received task if requested
+            if (_deviceReceivedMessageTaskCompletionSource != null)
+            {
+                _deviceReceivedMessageTaskCompletionSource.SetResult(0);
+            }
         }
 
 
@@ -119,6 +127,13 @@ namespace Silhouette.EndToEndTests
                 Log($"Device completing message. CorrelationId '{_deviceReceivedMessage.CorrelationId}'");
                 await _device.CompleteReceivedMessageAsync(_deviceReceivedMessage);
             });
+        }
+
+        [When]
+        public void When_we_set_up_a_trigger_for_the_device_receiving_messages()
+        {
+            _deviceReceivedMessageTaskCompletionSource = new TaskCompletionSource<int>();
+            _deviceReceivedMessageTask = _deviceReceivedMessageTaskCompletionSource.Task;   
         }
 
 
@@ -212,21 +227,37 @@ namespace Silhouette.EndToEndTests
         }
 
         [Then]
-        public void Then_the_device_receieves_the_state_request()
+        public void Then_the_device_receieves_the_state_request_within_TIMEOUT_seconds(int timeout)
         {
-            Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
+            RunAndBlock(async() =>
+            {
+                var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeout));
+                var task = await Task.WhenAny(_deviceReceivedMessageTask, timeoutTask);
+                if (task == timeoutTask)
+                {
+                    Assert.Fail("Timed out waiting for device to receive message");
+                }
 
-            _deviceReceivedMessage = _deviceReceivedMessages[0];
+                Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
 
-            Assert.AreEqual(_stateRequestCorrelationId, _deviceReceivedMessage.CorrelationId, "The message received by the device should match the request CorrelationId");
-            Assert.AreEqual("CommandRequest", _deviceReceivedMessage.MessageType, "The message received by the device should have type CommandRequest");
-            Assert.AreEqual("SetState", _deviceReceivedMessage.MessageSubType, "The message received by the device should have subtype SetState");
+                _deviceReceivedMessage = _deviceReceivedMessages[0];
 
-            dynamic body = JToken.Parse(_deviceReceivedMessage.Body);
-            Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
-            Assert.AreEqual(_testStateValue, (int)body.test, "The message received by the device should hace the same property value as the requested state");
+                Assert.AreEqual("CommandRequest", _deviceReceivedMessage.MessageType, "The message received by the device should have type CommandRequest");
+                Assert.AreEqual("SetState", _deviceReceivedMessage.MessageSubType, "The message received by the device should have subtype SetState");
+
+                dynamic body = JToken.Parse(_deviceReceivedMessage.Body);
+                Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
+                Assert.AreEqual(_testStateValue, (int)body.test, "The message received by the device should hace the same property value as the requested state");
+            });
         }
+        [Then]
+        public void Then_the_device_message_matches_the_messages_API_correlationId()
+        {
+            Assert.IsNotNull(_deviceReceivedMessage, "This step requires a received message");
+            Assert.IsNotNull(_stateRequestCorrelationId, "This step requires that the correlation id has been retrieved");
 
+            Assert.AreEqual(_stateRequestCorrelationId, _deviceReceivedMessage.CorrelationId, "Device Message choudl match correlation id in API");
+        }
 
         [Then]
         public void Then_the_command_API_contains_the_command_for_the_state_request_for_device_DEVICEID(string deviceId)
