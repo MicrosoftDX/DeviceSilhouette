@@ -29,7 +29,7 @@ namespace DeviceRepository
         //private const string StateName = "silhouetteMessages";
         private const string StateName = "silhouetteMessage";
         private readonly IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
-        private readonly IMessagePurger _messagePurger;
+        private readonly MessagePurger _messagePurger;
         private readonly double _messagesRetentionMilliseconds;
 
         private IActorTimer _purgeTimer;
@@ -46,8 +46,7 @@ namespace DeviceRepository
             if (stateMessages.HasValue)
             {              
                 var messages = stateMessages.Value;
-                var purgeMessages = _messagePurger.GetPurgableMessages(messages);
-                messages.RemoveAll(m => purgeMessages.Exists(p => p.Equals(m)));
+                _messagePurger.Purge(messages);
             }
         }
 
