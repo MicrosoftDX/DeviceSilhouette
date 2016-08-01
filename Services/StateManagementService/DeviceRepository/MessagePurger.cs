@@ -79,40 +79,60 @@ namespace DeviceRepository
         //    }
         //}
 
-        
-
-
         public int GetIndexOfLastPurgeableMessage(List<DeviceMessage> messages)
         {
-            // TODO - review this method for performance. It is likely that it can be implemented with better performance as a single loop. For initial implementation, the readability of LINQ approach seemed to work well!
+            // Handle requirements in https://github.com/dx-ted-emea/pudding/wiki/3.7-Long-term-persistency-and-analytics
+
 
             if (messages.Count == 0)
             {
                 return -1;
             }
 
-            // Can't persist after last reported state message
-            var latestReportedStateMessageIndex = messages.FindLastIndex(m => m.MessageType == MessageType.Report && m.MessageSubType == MessageSubType.State);
+            int latestReportedStateMessageIndex = -1;
 
-            // Can't persist after the last message outside the retention window
-            var latestMessageTimeStampToPurge = SystemTime.UtcNow().AddMilliseconds(-_messagesRetentionMilliseconds);
-            var latestMessageBeforeRetentionTimeWindowIndex = messages.FindLastIndex(m => m.Timestamp < latestMessageTimeStampToPurge);
-
-            //var latestPersistedMessageBeforeRetentionTimeWindowIndex = messages.FindLastIndex(m =>
-            //{
-            //    return m.Persisted
-            //            && m.Timestamp < latestMessageTimeStampToPurge;
-            //});
+            DateTime latestMessageTimeStampToPurge = SystemTime.UtcNow().AddMilliseconds(-_messagesRetentionMilliseconds);
+            bool gotMessageInRetentionTimeWindow = false;
+            int latestMessageBeforeRetentionTimeWindowIndex = -1;
 
             // Can't persist after the latest persisted message in a chain of persisted messages
             // e.g. in the following sequence lastPersistedMessageInSequenceIndex would be 2 as that is the 
             //      last message that is persisted before the non-persisted message
             //   index     0 1 2 3 4 5 6
             //   persisted y y y n y y y
-            var earliestNonPersistedMessageIndex = messages.FindIndex(m => !m.Persisted);
-            var lastPersistedMessageInSequenceIndex = (earliestNonPersistedMessageIndex == -1)
-                                                            ? messages.Count - 1 // no non-persisted messages => all messages persisted 
-                                                            : earliestNonPersistedMessageIndex - 1;
+            bool gotNonPersistedMessage = false;
+            int lastPersistedMessageInSequenceIndex = -1;
+
+            for (int messageIndex = 0; messageIndex < messages.Count; messageIndex++)
+            {
+                var message = messages[messageIndex];
+
+                // latestReportedStateMessageIndex
+                if (message.MessageType == MessageType.Report && message.MessageSubType == MessageSubType.State)
+                {
+                    latestReportedStateMessageIndex = messageIndex;
+                }
+
+                // lastPersistedMessageInSequenceIndex
+                if (!gotNonPersistedMessage && !message.Persisted)
+                {
+                    gotNonPersistedMessage = true;
+                    lastPersistedMessageInSequenceIndex = messageIndex - 1;
+                }
+
+                // latestMessageBeforeRetentionTimeWindowIndex
+                if (message.Timestamp > latestMessageTimeStampToPurge
+                     && !gotMessageInRetentionTimeWindow)
+                {
+                    gotMessageInRetentionTimeWindow = true;
+                    latestMessageBeforeRetentionTimeWindowIndex = messageIndex - 1;
+                }
+            }
+
+            if (!gotNonPersistedMessage)
+            {
+                lastPersistedMessageInSequenceIndex = messages.Count - 1;
+            }
 
             if (latestReportedStateMessageIndex < 0)
             {
@@ -123,11 +143,8 @@ namespace DeviceRepository
             {
                 return Min(latestReportedStateMessageIndex, latestMessageBeforeRetentionTimeWindowIndex, lastPersistedMessageInSequenceIndex);
             }
-
-            // TODO - handle requirements in https://github.com/dx-ted-emea/pudding/wiki/3.7-Long-term-persistency-and-analytics
         }
-
-
+        
         public int Min(int value1, int value2, int value3)
         {
             return Min(Min(value1, value2), value3);
