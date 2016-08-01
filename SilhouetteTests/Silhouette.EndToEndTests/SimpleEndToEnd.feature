@@ -17,15 +17,16 @@ Scenario: State requests via the API are receieved by a connected device and the
 	Given a registered and connected device with id e2eDevice2
 	
 	When a state request is sent through the Api for device e2eDevice2 with timeoutMs 10000
+	And we set up a trigger for the device receiving messages
 	Then the API status code is created
 	And the API response includes a Location header with the command Url
-	And the messages API contains the command request message for the state for device e2eDevice2
-	And the command API contains the command for the state request for device e2eDevice2
+	Then the device receieves the state request within 1 seconds but wait up to 60 seconds to verify
+	# next step stores the correlationId
+	Then the messages API contains the command request message for the state for device e2eDevice2 
+	And the device message matches the messages API correlationId
+	Then the command API contains the command for the state request for device e2eDevice2
 	And the command received from the API has no response
 #	And the commands API contains the command for the state request for device e2eDevice2 # TODO - be more explicit about collection vs entity endpoints!
-	
-	When we wait for 2 seconds
-	Then the device receieves the state request
 	
 	When the device accepts the state request
 	And we wait for 5 seconds
