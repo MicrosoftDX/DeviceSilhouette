@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
@@ -17,6 +18,8 @@ namespace Silhouette.EndToEndTests
     public class SimpleEndToEndSteps
     {
         private const string BaseUrlAddress = "http://localhost:9013/v0.1/";
+
+        private List<string> _timeoutMessages = new List<string>();
         private readonly Random _random = new Random();
 
         private DeviceSimulator _device;
@@ -41,7 +44,14 @@ namespace Silhouette.EndToEndTests
         // See https://github.com/techtalk/SpecFlow/issues/542
         // Update: in PR https://github.com/techtalk/SpecFlow/pull/647
 
-
+            [AfterScenario]
+        public void FlagTimeouts()
+        {
+            if (_timeoutMessages.Count >0)
+            {
+                Assert.Fail(string.Join("\r\n", _timeoutMessages));
+            }
+        }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -192,38 +202,64 @@ namespace Silhouette.EndToEndTests
         }
 
         [Then]
-        public void Then_the_messages_API_contains_the_command_request_message_for_the_state_for_device_DEVICEID(string deviceId)
+        public void Then_the_messages_API_contains_the_command_request_message_for_the_state_for_device_DEVICEID_within_TARGETTIME_seconds_but_wait_up_to_TIMEOUT_seconds_to_verify(string deviceId, int targetTime, int timeout)
         {
+            // target time - this is the elapsed time that we assert against
+            // timeout - this is the maximum time that the test will wait. Useful to assess whether the message arrived or not
+
             RunAndBlock(async () =>
             {
                 Func<dynamic, bool> messagePredicate = m => m.type == "CommandRequest"
                                 && m.subtype == "SetState"
                                 && m.values != null && m.values.test != null && m.values.test == _testStateValue;
 
-                dynamic message = await FindMessageAsync(deviceId, messagePredicate);
+                var stopwatch = Stopwatch.StartNew();
+                dynamic message = await FindMessageWithRetryAsync(deviceId, messagePredicate, timeout);
+                var elapsedTime = stopwatch.Elapsed;
 
                 Assert.IsNotNull(message, "Message should not be null");
                 _stateRequestCorrelationId = (string)message.correlationId;
                 Log($"CorrelationId: {_stateRequestCorrelationId}");
 
                 Assert.IsNotNull(_stateRequestCorrelationId, "CorrelationId should not be null");
+
+                // Got here, so we got a message that looks ok...
+                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
+                if (elapsedTime > targetTimeSpan)
+                {
+                    AddTimeoutMessage($"Waited {elapsedTime} for message. Target: {targetTimeSpan}");
+                }
             });
         }
 
+
         [Then]
-        public void Then_the_messages_API_contains_the_command_response_ACK_for_the_state_request_for_device_DEVICEID(string deviceId)
+        public void Then_the_messages_API_contains_the_command_response_ACK_for_the_state_request_for_device_DEVICEID_within_TARGETTIME_seconds_but_wait_up_to_TIMEOUT_seconds_to_verify(string deviceId, int targetTime, int timeout)
         {
+            // target time - this is the elapsed time that we assert against
+            // timeout - this is the maximum time that the test will wait. Useful to assess whether the message arrived or not
+
             RunAndBlock(async () =>
             {
                 Assert.IsNotNull(_stateRequestCorrelationId, "Should have a correlationId saved from a previous step");
                 Func<dynamic, bool> messagePredicate = m => ((string)m.type) == "CommandResponse"
                                 && ((string)m.correlationId) == _stateRequestCorrelationId;
 
-                dynamic message = await FindMessageAsync(deviceId, messagePredicate);
+                var stopwatch = Stopwatch.StartNew();
+                dynamic message = await FindMessageWithRetryAsync(deviceId, messagePredicate, timeout);
+                var elapsedTime = stopwatch.Elapsed;
 
-                Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{_stateRequestCorrelationId}'");
+
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{_stateRequestCorrelationId}'");
 
                 Assert.AreEqual("Acknowledged", (string)message.subtype, "Response SubType should be Acknowledged");
+
+                // Got here, so we got a message that looks ok...
+                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
+                if (elapsedTime > targetTimeSpan)
+                {
+                    AddTimeoutMessage($"Waited {elapsedTime} for message. Target: {targetTimeSpan}");
+                }
             });
         }
 
@@ -254,12 +290,16 @@ namespace Silhouette.EndToEndTests
                 Assert.AreEqual("SetState", _deviceReceivedMessage.MessageSubType, "The message received by the device should have subtype SetState");
 
                 dynamic body = JToken.Parse(_deviceReceivedMessage.Body);
-                Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
                 Assert.AreEqual(_testStateValue, (int)body.test, "The message received by the device should hace the same property value as the requested state");
 
                 Log($"Message wait time: {messageElapsedTime}");
                 // Got here, so the message looks ok
-                Assert.IsTrue(messageElapsedTime < TimeSpan.FromSeconds(targetTime), $"Waited {messageElapsedTime} for message");
+                var targetTimespan = TimeSpan.FromSeconds(targetTime);
+                if (messageElapsedTime > targetTimespan)
+                {
+                    AddTimeoutMessage($"Waited {messageElapsedTime} for message. Target: {targetTimespan}");
+                }
             });
         }
         [Then]
@@ -316,8 +356,25 @@ namespace Silhouette.EndToEndTests
         // Helpers
         //
 
+        private static async Task<dynamic> FindMessageWithRetryAsync(string deviceId, Func<dynamic, bool> messagePredicate, int timeoutInSeconds)
+        {
+            var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
 
-        private static async Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate)
+            dynamic message;
+            while ((message = await FindMessageAsync(deviceId, messagePredicate, cancellationToken)) == null)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(0.5), cancellationToken);
+            }
+
+            return message;
+        }
+
+
+        private static Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate)
+        {
+            return FindMessageAsync(deviceId, messagePredicate, CancellationToken.None);
+        }
+        private static async Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate, CancellationToken cancellationToken)
         {
             var client = GetApiClient();
             string messagesUrl = $"devices/{deviceId}/messages";
@@ -335,16 +392,18 @@ namespace Silhouette.EndToEndTests
 
             while (!string.IsNullOrEmpty(messagesUrl))
             {
-                var response = await client.GetAsync(messagesUrl);
+                var response = await client.GetAsync(messagesUrl, cancellationToken);
                 response.EnsureSuccessStatusCode();
-                dynamic messages = await response.Content.ReadAsAsync<dynamic>();
+                dynamic messages = await response.Content.ReadAsAsync<dynamic>(cancellationToken);
                 dynamic message = findMessageInMessagesList(messages.values);
                 if (message != null)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     return message;
                 }
                 messagesUrl = (string)((JToken)messages)["@nextLink"];
             }
+            cancellationToken.ThrowIfCancellationRequested();
             return null;
         }
 
@@ -390,6 +449,16 @@ namespace Silhouette.EndToEndTests
         private static void Log(string message)
         {
             Console.WriteLine($"\t{DateTime.Now:yyyy-MM-dd-HH-mm-ss} {message}");
+        }
+
+        /// <summary>
+        /// Add a timeout to flag at the end of the scenario without halting the test
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="memberName"></param>
+        private void AddTimeoutMessage(string message, [CallerMemberName] string memberName = null)
+        {
+            _timeoutMessages.Add($"Step '{memberName}': {message}");
         }
 
     }
