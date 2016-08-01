@@ -18,17 +18,18 @@ namespace DotNetClient
     public class DeviceSimulator
     {
         private readonly string _connectionString;
-        private readonly string _deviceId;
 
         private DeviceClient _deviceClient = null;
         private CancellationTokenSource _receiveLoopCancellationTokenSource = null;
+
+        public string DeviceId { get; private set; }
 
         public event EventHandler<ReceiveMessageEventArgs> ReceivedMessage;
 
         public DeviceSimulator(string connectionString, string deviceId)
         {
             _connectionString = connectionString;
-            _deviceId = deviceId;
+            DeviceId = deviceId;
         }
         
 
@@ -41,17 +42,17 @@ namespace DotNetClient
         public async Task InitializeAsync()
         {
             var registryManager = RegistryManager.CreateFromConnectionString(_connectionString);
-            var device = await registryManager.GetDeviceAsync(_deviceId);
+            var device = await registryManager.GetDeviceAsync(DeviceId);
             if (device == null)
             {
-                Console.WriteLine($"Add device: {_deviceId}");
-                device = await registryManager.AddDeviceAsync(new Device(_deviceId));
+                Console.WriteLine($"Add device: {DeviceId}");
+                device = await registryManager.AddDeviceAsync(new Device(DeviceId));
             }
 
             string hostname = GetHostNameFromConnectionString(_connectionString);
             _deviceClient = DeviceClient.Create(
                 hostname, 
-                new DeviceAuthenticationWithRegistrySymmetricKey(_deviceId, device.Authentication.SymmetricKey.PrimaryKey)
+                new DeviceAuthenticationWithRegistrySymmetricKey(DeviceId, device.Authentication.SymmetricKey.PrimaryKey)
                 );
         }
 

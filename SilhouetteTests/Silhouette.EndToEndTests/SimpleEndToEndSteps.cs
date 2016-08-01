@@ -54,10 +54,13 @@ namespace Silhouette.EndToEndTests
                 _deviceReceivedMessages = new List<DeviceMessage>();
                 _device.ReceivedMessage += device_OnMessageReceived;
                 _device.StartReceiveMessageLoop();
+                Console.WriteLine($"\tStarted device '{deviceId}' and listening for messages");
             });
         }
         private void device_OnMessageReceived(object sender, ReceiveMessageEventArgs e)
         {
+            var device = (DeviceSimulator)sender;
+            Console.WriteLine($"\tDevice '{device.DeviceId}', received message with correlationId '{e.Message.CorrelationId}'");
             _deviceReceivedMessages.Add(e.Message);
             e.Action = ReceiveMessageAction.None;
         }
@@ -74,7 +77,7 @@ namespace Silhouette.EndToEndTests
             RunAndBlock(async () =>
             {
                 _testStateValue = _random.Next(1, 1000000);
-                Console.WriteLine($"Using state value {_testStateValue}");
+                Console.WriteLine($"\tDevice reporting state: test value {_testStateValue}");
 
                 await _device.SendStateMessageAsync(new { test = _testStateValue });
             });
@@ -93,6 +96,8 @@ namespace Silhouette.EndToEndTests
                 _testStateValue = _random.Next(1, 1000000);
                 _appMetadataValue = Guid.NewGuid().ToString();
 
+                Console.WriteLine($"\tSending state request via API. Test value {_testStateValue}, metadata value {_appMetadataValue}");
+
                 var client = GetApiClient();
                 _stateRequestHttpResponse = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
                     new
@@ -110,6 +115,8 @@ namespace Silhouette.EndToEndTests
             RunAndBlock(async () =>
             {
                 Assert.IsNotNull(_deviceReceivedMessage, "Should have a received message from a previous step");
+
+                Console.WriteLine($"\tDevice completing message. CorrelationId '{_deviceReceivedMessage.CorrelationId}'");
                 await _device.CompleteReceivedMessageAsync(_deviceReceivedMessage);
             });
         }
@@ -149,7 +156,7 @@ namespace Silhouette.EndToEndTests
         {
             Assert.IsNotNull(_stateRequestHttpResponse.Headers.Location, "Location should not be null");
             _commandUrl = _stateRequestHttpResponse.Headers.Location.ToString();
-            Console.WriteLine($"CommandUrl: {_commandUrl}");
+            Console.WriteLine($"\tAPI response. CommandUrl: {_commandUrl}");
 
             Assert.IsFalse(string.IsNullOrEmpty(_commandUrl), "Location should not be empty");
         }
@@ -181,7 +188,7 @@ namespace Silhouette.EndToEndTests
 
                 Assert.IsNotNull(message, "Message should not be null");
                 _stateRequestCorrelationId = (string)message.correlationId;
-                Console.WriteLine($"CorrelationId: {_stateRequestCorrelationId}");
+                Console.WriteLine($"\tCorrelationId: {_stateRequestCorrelationId}");
 
                 Assert.IsNotNull(_stateRequestCorrelationId, "CorrelationId should not be null");
             });
@@ -198,7 +205,7 @@ namespace Silhouette.EndToEndTests
 
                 dynamic message = await FindMessageAsync(deviceId, messagePredicate);
 
-                Assert.IsNotNull(message, "Message should not be null");
+                Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{_stateRequestCorrelationId}'");
 
                 Assert.AreEqual("Acknowledged", (string)message.subtype, "Response SubType should be Acknowledged");
             });
@@ -207,7 +214,7 @@ namespace Silhouette.EndToEndTests
         [Then]
         public void Then_the_device_receieves_the_state_request()
         {
-            Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have receieved one message");
+            Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
 
             _deviceReceivedMessage = _deviceReceivedMessages[0];
 
@@ -301,7 +308,15 @@ namespace Silhouette.EndToEndTests
 
         private void RunAndBlock(Func<Task> asyncAction)
         {
-            asyncAction().Wait();
+            try
+            {
+                asyncAction().Wait();
+            }
+            catch(AggregateException ae) when (ae.InnerException is AssertFailedException)
+            {
+                var afe = (AssertFailedException)ae.InnerException;
+                throw new AssertFailedException("Wrapped: " + afe.Message, afe); // wrap the exception so that the inner exception preserves the stack trace
+            }
         }
 
         private async Task<DeviceSimulator> GetDeviceAsync(string deviceId)
