@@ -13,8 +13,9 @@ namespace StateManagementServiceWebAPI
     public static class Startup
     {
         /// <summary>
-        ///// This code configures Web API. The Startup class is specified as a type
-        // parameter in the WebApp.Start method./// </summary>
+        /// This code configures Web API. The Startup class is specified as a type
+        /// parameter in the WebApp.Start method.
+        /// </summary>
         /// <param name="appBuilder"></param>
         public static void ConfigureApp(IAppBuilder appBuilder)
         {
