@@ -119,3 +119,15 @@ To simplify working with the configuration, the solution has a ServiceFabricUtil
             string storageConnectionString = configurationSection["StorageConnectionString"];
 ```
 
+## Reporting issues and feedback
+
+If you encounter any bugs with the tool please file an issue in the Issues section of our GitHub repo.
+
+## Contribute Code
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+
+## License
+
+MIT
