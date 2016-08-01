@@ -108,6 +108,11 @@ namespace DeviceRepository
             var earliestIndexForCorrelationIdLookup = new Dictionary<string, int>();
             int earliestCorrelatedMessageIndex = -1;
 
+            // Track index for command requests. Remove when we encounter the response
+            // key = correlation Id, value = index of command request
+            var commandRequestIndices = new Dictionary<string, int>();
+            int earliestCommandRequestWithoutResponseIndex = -1;
+
             //
             // Loop over messages tracking states above
             //
@@ -159,12 +164,27 @@ namespace DeviceRepository
                         }
                     }
                 }
+
+                // earliestCommandRequestWithoutResponseIndex
+                if (message.MessageType == MessageType.CommandRequest)
+                {
+                    // store request
+                    commandRequestIndices[message.CorrelationId] = messageIndex;
+                }
+                else if (message.MessageType == MessageType.CommandResponse)
+                {
+                    // remove request as we have a response
+                    commandRequestIndices.Remove(message.CorrelationId);
+                }
             }
 
 
             //
             // Now combine the states
             //
+            earliestCommandRequestWithoutResponseIndex = commandRequestIndices.Count == 0
+                                                            ? messages.Count
+                                                            : commandRequestIndices.Values.Min();
             if (!gotNonPersistedMessage)
             {
                 lastPersistedMessageInSequenceIndex = messages.Count - 1;
@@ -177,14 +197,23 @@ namespace DeviceRepository
             {
                 latestReportedStateMessageIndex = messages.Count - 1;
             }
+            if (!gotMessageInRetentionTimeWindow)
+            {
+                latestMessageBeforeRetentionTimeWindowIndex = messages.Count - 1;
+            }
             return Min(
                 latestReportedStateMessageIndex,
                 latestMessageBeforeRetentionTimeWindowIndex,
                 lastPersistedMessageInSequenceIndex,
-                earliestCorrelatedMessageIndex - 1
+                earliestCorrelatedMessageIndex - 1,
+                earliestCommandRequestWithoutResponseIndex - 1
             );
         }
 
+        public int Min(int value1, int value2, int value3, int value4, int value5)
+        {
+            return Min(Min(value1, value2, value3, value4), value5);
+        }
         public int Min(int value1, int value2, int value3, int value4)
         {
             return Min(Min(value1, value2), Min(value3, value4));

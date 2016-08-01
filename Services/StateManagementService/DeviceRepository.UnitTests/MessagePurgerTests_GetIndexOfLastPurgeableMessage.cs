@@ -178,8 +178,8 @@ namespace DeviceRepository.Tests
                 DeviceId,
                 "{}",
                 "{}",
-                MessageType.CommandResponse,
-                MessageSubType.Enqueued,
+                MessageType.CommandRequest,
+                MessageSubType.SetState,
                 -1,
                 correlationId,
                 timestamp
