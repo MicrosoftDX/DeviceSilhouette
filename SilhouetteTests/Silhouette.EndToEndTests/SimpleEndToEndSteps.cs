@@ -189,15 +189,26 @@ namespace Silhouette.EndToEndTests
 
 
         [Then]
-        public void Then_the_messages_API_contains_the_reported_state_message_for_device_DEVICEID(string deviceId)
+        public void Then_the_messages_API_contains_the_reported_state_message_for_device_DEVICEID_within_TARGETTIME_seconds_but_wait_up_to_TIMEOUT_seconds_to_verify(string deviceId, int targetTime, int timeout)
         {
             RunAndBlock(async () =>
             {
                 Func<dynamic, bool> messagePredicate = m => m.values != null && m.values.test != null && m.values.test == _testStateValue;
 
-                dynamic message = await FindMessageAsync(deviceId, messagePredicate);
+                var stopwatch = Stopwatch.StartNew();
+                dynamic message = await RetryAsync(cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken)
+                                                    , timeout);
+                var elapsedTime = stopwatch.Elapsed;
 
                 Assert.IsNotNull(message, "Message should not be null");
+
+                // Got here, so we got a message that looks ok...
+                Log($"elapsed time: {elapsedTime}");
+                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
+                if (elapsedTime > targetTimeSpan)
+                {
+                    AddTimeoutMessage($"Waited {elapsedTime} for message. Target: {targetTimeSpan}");
+                }
             });
         }
 
@@ -214,7 +225,8 @@ namespace Silhouette.EndToEndTests
                                 && m.values != null && m.values.test != null && m.values.test == _testStateValue;
 
                 var stopwatch = Stopwatch.StartNew();
-                dynamic message = await FindMessageWithRetryAsync(deviceId, messagePredicate, timeout);
+                dynamic message = await RetryAsync(cancellationToken =>  FindMessageAsync(deviceId, messagePredicate, cancellationToken)
+                                                , timeout);
                 var elapsedTime = stopwatch.Elapsed;
 
                 Assert.IsNotNull(message, "Message should not be null");
@@ -248,7 +260,8 @@ namespace Silhouette.EndToEndTests
                                 && ((string)m.correlationId) == _stateRequestCorrelationId;
 
                 var stopwatch = Stopwatch.StartNew();
-                dynamic message = await FindMessageWithRetryAsync(deviceId, messagePredicate, timeout);
+                dynamic message = await RetryAsync(cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken)
+                                                , timeout);
                 var elapsedTime = stopwatch.Elapsed;
 
                 Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{_stateRequestCorrelationId}'");
@@ -358,7 +371,21 @@ namespace Silhouette.EndToEndTests
         //
         // Helpers
         //
+        private static async Task<TResult> RetryAsync<TResult>(
+            Func<CancellationToken, Task<TResult>> action,
+            int timeoutInSeconds,
+            double waitIntervalInSeconds = 0.25)
+        {
+            var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
 
+            TResult result;
+            while ((result = await action(cancellationToken)) == null)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(waitIntervalInSeconds), cancellationToken);
+            }
+
+            return result;
+        }
         private static async Task<dynamic> FindMessageWithRetryAsync(string deviceId, Func<dynamic, bool> messagePredicate, int timeoutInSeconds)
         {
             var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
@@ -366,7 +393,7 @@ namespace Silhouette.EndToEndTests
             dynamic message;
             while ((message = await FindMessageAsync(deviceId, messagePredicate, cancellationToken)) == null)
             {
-                await Task.Delay(TimeSpan.FromSeconds(0.5), cancellationToken);
+                await Task.Delay(TimeSpan.FromSeconds(0.25), cancellationToken);
             }
 
             return message;

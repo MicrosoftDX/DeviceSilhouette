@@ -80,11 +80,10 @@ this.ScenarioSetup(scenarioInfo);
 #line 10
  testRunner.When("the device reports its state", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 11
- testRunner.And("we wait for 2 seconds", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Then("the messages API contains the reported state message for device e2eDevice1 within" +
+                    " 2 seconds but wait up to 60 seconds to verify", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 12
- testRunner.Then("the reported state API contains the reported state for device e2eDevice1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 13
- testRunner.And("the messages API contains the reported state message for device e2eDevice1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the reported state API contains the reported state for device e2eDevice1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -97,39 +96,39 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("State requests via the API are receieved by a connected device and the message st" +
                     "atus is accessible in the API", ((string[])(null)));
-#line 16
+#line 15
 this.ScenarioSetup(scenarioInfo);
-#line 17
+#line 16
  testRunner.Given("a registered and connected device with id e2eDevice2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 19
+#line 18
  testRunner.When("we set up a trigger for the device receiving messages", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 20
+#line 19
  testRunner.And("a state request is sent through the Api for device e2eDevice2 with timeoutMs 1000" +
                     "0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 21
+#line 20
  testRunner.Then("the API status code is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 22
+#line 21
  testRunner.And("the API response includes a Location header with the command Url", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 23
+#line 22
  testRunner.Then("the device receieves the state request within 5 seconds but wait up to 60 seconds" +
                     " to verify", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 25
+#line 24
  testRunner.Then("the messages API contains the command request message for the state for device e2" +
                     "eDevice2 within 5 seconds but wait up to 60 seconds to verify", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 26
+#line 25
  testRunner.And("the device message matches the messages API correlationId", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 27
+#line 26
  testRunner.Then("the command API contains the command for the state request for device e2eDevice2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 28
+#line 27
  testRunner.And("the command received from the API has no response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
+#line 30
  testRunner.When("the device accepts the state request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 32
+#line 31
  testRunner.Then("the messages API contains the command response ACK for the state request for devi" +
                     "ce e2eDevice2 within 5 seconds but wait up to 60 seconds to verify", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 33
+#line 32
  testRunner.And("the command API contains the command for the state request for device e2eDevice2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 34
+#line 33
  testRunner.And("the command received from the API has an ACK response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

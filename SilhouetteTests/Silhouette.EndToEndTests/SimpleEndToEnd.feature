@@ -8,9 +8,8 @@ Scenario: State reports from device are received in API
 	Given a registered and connected device with id e2eDevice1
 	
 	When the device reports its state
-	And we wait for 2 seconds
-	Then the reported state API contains the reported state for device e2eDevice1
-	And the messages API contains the reported state message for device e2eDevice1
+	Then the messages API contains the reported state message for device e2eDevice1 within 2 seconds but wait up to 60 seconds to verify
+	And the reported state API contains the reported state for device e2eDevice1
 
 
 Scenario: State requests via the API are receieved by a connected device and the message status is accessible in the API
