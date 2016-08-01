@@ -79,6 +79,8 @@ namespace DeviceRepository
         //    }
         //}
 
+        
+
 
         public int GetIndexOfLastPurgeableMessage(List<DeviceMessage> messages)
         {
@@ -90,7 +92,7 @@ namespace DeviceRepository
             }
 
             // Can't persist after last reported state message
-            var latestReportedStateMessageIndex = messages.FindLastIndex(m => m.MessageType == MessageType.Report);
+            var latestReportedStateMessageIndex = messages.FindLastIndex(m => m.MessageType == MessageType.Report && m.MessageSubType == MessageSubType.State);
 
             // Can't persist after the last message outside the retention window
             var latestMessageTimeStampToPurge = SystemTime.UtcNow().AddMilliseconds(-_messagesRetentionMilliseconds);
