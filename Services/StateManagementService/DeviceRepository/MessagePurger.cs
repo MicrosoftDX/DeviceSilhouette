@@ -160,6 +160,11 @@ namespace DeviceRepository
                     }
                 }
             }
+
+
+            //
+            // Now combine the states
+            //
             if (!gotNonPersistedMessage)
             {
                 lastPersistedMessageInSequenceIndex = messages.Count - 1;
@@ -168,30 +173,16 @@ namespace DeviceRepository
             {
                 earliestCorrelatedMessageIndex = messages.Count;
             }
-
-            //
-            // Now combine the states
-            //
-            
-            // TODO  - handle earliestCorrelatedMessageIndex
             if (latestReportedStateMessageIndex < 0)
             {
-                // no reported state messages
-                return Min(
-                        latestMessageBeforeRetentionTimeWindowIndex, 
-                        lastPersistedMessageInSequenceIndex,
-                        earliestCorrelatedMessageIndex - 1
-                    );
+                latestReportedStateMessageIndex = messages.Count - 1;
             }
-            else
-            {
-                return Min(
-                    latestReportedStateMessageIndex, 
-                    latestMessageBeforeRetentionTimeWindowIndex, 
-                    lastPersistedMessageInSequenceIndex,
-                    earliestCorrelatedMessageIndex - 1
-                );
-            }
+            return Min(
+                latestReportedStateMessageIndex,
+                latestMessageBeforeRetentionTimeWindowIndex,
+                lastPersistedMessageInSequenceIndex,
+                earliestCorrelatedMessageIndex - 1
+            );
         }
 
         public int Min(int value1, int value2, int value3, int value4)
