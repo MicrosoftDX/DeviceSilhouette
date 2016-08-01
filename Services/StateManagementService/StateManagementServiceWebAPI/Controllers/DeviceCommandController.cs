@@ -98,12 +98,12 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <param name="requestedState"></param>
         /// <returns></returns>
         [Route("")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeviceStateRequestModel))] // TODO - should be a CommandResponse model
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(CommandModel))] 
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ErrorModel))]
         [HandleInvalidModel]
         public async Task<IHttpActionResult> Post(
             [FromUri]string deviceId,
-            [FromBody]DeviceStateRequestModel requestedState)
+            [FromBody]DeviceStateRequestModel requestedState) // TODO -= should be a CommandRequestModel
         {
             // TODO - this should return the Accepted Response
 
@@ -116,7 +116,7 @@ namespace StateManagementServiceWebAPI.Controllers
 
             return Created(
                 Url.Link("GetCommand", new { commandId = deviceMessage.CorrelationId }),
-                new DeviceStateModel(deviceMessage)); // TODO - should be a CommandResponse model
+                new CommandModel(new[] { deviceMessage })); // TODO - should be a CommandResponse model
         }
     }
 }
