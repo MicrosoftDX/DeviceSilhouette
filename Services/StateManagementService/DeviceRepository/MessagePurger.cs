@@ -19,7 +19,10 @@ namespace DeviceRepository
         public void Purge(List<DeviceMessage> messages)
         {
             var indexOfLastPurgeableMessage = GetIndexOfLastPurgeableMessage(messages);
-            messages.RemoveRange(0, indexOfLastPurgeableMessage + 1);
+            if (indexOfLastPurgeableMessage >= 0)
+            {
+                messages.RemoveRange(0, indexOfLastPurgeableMessage + 1);
+            }
         }
 
         ///// <summary>
@@ -79,6 +82,8 @@ namespace DeviceRepository
 
         public int GetIndexOfLastPurgeableMessage(List<DeviceMessage> messages)
         {
+            // TODO - review this method for performance. It is likely that it can be implemented with better performance as a single loop. For initial implementation, the readability of LINQ approach seemed to work well!
+
             if (messages.Count == 0)
             {
                 return -1;
