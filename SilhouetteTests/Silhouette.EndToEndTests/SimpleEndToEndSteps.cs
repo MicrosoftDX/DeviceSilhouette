@@ -251,8 +251,9 @@ namespace Silhouette.EndToEndTests
                 dynamic message = await FindMessageWithRetryAsync(deviceId, messagePredicate, timeout);
                 var elapsedTime = stopwatch.Elapsed;
 
+                Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{_stateRequestCorrelationId}'");
 
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{_stateRequestCorrelationId}'");
+                Log($"elapsed time: {elapsedTime}");
 
                 Assert.AreEqual("Acknowledged", (string)message.subtype, "Response SubType should be Acknowledged");
 
