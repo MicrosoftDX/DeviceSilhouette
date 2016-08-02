@@ -42,11 +42,11 @@ namespace StateManagementServiceWebAPI.Helpers
                             Message = message
                         }
                     },
-                    (ApiController)context.ExceptionContext.ControllerContext.Controller);
+                    (ApiController)context.ExceptionContext.ControllerContext?.Controller);
         }
         public override bool ShouldHandle(ExceptionHandlerContext context)
         {
-            return true;
+            return context.ExceptionContext.ControllerContext != null; // our handling requires a controller context to send the response...
         }
     }
 }
