@@ -15,6 +15,7 @@ using Microsoft.ServiceFabric.Actors.Client;
 using Newtonsoft.Json;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using CommonUtils;
 
 namespace CommunicationProviderService
 {
@@ -149,10 +150,10 @@ namespace CommunicationProviderService
             {
                 // Currently only expect Report (State) or Inquiry messages here (D2C context, ACK/NAK handled in feedback service)
                 case MessageType.Inquiry:
-                    var inquirySubtype = (InquiryMessageSubType)Enum.Parse(typeof(InquiryMessageSubType), message.MessageSubType);
+                    var inquirySubtype = EnumUtils.ConstrainedParse<InquiryMessageSubType>(message.MessageSubType);
                     return DeviceMessage.CreateInquiry(message.DeviceId, message.Body, inquirySubtype, message.CorrelationId, message.EnqueuedTimeUtc);
                 case MessageType.Report:
-                    var reportSubtype = (ReportMessageSubType)Enum.Parse(typeof(ReportMessageSubType), message.MessageSubType);
+                    var reportSubtype = EnumUtils.ConstrainedParse<ReportMessageSubType>(message.MessageSubType);
                     return DeviceMessage.CreateReport(message.DeviceId, message.Body, reportSubtype, message.CorrelationId, message.EnqueuedTimeUtc);
             }
             throw new Exception($"Unexpected MessageType '{message.MessageType}'");

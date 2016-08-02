@@ -1,4 +1,5 @@
-﻿using DeviceRichState;
+﻿using CommonUtils;
+using DeviceRichState;
 using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Concurrent;
@@ -62,7 +63,7 @@ namespace CommunicationProviders.IoTHub
                 return null;
             }
             MessageType messageType;
-            if (!Enum.TryParse(messageTypeString, ignoreCase: true, result:out messageType))
+            if (!EnumUtils.TryConstrainedParse<MessageType>(messageTypeString, ignoreCase: true, result:out messageType))
             {
                 // TODO - log failure. (also move to alternative queue for handling?)
                 return null;

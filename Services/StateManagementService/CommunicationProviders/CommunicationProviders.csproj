@@ -110,6 +110,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonUtils\CommonUtils.csproj">
+      <Project>{B7313376-B9C8-46F4-A2D1-CA4A8313C861}</Project>
+      <Name>CommonUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeviceRichState\DeviceRichState.csproj">
       <Project>{6E768642-EFC3-4A83-B497-2D6D149A1D4A}</Project>
       <Name>DeviceRichState</Name>

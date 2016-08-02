@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CommonUtils;
 
 namespace DeviceRichState
 {
@@ -204,7 +205,7 @@ namespace DeviceRichState
             {
                 throw new InvalidOperationException($"Can only call {nameof(ReportMessageSubType)} when MessageType is {nameof(MessageType.Report)}");
             }
-            return (ReportMessageSubType)Enum.Parse(typeof(ReportMessageSubType), MessageSubType);
+            return EnumUtils.ConstrainedParse<ReportMessageSubType>(MessageSubType);
         }
         public InquiryMessageSubType InquiryMessageSubType()
         {
@@ -212,7 +213,7 @@ namespace DeviceRichState
             {
                 throw new InvalidOperationException($"Can only call {nameof(InquiryMessageSubType)} when MessageType is {nameof(MessageType.Inquiry)}");
             }
-            return (InquiryMessageSubType)Enum.Parse(typeof(InquiryMessageSubType), MessageSubType);
+            return EnumUtils.ConstrainedParse<InquiryMessageSubType>(MessageSubType);
         }
         public CommandRequestMessageSubType CommandRequestMessageSubType()
         {
@@ -220,7 +221,7 @@ namespace DeviceRichState
             {
                 throw new InvalidOperationException($"Can only call {nameof(CommandRequestMessageSubType)} when MessageType is {nameof(MessageType.CommandRequest)}");
             }
-            return (CommandRequestMessageSubType)Enum.Parse(typeof(CommandRequestMessageSubType), MessageSubType);
+            return EnumUtils.ConstrainedParse<CommandRequestMessageSubType>(MessageSubType);
         }
         public CommandResponseMessageSubType CommandResponseMessageSubType()
         {
@@ -228,7 +229,7 @@ namespace DeviceRichState
             {
                 throw new InvalidOperationException($"Can only call {nameof(CommandResponseMessageSubType)} when MessageType is {nameof(MessageType.CommandResponse)}");
             }
-            return (CommandResponseMessageSubType)Enum.Parse(typeof(CommandResponseMessageSubType), MessageSubType);
+            return EnumUtils.ConstrainedParse<CommandResponseMessageSubType>(MessageSubType);
         }
 
     }

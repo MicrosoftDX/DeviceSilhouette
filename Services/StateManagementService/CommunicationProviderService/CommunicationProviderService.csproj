@@ -98,6 +98,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonUtils\CommonUtils.csproj">
+      <Project>{B7313376-B9C8-46F4-A2D1-CA4A8313C861}</Project>
+      <Name>CommonUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CommunicationProviders\CommunicationProviders.csproj">
       <Project>{091b2a18-ab32-44c6-acdb-e15cf2a2e846}</Project>
       <Name>CommunicationProviders</Name>
