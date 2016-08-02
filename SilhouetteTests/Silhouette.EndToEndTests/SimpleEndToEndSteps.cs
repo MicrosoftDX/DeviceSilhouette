@@ -44,12 +44,14 @@ namespace Silhouette.EndToEndTests
         // See https://github.com/techtalk/SpecFlow/issues/542
         // Update: in PR https://github.com/techtalk/SpecFlow/pull/647
 
-            [AfterScenario]
+        [AfterScenario]
         public void FlagTimeouts()
         {
-            if (_timeoutMessages.Count >0)
+            if (_timeoutMessages.Count > 0)
             {
-                Assert.Fail(string.Join("\r\n", _timeoutMessages));
+                var timeoutMessageString = string.Join("\r\n", _timeoutMessages);
+
+                Assert.Fail("One or more steps exceeded the target time for responses:\r\n" + timeoutMessageString);
             }
         }
 
@@ -196,8 +198,9 @@ namespace Silhouette.EndToEndTests
                 Func<dynamic, bool> messagePredicate = m => m.values != null && m.values.test != null && m.values.test == _testStateValue;
 
                 var stopwatch = Stopwatch.StartNew();
-                dynamic message = await RetryAsync(cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken)
-                                                    , timeout);
+                dynamic message = await RetryAsync(
+                        cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken, ignore404:true)
+                        , timeout);
                 var elapsedTime = stopwatch.Elapsed;
 
                 Assert.IsNotNull(message, "Message should not be null");
@@ -225,7 +228,7 @@ namespace Silhouette.EndToEndTests
                                 && m.values != null && m.values.test != null && m.values.test == _testStateValue;
 
                 var stopwatch = Stopwatch.StartNew();
-                dynamic message = await RetryAsync(cancellationToken =>  FindMessageAsync(deviceId, messagePredicate, cancellationToken)
+                dynamic message = await RetryAsync(cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken)
                                                 , timeout);
                 var elapsedTime = stopwatch.Elapsed;
 
@@ -400,11 +403,15 @@ namespace Silhouette.EndToEndTests
         }
 
 
-        private static Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate)
+        private static Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate, bool ignore404 = false)
         {
             return FindMessageAsync(deviceId, messagePredicate, CancellationToken.None);
         }
-        private static async Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate, CancellationToken cancellationToken)
+        private static async Task<dynamic> FindMessageAsync(
+            string deviceId,
+            Func<dynamic, bool> messagePredicate,
+            CancellationToken cancellationToken,
+            bool ignore404 = false)
         {
             var client = GetApiClient();
             string messagesUrl = $"devices/{deviceId}/messages";
@@ -423,6 +430,12 @@ namespace Silhouette.EndToEndTests
             while (!string.IsNullOrEmpty(messagesUrl))
             {
                 var response = await client.GetAsync(messagesUrl, cancellationToken);
+                if (response.StatusCode == HttpStatusCode.NotFound /* 404 */
+                    && ignore404)
+                {
+                    // want to ignore 404 as that just indicates that we have no messages
+                    return null;
+                }
                 response.EnsureSuccessStatusCode();
                 dynamic messages = await response.Content.ReadAsAsync<dynamic>(cancellationToken);
                 dynamic message = findMessageInMessagesList(messages.values);
