@@ -39,7 +39,40 @@ namespace CommunicationProviders
         public string DeviceId { get; internal set; }
         public DateTime EnqueuedTimeUtc { get; set; }
         public MessageType MessageType { get; internal set; }
-        public MessageSubType MessageSubType { get; internal set; }
+        public string MessageSubType { get; internal set; }
         public IDictionary<string, object> RawProperties { get; set; }
+
+        public ReportMessageSubType ReportMessageSubType()
+        {
+            if (MessageType != MessageType.Report)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(ReportMessageSubType)} when MessageType is {nameof(MessageType.Report)}");
+            }
+            return (ReportMessageSubType)Enum.Parse(typeof(ReportMessageSubType), MessageSubType);
+        }
+        public InquiryMessageSubType InquiryMessageSubType()
+        {
+            if (MessageType != MessageType.Inquiry)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(InquiryMessageSubType)} when MessageType is {nameof(MessageType.Inquiry)}");
+            }
+            return (InquiryMessageSubType)Enum.Parse(typeof(InquiryMessageSubType), MessageSubType);
+        }
+        public CommandRequestMessageSubType CommandRequestMessageSubType()
+        {
+            if (MessageType != MessageType.CommandRequest)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(CommandRequestMessageSubType)} when MessageType is {nameof(MessageType.CommandRequest)}");
+            }
+            return (CommandRequestMessageSubType)Enum.Parse(typeof(CommandRequestMessageSubType), MessageSubType);
+        }
+        public CommandResponseMessageSubType CommandResponseMessageSubType()
+        {
+            if (MessageType != MessageType.CommandResponse)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(CommandResponseMessageSubType)} when MessageType is {nameof(MessageType.CommandResponse)}");
+            }
+            return (CommandResponseMessageSubType)Enum.Parse(typeof(CommandResponseMessageSubType), MessageSubType);
+        }
     }
 }

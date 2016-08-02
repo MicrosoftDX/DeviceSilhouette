@@ -33,11 +33,10 @@ namespace IoTHubFeedbackService
         {
             // TODO - handle actor not found for deviceID exception
             IDeviceRepositoryActor silhouette = GetDeviceActor(feedbackRecord.DeviceId);
-            DeviceMessage state = new DeviceMessage(
+            DeviceMessage state = DeviceMessage.CreateCommandResponse(
                 feedbackRecord.DeviceId,
                 "",
                 "",
-                MessageType.CommandResponse,
                 GetMessageSubTypeFromFeedbck(feedbackRecord.StatusCode),
                 -1,
                 feedbackRecord.OriginalMessageId,
@@ -46,19 +45,19 @@ namespace IoTHubFeedbackService
             await silhouette.StoreDeviceMessageAsync(state);
         }
 
-        private MessageSubType GetMessageSubTypeFromFeedbck(FeedbackStatusCode status)
+        private CommandResponseMessageSubType GetMessageSubTypeFromFeedbck(FeedbackStatusCode status)
         {
             switch (status) {
                 case FeedbackStatusCode.Success:
-                    return MessageSubType.Acknowledged;
+                    return CommandResponseMessageSubType.Acknowledged;
                 case FeedbackStatusCode.Rejected:
-                    return MessageSubType.NotAcknowledged;
+                    return CommandResponseMessageSubType.NotAcknowledged;
                 case FeedbackStatusCode.Expired:
-                    return MessageSubType.Expired;
+                    return CommandResponseMessageSubType.Expired;
                 case FeedbackStatusCode.DeliveryCountExceeded:
-                    return MessageSubType.ExceededRetryCount;
+                    return CommandResponseMessageSubType.ExceededRetryCount;
             }
-            return MessageSubType.Unknown;
+            throw new Exception($"Unknown FeedbackStatusCode: {status}");
         }
 
         private static IDeviceRepositoryActor GetDeviceActor(string deviceId)

@@ -64,7 +64,7 @@ namespace StateManagementServiceWebAPI.Controllers
             // TODO - this is a temporary endpoint - it feels as though it should be just another command
             // TODO - this should return the Accepted Response
 
-            var deviceMessage = new DeviceMessage(deviceId, null, null, MessageType.CommandRequest, MessageSubType.ReportState, timeToLiveMilliSec);
+            var deviceMessage = DeviceMessage.CreateCommandRequest(deviceId, null, null, CommandRequestMessageSubType.ReportState, timeToLiveMilliSec);
 
             await _communicationProvider.SendCloudToDeviceMessageAsync(deviceMessage);
         }
@@ -103,7 +103,7 @@ namespace StateManagementServiceWebAPI.Controllers
         [HandleInvalidModel]
         public async Task<IHttpActionResult> Post(
             [FromUri]string deviceId,
-            [FromBody] Models.CommandRequestModel command) // TODO -= should be a CommandRequestModel
+            [FromBody] Models.CreateCommandRequestModel command) // TODO -= should be a CommandRequestModel
         {
             // TODO - this should return the Accepted Response
 

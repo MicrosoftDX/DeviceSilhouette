@@ -67,7 +67,7 @@ namespace DeviceRepository
                 var message = messages[messageIndex];
 
                 // latestReportedStateMessageIndex
-                if (message.MessageType == MessageType.Report && message.MessageSubType == MessageSubType.State)
+                if (message.MessageType == MessageType.Report && message.ReportMessageSubType() == ReportMessageSubType.State)
                 {
                     latestReportedStateMessageIndex = messageIndex;
                 }

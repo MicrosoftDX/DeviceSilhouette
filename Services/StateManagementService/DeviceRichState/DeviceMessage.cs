@@ -23,7 +23,7 @@ namespace DeviceRichState
         [DataMember]
         private MessageType _messageType;
         [DataMember]
-        private MessageSubType _messageSubType;
+        private string _messageSubType;
         [DataMember]
         private string _appMetadata;
         [DataMember]
@@ -59,7 +59,7 @@ namespace DeviceRichState
 
 
         [DataMember]
-        public MessageSubType MessageSubType { get { return _messageSubType; } set {; } }
+        public string MessageSubType { get { return _messageSubType; } set {; } }
 
         /// <summary>
         /// Part of the state message that contains Application specific data
@@ -90,7 +90,7 @@ namespace DeviceRichState
         }
 
         /// <summary>
-        /// Holds the RichState of a device based on the state message and 
+        /// DO NOT USE THIS CONSTRUCTOR. Instead, use the static CreateXXX methods
         /// </summary>
         /// <param name="deviceId">Unique indentifier of the device</param>
         /// <param name="metadata">Application metadata</param>   
@@ -98,12 +98,12 @@ namespace DeviceRichState
         /// <param name="messageType">Who send the message; reported == device, requested == application</param>
         /// <param name="messageStatus">Indication of the status of this message instance</param>
         /// /// <param name="correlationId">Message id</param>
-        public DeviceMessage(
+        private DeviceMessage(
             string deviceId,
             string metadata,
             string values,
             MessageType messageType,
-            MessageSubType messageSubType,
+            string messageSubType,
             long messageTtlMs,
             string correlationId = null,
             DateTime? timestamp = null)
@@ -123,8 +123,115 @@ namespace DeviceRichState
 
             _timestamp = timestamp ?? SystemTime.UtcNow();
         }
-    }
 
+        public static DeviceMessage CreateCommandRequest(string deviceId,
+                string metadata,
+                string values,
+                CommandRequestMessageSubType messageSubType,
+                long messageTtlMs,
+                string correlationId = null,
+                DateTime? timestamp = null)
+        {
+            return new DeviceMessage(
+                deviceId,
+                metadata,
+                values,
+                MessageType.CommandRequest,
+                messageSubType.ToString(),
+                messageTtlMs,
+                correlationId,
+                timestamp
+                );
+        }
+        public static DeviceMessage CreateCommandResponse(string deviceId,
+          string metadata,
+          string values,
+          CommandResponseMessageSubType messageSubType,
+          long messageTtlMs,
+          string correlationId = null,
+          DateTime? timestamp = null)
+        {
+            return new DeviceMessage(
+                deviceId,
+                metadata,
+                values,
+                MessageType.CommandResponse,
+                messageSubType.ToString(),
+                messageTtlMs,
+                correlationId,
+                timestamp
+                );
+        }
+        public static DeviceMessage CreateReport(string deviceId,
+            string values,
+            ReportMessageSubType messageSubType,
+            string correlationId = null,
+            DateTime? timestamp = null)
+        {
+            return new DeviceMessage(
+                deviceId,
+                null, // don't have app metadata in Report
+                values,
+                MessageType.Report,
+                messageSubType.ToString(),
+                -1, // don't have TTL in Report
+                correlationId,
+                timestamp
+                );
+        }
+        public static DeviceMessage CreateInquiry(string deviceId,
+            string values,
+            InquiryMessageSubType messageSubType,
+            string correlationId = null,
+            DateTime? timestamp = null)
+        {
+            return new DeviceMessage(
+                deviceId,
+                null, // don't have app metadata in Inquiry
+                values,
+                MessageType.Report,
+                messageSubType.ToString(),
+                -1, // don't have ttl in Inquiry
+                correlationId,
+                timestamp
+                );
+        }
+
+        // Do these helpers belong here or in extension methods?
+        public ReportMessageSubType ReportMessageSubType()
+        {
+            if (MessageType != MessageType.Report)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(ReportMessageSubType)} when MessageType is {nameof(MessageType.Report)}");
+            }
+            return (ReportMessageSubType)Enum.Parse(typeof(ReportMessageSubType), MessageSubType);
+        }
+        public InquiryMessageSubType InquiryMessageSubType()
+        {
+            if (MessageType != MessageType.Inquiry)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(InquiryMessageSubType)} when MessageType is {nameof(MessageType.Inquiry)}");
+            }
+            return (InquiryMessageSubType)Enum.Parse(typeof(InquiryMessageSubType), MessageSubType);
+        }
+        public CommandRequestMessageSubType CommandRequestMessageSubType()
+        {
+            if (MessageType != MessageType.CommandRequest)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(CommandRequestMessageSubType)} when MessageType is {nameof(MessageType.CommandRequest)}");
+            }
+            return (CommandRequestMessageSubType)Enum.Parse(typeof(CommandRequestMessageSubType), MessageSubType);
+        }
+        public CommandResponseMessageSubType CommandResponseMessageSubType()
+        {
+            if (MessageType != MessageType.CommandResponse)
+            {
+                throw new InvalidOperationException($"Can only call {nameof(CommandResponseMessageSubType)} when MessageType is {nameof(MessageType.CommandResponse)}");
+            }
+            return (CommandResponseMessageSubType)Enum.Parse(typeof(CommandResponseMessageSubType), MessageSubType);
+        }
+
+    }
     public enum MessageType
     {
 
@@ -147,11 +254,11 @@ namespace DeviceRichState
         /// <summary>
         /// Device requesting to get it's last known state. May be invoked by the device, for example, after being offline for a while.
         /// </summary>
-        InquiryRequest,
+        Inquiry,
 
     }
 
-    public enum MessageSubType
+    public enum CommandRequestMessageSubType
     {
         /// <summary>
         /// CommandRequest: body contains desired state for the device
@@ -165,13 +272,14 @@ namespace DeviceRichState
         /// CommandRequest: sent in response to to a device sending an InquiryRequest
         /// </summary>
         LatestState,
+    }
 
-        New,
+    public enum CommandResponseMessageSubType
+    {
         /// <summary>
         /// CommandResponse: Device sent ACK
         /// </summary>
         Acknowledged,
-        Enqueued,
         /// <summary>
         /// CommandResponse: the request message was not delivered before the message TTL
         /// </summary>
@@ -184,26 +292,19 @@ namespace DeviceRichState
         /// CommandResponse: the number of delivery attempts for the request message exceeded the retry count
         /// </summary>
         ExceededRetryCount,
-        Received,
-
-        //DeliveryCountExceeded,
-        //Expired,
-        //Rejected,
-        //Success,
-
-
+    }
+    public enum ReportMessageSubType
+    {
         /// <summary>
         /// Report: The device is reporting its state
         /// </summary>
         State,
-
-
+    }
+    public enum InquiryMessageSubType
+    {
         /// <summary>
         /// InquiryRequest: The device is requesting its last state
         /// </summary>
         GetState,
-
-        Unknown
-
     }
 }

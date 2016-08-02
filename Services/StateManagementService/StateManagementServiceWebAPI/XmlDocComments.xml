@@ -72,13 +72,13 @@
             <param name="commandId">The id of the command to retrieve (this is the correlation id for the command messages)</param>
             <returns></returns>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.Post(System.String,StateManagementServiceWebAPI.Models.DeviceStateRequestModel)">
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.Post(System.String,StateManagementServiceWebAPI.Models.CreateCommandRequestModel)">
             <summary>
             Add a new command
             NB Currently this only supports creating a state request command
             </summary>
             <param name="deviceId">The id of the device</param>
-            <param name="requestedState"></param>
+            <param name="command"></param>
             <returns></returns>
         </member>
         <member name="T:StateManagementServiceWebAPI.Controllers.DeviceStateController">
@@ -190,7 +190,7 @@
         </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceCommand.CommandRequestModel">
             <summary>
-            Represent the response portion of a command
+            Represent the request portion of a command
             </summary>
         </member>
         <member name="P:StateManagementServiceWebAPI.Models.DeviceCommand.CommandRequestModel.Version">
@@ -260,27 +260,27 @@
             </summary>
             <param name="response"></param>
         </member>
-        <member name="T:StateManagementServiceWebAPI.Models.DeviceStateRequestModel">
+        <member name="T:StateManagementServiceWebAPI.Models.CreateCommandRequestModel">
             <summary>
             Data model used to capture the State Request command added through the API
             </summary>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.#ctor">
+        <member name="M:StateManagementServiceWebAPI.Models.CreateCommandRequestModel.#ctor">
             <summary>
                 
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.AppMetadata">
+        <member name="P:StateManagementServiceWebAPI.Models.CreateCommandRequestModel.AppMetadata">
             <summary>
             The application specific metadata
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.Values">
+        <member name="P:StateManagementServiceWebAPI.Models.CreateCommandRequestModel.Values">
             <summary>
             The device values (state) to set
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceStateRequestModel.TimeToLiveMilliSec">
+        <member name="P:StateManagementServiceWebAPI.Models.CreateCommandRequestModel.TimeToLiveMilliSec">
             <summary>
             The time-to-live for the command message
             </summary>

@@ -6,12 +6,12 @@ namespace StateManagementServiceWebAPI.Models
     /// <summary>
     /// Data model used to capture the State Request command added through the API
     /// </summary>
-    public class CommandRequestModel
+    public class CreateCommandRequestModel
     {
         /// <summary>
         ///     
         /// </summary>
-        public CommandRequestModel()
+        public CreateCommandRequestModel()
         {
             //empty ctor for WebAPI model binding
         }

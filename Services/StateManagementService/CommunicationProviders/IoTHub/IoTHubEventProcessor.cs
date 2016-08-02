@@ -74,19 +74,13 @@ namespace CommunicationProviders.IoTHub
                 // TODO - log failure. (also move to alternative queue for handling?)
                 return null;
             }
-            MessageSubType messageSubType;
-            if (!Enum.TryParse(messageSubTypeString, ignoreCase: true, result: out messageSubType))
-            {
-                // TODO - log failure. (also move to alternative queue for handling?)
-                return null;
-            }
 
             var message = new MessageInfo
             {
                 DeviceId = deviceId,
                 CorrelationId = correlationId,
                 MessageType = messageType,
-                MessageSubType = messageSubType,
+                MessageSubType = messageSubTypeString,
                 EnqueuedTimeUtc = eventData.EnqueuedTimeUtc,
                 Body = GetMessageStringFromEvent(eventData),
                 RawProperties = eventData.Properties,

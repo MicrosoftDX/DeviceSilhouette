@@ -74,8 +74,8 @@ namespace DeviceRepository
                 state = messages.OrderByDescending(m => m.Timestamp)
                                         .Where(m => {
                                             return (m.MessageType == MessageType.CommandRequest
-                                                        && m.MessageSubType == MessageSubType.SetState)
-                                                    || (m.MessageType == MessageType.Report && m.MessageSubType == MessageSubType.State);
+                                                        && m.CommandRequestMessageSubType() == CommandRequestMessageSubType.SetState)
+                                                    || (m.MessageType == MessageType.Report && m.ReportMessageSubType() == ReportMessageSubType.State);
                                             })
                                         .FirstOrDefault();
             }

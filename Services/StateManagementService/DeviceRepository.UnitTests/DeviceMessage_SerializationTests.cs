@@ -20,20 +20,17 @@ namespace DeviceRichState.Tests
         [TestInitialize]
         public void Initialize()
         {
-            OriginalMessage = new DeviceMessage(
+            OriginalMessage = DeviceMessage.CreateCommandRequest(
                 "deviceIdWibble",
                 "{\"metadataValue\":123}",
                 "{\"state\":123}",
-                MessageType.Report,
-                MessageSubType.ExceededRetryCount,
+                CommandRequestMessageSubType.SetState,
                 123456,
                 "ACorrelationId",
                 DateTime.UtcNow.AddDays(-123)
-                )
-            {
-                Version = 67890,
-                Persisted = true
-            };
+                );
+            OriginalMessage.Version = 67890;
+            OriginalMessage.Persisted = true;
 
 
             var serializer = new DataContractSerializer(typeof(DeviceMessage)); // TODO - can we find out the settings that SF uses to align the tests with those?

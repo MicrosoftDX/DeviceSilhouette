@@ -64,7 +64,7 @@ namespace StateManagementServiceWebAPI.Models.DeviceCommand
 
 
     /// <summary>
-    /// Represent the response portion of a command
+    /// Represent the request portion of a command
     /// </summary>
     public class CommandRequestModel
     {

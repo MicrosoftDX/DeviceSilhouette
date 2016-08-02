@@ -115,7 +115,7 @@
     <Compile Include="Helpers\ApiControllerResponseExtensions.cs" />
     <Compile Include="Helpers\UnhandledErrorModelExceptionHandler.cs" />
     <Compile Include="Models\DeviceCommand\CommandModel.cs" />
-    <Compile Include="Models\DeviceCommand\DeviceStateRequestModel.cs" />
+    <Compile Include="Models\DeviceCommand\CommandRequestModel.cs" />
     <Compile Include="Models\DeviceMessage\MessageModel.cs" />
     <Compile Include="Models\DeviceState\DeviceStateModel.cs" />
     <Compile Include="Models\ErrorModel.cs" />

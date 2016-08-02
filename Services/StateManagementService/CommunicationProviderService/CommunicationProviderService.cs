@@ -90,8 +90,8 @@ namespace CommunicationProviderService
             // Any actions to take on the message (should this be handled here?)
             switch (message.MessageType)
             {
-                case MessageType.InquiryRequest: // device requesting last stored state
-                    if (message.MessageSubType == MessageSubType.GetState)
+                case MessageType.Inquiry: // device requesting last stored state
+                    if (message.InquiryMessageSubType() == InquiryMessageSubType.GetState)
                     {
                         await SendLastReportedStateToDeviceAsync(message);
                     }
@@ -109,12 +109,11 @@ namespace CommunicationProviderService
             DeviceMessage lastReportedStateMessage = await actor.GetLastKnownReportedStateAsync();
 
             // create a new DeviceState with new correlation id, send to the device and store in the repository   
-            var newState = new DeviceMessage(
+            var newState = DeviceMessage.CreateCommandRequest(
                     message.DeviceId,
                     null,
                     lastReportedStateMessage?.Values, // send null if no lastReportedStateMessage
-                    MessageType.CommandRequest,
-                    MessageSubType.LatestState,
+                    CommandRequestMessageSubType.LatestState,
                     5000 // TODO - need to have a configurable TTL for InquiryResponse
                 );
             await SendCloudToDeviceMessageAsync(newState);
@@ -146,16 +145,17 @@ namespace CommunicationProviderService
 
         private DeviceMessage ToDeviceMessage(MessageInfo message)
         {
-            return new DeviceMessage(
-                message.DeviceId,
-                null,
-                message.Body,
-                message.MessageType,
-                message.MessageSubType,
-                -1, // don't have ttl for received messages
-                message.CorrelationId,
-                message.EnqueuedTimeUtc
-                );
+            switch (message.MessageType)
+            {
+                // Currently only expect Report (State) or Inquiry messages here (D2C context, ACK/NAK handled in feedback service)
+                case MessageType.Inquiry:
+                    var inquirySubtype = (InquiryMessageSubType)Enum.Parse(typeof(InquiryMessageSubType), message.MessageSubType);
+                    return DeviceMessage.CreateInquiry(message.DeviceId, message.Body, inquirySubtype, message.CorrelationId, message.EnqueuedTimeUtc);
+                case MessageType.Report:
+                    var reportSubtype = (ReportMessageSubType)Enum.Parse(typeof(ReportMessageSubType), message.MessageSubType);
+                    return DeviceMessage.CreateReport(message.DeviceId, message.Body, reportSubtype, message.CorrelationId, message.EnqueuedTimeUtc);
+            }
+            throw new Exception($"Unexpected MessageType '{message.MessageType}'");
         }
     }
 }

@@ -158,52 +158,41 @@ namespace DeviceRepository.Tests
         private const string DeviceId = "a-device";
         private DeviceMessage ReportedState(DateTime timestamp, bool persisted)
         {
-            var message = new DeviceMessage(
+            var message = DeviceMessage.CreateReport(
                 DeviceId,
                 "{}",
-                "{}",
-                MessageType.Report,
-                MessageSubType.State,
-                -1,
+                ReportMessageSubType.State,
                 timestamp: timestamp
-                )
-            {
-                Persisted = persisted,
-            };
+                );
+            message.Persisted = persisted;
             return message;
         }
         private DeviceMessage Command(DateTime timestamp, bool persisted, string correlationId)
         {
-            var message = new DeviceMessage(
+            var message = DeviceMessage.CreateCommandRequest(
                 DeviceId,
                 "{}",
                 "{}",
-                MessageType.CommandRequest,
-                MessageSubType.SetState,
+                CommandRequestMessageSubType.SetState,
                 -1,
                 correlationId,
                 timestamp
-                )
-            {
-                Persisted = persisted,
-            };
+                );
+            message.Persisted = persisted;
             return message;
         }
         private DeviceMessage Response(DateTime timestamp, bool persisted, string correlationId)
         {
-            var message = new DeviceMessage(
+            var message = DeviceMessage.CreateCommandResponse(
                 DeviceId,
                 "{}",
                 "{}",
-                MessageType.CommandResponse,
-                MessageSubType.Acknowledged,
+                CommandResponseMessageSubType.Acknowledged,
                 -1,
                 correlationId,
                 timestamp
-                )
-            {
-                Persisted = persisted,
-            };
+                );
+            message.Persisted = persisted;
             return message;
         }
         private void WithSystemTimeUtc(DateTime systemDateTime)
