@@ -1,4 +1,4 @@
-1.	General
+1.	General (README)
  * About
  * Report issues
  * Contribute Code
