@@ -64,7 +64,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Steps\ApiCommandSteps.cs" />
     <Compile Include="Steps\DeviceSteps.cs" />
     <Compile Include="GeneralApiBehaviour.feature.cs">
       <AutoGen>True</AutoGen>

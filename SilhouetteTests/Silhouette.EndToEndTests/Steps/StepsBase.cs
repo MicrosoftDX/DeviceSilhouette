@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -43,10 +44,11 @@ namespace Silhouette.EndToEndTests.Steps
         }
 
 
-        protected async Task<TResult> RetryAsync<TResult>(
-                            Func<CancellationToken, Task<TResult>> action,
+        protected async Task<TResult> RetryWithTimeoutAsync<TResult>(
                             int timeoutInSeconds,
-                            double waitIntervalInSeconds = 0.25)
+                            Func<CancellationToken, Task<TResult>> action,
+                            double waitIntervalInSeconds = 0.25
+            )
         {
             var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
 
@@ -68,6 +70,31 @@ namespace Silhouette.EndToEndTests.Steps
             try
             {
                 asyncAction().Wait();
+            }
+            catch (AggregateException ae) when (ae.InnerException is AssertFailedException)
+            {
+                var afe = (AssertFailedException)ae.InnerException;
+                throw new AssertFailedException("Wrapped: " + afe.Message, afe); // wrap the exception so that the inner exception preserves the stack trace
+            }
+        }
+
+        public TResult RunAndBlockWithTargetTime<TResult>(int targetTime,
+            string actionDescription,
+            Func<Task<TResult>> asyncAction)
+        {
+            try
+            {
+                var stopwatch = Stopwatch.StartNew();
+                TResult result = asyncAction().Result;
+                var elapsedTime = stopwatch.Elapsed;
+
+                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
+                if (elapsedTime > targetTimeSpan)
+                {
+                    var stepText = ScenarioContext.Current.StepContext.StepInfo.Text;
+                    AddTimeoutMessage($"Step '{stepText}', action '{actionDescription}' took {elapsedTime} with a target of {targetTimeSpan}");
+                }
+                return result;
             }
             catch (AggregateException ae) when (ae.InnerException is AssertFailedException)
             {
