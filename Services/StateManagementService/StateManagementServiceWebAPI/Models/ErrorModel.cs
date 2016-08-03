@@ -87,7 +87,7 @@ namespace StateManagementServiceWebAPI.Models
         /// <summary>
         /// The specified device id wasn't found
         /// </summary>
-        public const string InvalidDeviceId = "invalid-device-id";
+        public const string EntityNotFound = "invalid-identifier";
         /// <summary>
         /// The request body/parameters are not valid
         /// </summary>
@@ -109,11 +109,16 @@ namespace StateManagementServiceWebAPI.Models
         /// The specified device id wasn't found
         /// </summary>
         /// <param name="deviceId"></param>
+        /// <param name="version"></param>
         /// <returns></returns>
-        public static string InvalidDeviceId(string deviceId)
+        public static string EntityNotFound_DeviceMessage(string deviceId, int version)
         {
-            const string format = "The device '{0}' was not found";
-            return string.Format(format, deviceId);
+            return $"Message '{version}' not found for device '{deviceId}'";
+        }
+
+        internal static string EntityNotFound_DeviceCommand(string deviceId, string commandId)
+        {
+            return $"Command'{commandId}' not found for device '{deviceId}'";
         }
         /// <summary>
         /// The request body/parameters are not valid
@@ -131,6 +136,7 @@ namespace StateManagementServiceWebAPI.Models
         {
             return "Unhandled error";
         }
+
     }
 
 

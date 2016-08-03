@@ -64,6 +64,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GeneralApiBehaviour.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GeneralApiBehaviour.feature</DependentUpon>
+    </Compile>
     <Compile Include="SimpleEndToEnd.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -74,6 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="GeneralApiBehaviour.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>GeneralApiBehaviour.feature.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <None Include="SimpleEndToEnd.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

@@ -40,7 +40,6 @@ namespace StateManagementServiceWebAPI.Controllers
         /// 
         /// </summary>
         /// <param name="stateProcessor"></param>
-        /// <param name="communicationProvider"></param>
         public DeviceStateController(IStateProcessorRemoting stateProcessor)
         {
             _stateProcessor = stateProcessor;
@@ -60,11 +59,7 @@ namespace StateManagementServiceWebAPI.Controllers
             var state = await _stateProcessor.GetLastReportedStateAsync(deviceId);
             if (state == null)
             {
-                result = this.NotFound(new ErrorModel
-                {
-                    Code = ErrorCode.InvalidDeviceId,
-                    Message = ErrorMessage.InvalidDeviceId(deviceId)
-                });
+                result = Ok();
             }
             else
             {
@@ -88,11 +83,7 @@ namespace StateManagementServiceWebAPI.Controllers
             var state = await _stateProcessor.GetLastRequestedStateAsync(deviceId);
             if (state == null)
             {
-                result = this.NotFound(new ErrorModel
-                {
-                    Code = ErrorCode.InvalidDeviceId,
-                    Message = ErrorMessage.InvalidDeviceId(deviceId)
-                });
+                result = Ok();
             }
             else
             {

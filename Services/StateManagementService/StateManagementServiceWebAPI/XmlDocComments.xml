@@ -84,7 +84,6 @@
             
             </summary>
             <param name="stateProcessor"></param>
-            <param name="communicationProvider"></param>
         </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.GetLastReportedState(System.String)">
             <summary>
@@ -479,7 +478,7 @@
             List of error codes
             </summary>
         </member>
-        <member name="F:StateManagementServiceWebAPI.Models.ErrorCode.InvalidDeviceId">
+        <member name="F:StateManagementServiceWebAPI.Models.ErrorCode.EntityNotFound">
             <summary>
             The specified device id wasn't found
             </summary>
@@ -499,11 +498,12 @@
             List of error messages
             </summary>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Models.ErrorMessage.InvalidDeviceId(System.String)">
+        <member name="M:StateManagementServiceWebAPI.Models.ErrorMessage.EntityNotFound_DeviceMessage(System.String,System.Int32)">
             <summary>
             The specified device id wasn't found
             </summary>
             <param name="deviceId"></param>
+            <param name="version"></param>
             <returns></returns>
         </member>
         <member name="M:StateManagementServiceWebAPI.Models.ErrorMessage.InvalidRequest">

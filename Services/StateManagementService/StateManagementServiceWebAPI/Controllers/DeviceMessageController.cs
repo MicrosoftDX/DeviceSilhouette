@@ -55,6 +55,8 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <param name="deviceId">The id of the device</param>
         /// <param name="version">The version (message identifier) for the message to return</param>
         /// <returns></returns>
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MessageModel))]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
         [Route("{version:int}")]
         public async Task<IHttpActionResult> GetMessage(string deviceId, int version)
         {
@@ -64,8 +66,8 @@ namespace StateManagementServiceWebAPI.Controllers
             {
                 result = this.NotFound(new ErrorModel
                 {
-                    Code = ErrorCode.InvalidDeviceId,
-                    Message = ErrorMessage.InvalidDeviceId(deviceId)
+                    Code = ErrorCode.EntityNotFound,
+                    Message = ErrorMessage.EntityNotFound_DeviceMessage(deviceId, version)
                 });
             }
             else
@@ -84,29 +86,16 @@ namespace StateManagementServiceWebAPI.Controllers
         /// <returns></returns>
         [Route("", Name = "GetMessages")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MessageListModel))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ErrorModel))]
         public async Task<IHttpActionResult> GetMessages(string deviceId, [FromUri]int? continuationToken = null)
         {
             IHttpActionResult result;
             var messages = await _stateProcessor.GetMessagesAsync(deviceId, MessageResultPageSize, continuationToken);
-            if (messages == null)
+            var resultModel = new MessageListModel
             {
-                result = this.NotFound(new ErrorModel
-                {
-                    Code = ErrorCode.InvalidDeviceId,
-                    Message = ErrorMessage.InvalidDeviceId(deviceId)
-                });
-            }
-            else
-            {
-                var resultModel = new MessageListModel
-                {
-                    Values = messages.Messages.Select(ToMessageModel),
-                    NextLink = continuationToken == null ? null : Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
-                };
-                result = Ok(resultModel);
-
-            }
+                Values = messages?.Messages?.Select(ToMessageModel),
+                NextLink = continuationToken == null ? null : Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
+            };
+            result = Ok(resultModel);
             return result;
         }
 

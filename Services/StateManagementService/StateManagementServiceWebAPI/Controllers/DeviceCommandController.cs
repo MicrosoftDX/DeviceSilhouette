@@ -15,6 +15,7 @@ using StateManagementServiceWebAPI.Models;
 using System.Web.Http.Results;
 using StateManagementServiceWebAPI.Filters;
 using StateManagementServiceWebAPI.Models.DeviceCommand;
+using StateManagementServiceWebAPI.Helpers;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -64,7 +65,11 @@ namespace StateManagementServiceWebAPI.Controllers
             var messages = await _stateProcessor.GetMessagesByCorrelationIdAsync(deviceId, commandId);
             if (messages == null || messages.Length == 0)
             {
-                return NotFound();
+                return this.NotFound(new ErrorModel
+                {
+                    Code = ErrorCode.EntityNotFound,
+                    Message = ErrorMessage.EntityNotFound_DeviceCommand(deviceId, commandId)
+                });
             }
             return Ok(new CommandModel(messages));
         }

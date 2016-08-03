@@ -196,11 +196,12 @@ namespace Silhouette.EndToEndTests
         {
             RunAndBlock(async () =>
             {
+                
                 Func<dynamic, bool> messagePredicate = m => m.values != null && m.values.test != null && m.values.test == _testStateValue;
 
                 var stopwatch = Stopwatch.StartNew();
                 dynamic message = await RetryAsync(
-                        cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken, ignore404:true)
+                        cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken)
                         , timeout);
                 var elapsedTime = stopwatch.Elapsed;
 
@@ -371,6 +372,66 @@ namespace Silhouette.EndToEndTests
         }
 
 
+
+        [Then]
+        public void Then_the_messages_API_contains_no_messages_for_device_DEVICEID(string deviceId)
+        {
+            RunAndBlock(async () =>
+            {
+                var client = GetApiClient();
+                string messagesUrl = $"devices/{deviceId}/messages";
+                var response = await client.GetAsync(messagesUrl);
+                response.EnsureSuccessStatusCode();
+                dynamic messages = await response.Content.ReadAsAsync<dynamic>();
+
+                Assert.IsTrue(messages.values == null, "Response.values should be null");
+            });
+        }
+
+        [Then]
+        public void Then_the_message_API_returns_NotFound_for_device_DEVICEID_for_message_version_VERSION(string deviceId, int version)
+        {
+            RunAndBlock(async () =>
+            {
+                var client = GetApiClient();
+                string messagesUrl = $"devices/{deviceId}/messages/{version}";
+                var response = await client.GetAsync(messagesUrl);
+                
+                Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode, "Status code for non-existent message should be NotFound");
+            });
+        }
+
+        [Then]
+        public void Then_the_commands_API_contains_no_commands_for_device_DEVICEID(string deviceId)
+        {
+            RunAndBlock(async () =>
+            {
+                var client = GetApiClient();
+                string commandsUrl = $"devices/{deviceId}/commands";
+                var response = await client.GetAsync(commandsUrl);
+                response.EnsureSuccessStatusCode();
+                dynamic messages = await response.Content.ReadAsAsync<dynamic>();
+
+                object messageList = messages.values;
+                Assert.IsNull(messageList, "Response.values should be null");
+            });
+        }
+
+        [Then]
+        public void Then_the_command_API_returns_NotFound_for_device_DEVICEID_for_command_id_COMMANDID(string deviceId, string commandId)
+        {
+            RunAndBlock(async () =>
+            {
+                var client = GetApiClient();
+                string messagesUrl = $"devices/{deviceId}/commands/{commandId}";
+                var response = await client.GetAsync(messagesUrl);
+
+                Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode, "Status code for non-existent command should be NotFound");
+            });
+        }
+
+
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // Helpers
@@ -404,15 +465,14 @@ namespace Silhouette.EndToEndTests
         }
 
 
-        private static Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate, bool ignore404 = false)
+        private static Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate)
         {
             return FindMessageAsync(deviceId, messagePredicate, CancellationToken.None);
         }
         private static async Task<dynamic> FindMessageAsync(
             string deviceId,
             Func<dynamic, bool> messagePredicate,
-            CancellationToken cancellationToken,
-            bool ignore404 = false)
+            CancellationToken cancellationToken)
         {
             var client = GetApiClient();
             string messagesUrl = $"devices/{deviceId}/messages";
@@ -431,12 +491,6 @@ namespace Silhouette.EndToEndTests
             while (!string.IsNullOrEmpty(messagesUrl))
             {
                 var response = await client.GetAsync(messagesUrl, cancellationToken);
-                if (response.StatusCode == HttpStatusCode.NotFound /* 404 */
-                    && ignore404)
-                {
-                    // want to ignore 404 as that just indicates that we have no messages
-                    return null;
-                }
                 response.EnsureSuccessStatusCode();
                 dynamic messages = await response.Content.ReadAsAsync<dynamic>(cancellationToken);
                 dynamic message = findMessageInMessagesList(messages.values);

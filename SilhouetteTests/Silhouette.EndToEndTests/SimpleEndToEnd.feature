@@ -31,4 +31,5 @@ Scenario: State requests via the API are receieved by a connected device and the
 	Then the messages API contains the command response ACK for the state request for device e2eDevice2 within 5 seconds but wait up to 60 seconds to verify
 	And the command API contains the command for the state request for device e2eDevice2
 	And the command received from the API has an ACK response
-	
+
+
