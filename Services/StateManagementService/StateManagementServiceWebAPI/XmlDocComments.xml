@@ -14,12 +14,11 @@
             Lazy DI constructor ;-)
             </summary>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.#ctor(StateProcessorService.IStateProcessorRemoting,CommunicationProviderService.ICommunicationProviderRemoting)">
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.#ctor(StateProcessorService.IStateProcessorRemoting)">
             <summary>
             
             </summary>
             <param name="stateProcessor"></param>
-            <param name="communicationProvider"></param>
         </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.GetMessage(System.String,System.Int32)">
             <summary>
@@ -54,16 +53,6 @@
             <param name="stateProcessor"></param>
             <param name="communicationProvider"></param>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.InvokeDeepRead(System.String,System.Int64)">
-            <summary>
-            Trigger a DeepGet (i.e. invoke getting the current state from the device
-            NOTE: this endpoint is temporary and will likely change!
-            
-            </summary>
-            <param name="deviceId"></param>
-            <param name="timeToLiveMilliSec"></param>
-            <returns></returns>
-        </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.Get(System.String,System.String)">
             <summary>
             
@@ -75,7 +64,6 @@
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.Post(System.String,StateManagementServiceWebAPI.Models.CreateCommandRequestModel)">
             <summary>
             Add a new command
-            NB Currently this only supports creating a state request command
             </summary>
             <param name="deviceId">The id of the device</param>
             <param name="command"></param>
@@ -91,7 +79,7 @@
             Lazy DI constructor ;-)
             </summary>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.#ctor(StateProcessorService.IStateProcessorRemoting,CommunicationProviderService.ICommunicationProviderRemoting)">
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.#ctor(StateProcessorService.IStateProcessorRemoting)">
             <summary>
             
             </summary>
@@ -146,6 +134,19 @@
             <param name="content"></param>
             <returns></returns>
         </member>
+        <member name="T:StateManagementServiceWebAPI.Helpers.EnumIsDefinedValueAttribute">
+            <summary>
+            Validate that the value of the (enum) property is a defined member of the enum type
+            </summary>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Helpers.EnumIsDefinedValueAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Perform the validation
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
         <member name="T:StateManagementServiceWebAPI.Helpers.UnhandledErrorModelExceptionHandler">
             <summary>
             Catch-all handler as a last resort
@@ -156,6 +157,13 @@
             convert the exception into a result object
             </summary>
             <param name="context"></param>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Helpers.UnhandledErrorModelExceptionHandler.ShouldHandle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
         </member>
         <member name="T:StateManagementServiceWebAPI.Models.DeviceCommand.CommandModel">
             <summary>
@@ -268,6 +276,11 @@
         <member name="M:StateManagementServiceWebAPI.Models.CreateCommandRequestModel.#ctor">
             <summary>
                 
+            </summary>
+        </member>
+        <member name="P:StateManagementServiceWebAPI.Models.CreateCommandRequestModel.Subtype">
+            <summary>
+            The subtype of the message to create, i.e. the type of Command Request to create
             </summary>
         </member>
         <member name="P:StateManagementServiceWebAPI.Models.CreateCommandRequestModel.AppMetadata">

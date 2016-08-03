@@ -1,5 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
+using DeviceRichState;
+using StateManagementServiceWebAPI.Helpers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace StateManagementServiceWebAPI.Models
 {
@@ -15,18 +19,23 @@ namespace StateManagementServiceWebAPI.Models
         {
             //empty ctor for WebAPI model binding
         }
-        
+
+        /// <summary>
+        /// The subtype of the message to create, i.e. the type of Command Request to create
+        /// </summary>
+        [EnumIsDefinedValue]
+        [JsonConverter(typeof(StringEnumConverter))]
+        [Required]
+        public CommandRequestMessageSubType? Subtype { get; set; }
 
         /// <summary>
         /// The application specific metadata
         /// </summary>
-        [Required]
         public JToken AppMetadata { get; set; }
 
         /// <summary>
         /// The device values (state) to set
         /// </summary>
-        [Required]
         public JToken Values { get; set; }
 
         /// <summary>

@@ -4,6 +4,7 @@ using Swashbuckle.Application;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http.ExceptionHandling;
 using StateManagementServiceWebAPI.Helpers;
+using Newtonsoft.Json.Converters;
 
 namespace StateManagementServiceWebAPI
 {
@@ -21,7 +22,9 @@ namespace StateManagementServiceWebAPI
         {
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
-            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            var jsonSerializerSettings = config.Formatters.JsonFormatter.SerializerSettings;
+            jsonSerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonSerializerSettings.Converters.Add(new StringEnumConverter());
 
             config.Services.Replace(typeof(IExceptionHandler), new UnhandledErrorModelExceptionHandler());
 
@@ -31,6 +34,9 @@ namespace StateManagementServiceWebAPI
             {
                 c.IncludeXmlComments(GetXmlCommentsPath());
                 c.SingleApiVersion("0.1", "StateManagementService");
+                c.DescribeAllEnumsAsStrings(camelCase: true);
+
+               
             }).EnableSwaggerUi();
 
 

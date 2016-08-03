@@ -2,6 +2,7 @@
 using Microsoft.Azure.Devices;
 using Microsoft.ServiceBus.Messaging;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +18,8 @@ namespace CommunicationProviders.IoTHub
         }
         public async Task SendCloudToDeviceAsync(DeviceMessage silhouetteMessage)
         {
-            var commandMessage = new Message(System.Text.Encoding.UTF8.GetBytes(silhouetteMessage.Values))
+            var messageBody = silhouetteMessage.Values == null ? new byte[0] : Encoding.UTF8.GetBytes(silhouetteMessage.Values);
+            var commandMessage = new Message(messageBody)
             {
                 Properties = {
                     { "MessageType", silhouetteMessage.MessageType.ToString() },
