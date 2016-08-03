@@ -51,7 +51,7 @@ namespace Silhouette.EndToEndTests
             {
                 var timeoutMessageString = string.Join("\r\n", _timeoutMessages);
 
-                Assert.Fail("One or more steps exceeded the target time for responses:\r\n" + timeoutMessageString);
+                Assert.Inconclusive("One or more steps exceeded the target time for responses:\r\n" + timeoutMessageString);
             }
         }
 
