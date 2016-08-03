@@ -50,26 +50,6 @@ namespace StateManagementServiceWebAPI.Controllers
         }
 
         /// <summary>
-        /// Trigger a DeepGet (i.e. invoke getting the current state from the device
-        /// NOTE: this endpoint is temporary and will likely change!
-        /// 
-        /// </summary>
-        /// <param name="deviceId"></param>
-        /// <param name="timeToLiveMilliSec"></param>
-        /// <returns></returns>
-        [Route("deepget")]
-        [HttpPost]
-        public async Task InvokeDeepRead([FromUri]string deviceId, [FromUri] long timeToLiveMilliSec)
-        {
-            // TODO - this is a temporary endpoint - it feels as though it should be just another command
-            // TODO - this should return the Accepted Response
-
-            var deviceMessage = DeviceMessage.CreateCommandRequest(deviceId, null, null, CommandRequestMessageSubType.ReportState, timeToLiveMilliSec);
-
-            await _communicationProvider.SendCloudToDeviceMessageAsync(deviceMessage);
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="deviceId">The id of the device</param>
@@ -92,7 +72,6 @@ namespace StateManagementServiceWebAPI.Controllers
 
         /// <summary>
         /// Add a new command
-        /// NB Currently this only supports creating a state request command
         /// </summary>
         /// <param name="deviceId">The id of the device</param>
         /// <param name="command"></param>
@@ -103,20 +82,20 @@ namespace StateManagementServiceWebAPI.Controllers
         [HandleInvalidModel]
         public async Task<IHttpActionResult> Post(
             [FromUri]string deviceId,
-            [FromBody] Models.CreateCommandRequestModel command) // TODO -= should be a CommandRequestModel
+            [FromBody] Models.CreateCommandRequestModel command) 
         {
-            // TODO - this should return the Accepted Response
+            var deviceMessage = DeviceMessage.CreateCommandRequest(
+                                                    deviceId, 
+                                                    metadata: command.AppMetadata?.ToString(), 
+                                                    values: command.Values?.ToString(),
+                                                    messageSubType: command.Subtype.Value,
+                                                    messageTtlMs: command.TimeToLiveMilliSec);
 
-            // TODO: add error handling. return HttpResponseException if StateValue is null (not well formated JSON)
-            var deviceMessage = await _stateProcessor.SetStateValueAsync(
-                deviceId,
-                command.AppMetadata.ToString(),
-                command.Values.ToString(),
-                command.TimeToLiveMilliSec);
+            await _communicationProvider.SendCloudToDeviceMessageAsync(deviceMessage);
 
             return Created(
                 Url.Link("GetCommand", new { commandId = deviceMessage.CorrelationId }),
-                new CommandModel(new[] { deviceMessage })); // TODO - should be a CommandResponse model
+                new CommandModel(new[] { deviceMessage })); 
         }
     }
 }

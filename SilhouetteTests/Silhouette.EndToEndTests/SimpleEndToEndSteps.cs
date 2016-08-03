@@ -123,6 +123,7 @@ namespace Silhouette.EndToEndTests
                 _stateRequestHttpResponse = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
                     new
                     {
+                        subtype = "setState",
                         appMetadata = new { testMetadata = _appMetadataValue },
                         values = new { test = _testStateValue },
                         timeToLiveMilliSec = timeoutMs

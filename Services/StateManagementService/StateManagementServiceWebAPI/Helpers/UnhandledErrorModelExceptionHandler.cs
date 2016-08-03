@@ -44,6 +44,11 @@ namespace StateManagementServiceWebAPI.Helpers
                     },
                     (ApiController)context.ExceptionContext.ControllerContext?.Controller);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override bool ShouldHandle(ExceptionHandlerContext context)
         {
             return context.ExceptionContext.ControllerContext != null; // our handling requires a controller context to send the response...
