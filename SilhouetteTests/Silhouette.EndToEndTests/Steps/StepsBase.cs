@@ -1,0 +1,79 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using TechTalk.SpecFlow;
+
+namespace Silhouette.EndToEndTests.Steps
+{
+    public class StepsBase
+    {
+        private List<string> _timeoutMessages = new List<string>();
+
+        protected void Log(string message)
+        {
+            Console.WriteLine($"\t{DateTime.Now:yyyy-MM-dd-HH-mm-ss} {message}");
+        }
+
+
+        [AfterScenario]
+        public void FlagTimeouts()
+        {
+            if (_timeoutMessages.Count > 0)
+            {
+                var timeoutMessageString = string.Join("\r\n", _timeoutMessages);
+
+                Assert.Inconclusive("One or more steps exceeded the target time for responses:\r\n" + timeoutMessageString);
+            }
+        }
+
+
+        /// <summary>
+        /// Add a timeout to flag at the end of the scenario without halting the test
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="memberName"></param>
+        protected void AddTimeoutMessage(string message, [CallerMemberName] string memberName = null)
+        {
+            _timeoutMessages.Add($"Step '{memberName}': {message}");
+        }
+
+
+        protected async Task<TResult> RetryAsync<TResult>(
+                            Func<CancellationToken, Task<TResult>> action,
+                            int timeoutInSeconds,
+                            double waitIntervalInSeconds = 0.25)
+        {
+            var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
+
+            TResult result;
+            while ((result = await action(cancellationToken)) == null)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(waitIntervalInSeconds), cancellationToken);
+            }
+
+            return result;
+        }
+
+
+        // The slightly odd style of test method (with RunAndBlock) is because SpecFlow currently doesn't support async tests _yet_ :-( 
+        // See https://github.com/techtalk/SpecFlow/issues/542
+        // Update: in PR https://github.com/techtalk/SpecFlow/pull/647
+        public void RunAndBlock(Func<Task> asyncAction)
+        {
+            try
+            {
+                asyncAction().Wait();
+            }
+            catch (AggregateException ae) when (ae.InnerException is AssertFailedException)
+            {
+                var afe = (AssertFailedException)ae.InnerException;
+                throw new AssertFailedException("Wrapped: " + afe.Message, afe); // wrap the exception so that the inner exception preserves the stack trace
+            }
+        }
+    }
+}

@@ -12,79 +12,43 @@ using System.Threading;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
-namespace Silhouette.EndToEndTests
+using Silhouette.EndToEndTests;
+
+namespace Silhouette.EndToEndTests.Steps
 {
     [Binding]
-    public class SimpleEndToEndSteps
+    public class SimpleEndToEndSteps : StepsBase
     {
         private const string BaseUrlAddress = "http://localhost:9013/v0.1/";
 
-        private List<string> _timeoutMessages = new List<string>();
         private readonly Random _random = new Random();
 
-        private DeviceSimulator _device;
-
-        private List<DeviceMessage> _deviceReceivedMessages;
-        private DeviceMessage _deviceReceivedMessage;
-        private Task _deviceReceivedMessageTask;
-        private TaskCompletionSource<int> _deviceReceivedMessageTaskCompletionSource;
-
-
-        private int _testStateValue;
         private string _appMetadataValue;
 
         private HttpResponseMessage _stateRequestHttpResponse;
         private string _commandUrl;
-        private string _stateRequestCorrelationId;
         private dynamic _command;
 
-
-
-        // The slightly odd style of test method is because SpecFlow currently doesn't support async tests _yet_ :-( 
-        // See https://github.com/techtalk/SpecFlow/issues/542
-        // Update: in PR https://github.com/techtalk/SpecFlow/pull/647
-
-        [AfterScenario]
-        public void FlagTimeouts()
+        public string CurrentCorrelationId
         {
-            if (_timeoutMessages.Count > 0)
-            {
-                var timeoutMessageString = string.Join("\r\n", _timeoutMessages);
-
-                Assert.Inconclusive("One or more steps exceeded the target time for responses:\r\n" + timeoutMessageString);
-            }
+            get { return (string)ScenarioContext.Current["CurrentCorrelationId"]; }
+            set { ScenarioContext.Current["CurrentCorrelationId"] = value; }
         }
+        public int TestStateValue
+        {
+            get { return (int)ScenarioContext.Current["TestStateValue"]; }
+            set { ScenarioContext.Current["TestStateValue"] = value; }
+        }
+
+
+
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // Given
         //
 
-        [Given]
-        public void Given_a_registered_and_connected_device_with_id_DEVICEID(string deviceId)
-        {
-            RunAndBlock(async () =>
-            {
-                _device = await GetDeviceAsync(deviceId);
-                _deviceReceivedMessages = new List<DeviceMessage>();
-                _device.ReceivedMessage += device_OnMessageReceived;
-                _device.StartReceiveMessageLoop();
-                Log($"\tStarted device '{deviceId}' and listening for messages");
-            });
-        }
-        private void device_OnMessageReceived(object sender, ReceiveMessageEventArgs e)
-        {
-            var device = (DeviceSimulator)sender;
-            Log($"Device '{device.DeviceId}', received message with correlationId '{e.Message.CorrelationId}'");
-            _deviceReceivedMessages.Add(e.Message);
-            e.Action = ReceiveMessageAction.None;
 
-            // trigger received task if requested
-            if (_deviceReceivedMessageTaskCompletionSource != null)
-            {
-                _deviceReceivedMessageTaskCompletionSource.SetResult(0);
-            }
-        }
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,17 +56,7 @@ namespace Silhouette.EndToEndTests
         // When
         //
 
-        [When]
-        public void When_the_device_reports_its_state()
-        {
-            RunAndBlock(async () =>
-            {
-                _testStateValue = _random.Next(1, 1000000);
-                Log($"Device reporting state: test value {_testStateValue}");
 
-                await _device.SendStateMessageAsync(new { test = _testStateValue });
-            });
-        }
         [When]
         public void When_we_wait_for_SECONDSTOWAIT_seconds(int secondsToWait)
         {
@@ -114,10 +68,10 @@ namespace Silhouette.EndToEndTests
         {
             RunAndBlock(async () =>
             {
-                _testStateValue = _random.Next(1, 1000000);
+                TestStateValue = _random.Next(1, 1000000);
                 _appMetadataValue = Guid.NewGuid().ToString();
 
-                Log($"Sending state request via API. Test value {_testStateValue}, metadata value {_appMetadataValue}");
+                Log($"Sending state request via API. Test value {TestStateValue}, metadata value {_appMetadataValue}");
 
                 var client = GetApiClient();
                 _stateRequestHttpResponse = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
@@ -125,30 +79,13 @@ namespace Silhouette.EndToEndTests
                     {
                         subtype = "setState",
                         appMetadata = new { testMetadata = _appMetadataValue },
-                        values = new { test = _testStateValue },
+                        values = new { test = TestStateValue },
                         timeToLiveMilliSec = timeoutMs
                     });
             });
         }
 
-        [When]
-        public void When_the_device_accepts_the_state_request()
-        {
-            RunAndBlock(async () =>
-            {
-                Assert.IsNotNull(_deviceReceivedMessage, "Should have a received message from a previous step");
-
-                Log($"Device completing message. CorrelationId '{_deviceReceivedMessage.CorrelationId}'");
-                await _device.CompleteReceivedMessageAsync(_deviceReceivedMessage);
-            });
-        }
-
-        [When]
-        public void When_we_set_up_a_trigger_for_the_device_receiving_messages()
-        {
-            _deviceReceivedMessageTaskCompletionSource = new TaskCompletionSource<int>();
-            _deviceReceivedMessageTask = _deviceReceivedMessageTaskCompletionSource.Task;
-        }
+       
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,7 +107,7 @@ namespace Silhouette.EndToEndTests
                 Assert.IsNotNull(state, "state should not be null");
                 Assert.IsNotNull(state.values, "state.values should not be null");
                 Assert.IsNotNull(state.values.test, "state.values.test should not be null");
-                Assert.AreEqual(_testStateValue, (int)state.values.test); // Check that we get the value back
+                Assert.AreEqual(TestStateValue, (int)state.values.test); // Check that we get the value back
             });
         }
 
@@ -197,7 +134,7 @@ namespace Silhouette.EndToEndTests
             RunAndBlock(async () =>
             {
                 
-                Func<dynamic, bool> messagePredicate = m => m.values != null && m.values.test != null && m.values.test == _testStateValue;
+                Func<dynamic, bool> messagePredicate = m => m.values != null && m.values.test != null && m.values.test == TestStateValue;
 
                 var stopwatch = Stopwatch.StartNew();
                 dynamic message = await RetryAsync(
@@ -225,9 +162,10 @@ namespace Silhouette.EndToEndTests
 
             RunAndBlock(async () =>
             {
+
                 Func<dynamic, bool> messagePredicate = m => m.type == "CommandRequest"
                                 && m.subtype == "SetState"
-                                && m.values != null && m.values.test != null && m.values.test == _testStateValue;
+                                && m.values != null && m.values.test != null && m.values.test == TestStateValue;
 
                 var stopwatch = Stopwatch.StartNew();
                 dynamic message = await RetryAsync(cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken)
@@ -237,10 +175,10 @@ namespace Silhouette.EndToEndTests
                 Assert.IsNotNull(message, "Message should not be null");
                 Log($"elapsed time: {elapsedTime}");
 
-                _stateRequestCorrelationId = (string)message.correlationId;
-                Log($"CorrelationId: {_stateRequestCorrelationId}");
+                CurrentCorrelationId = (string)message.correlationId;
+                Log($"CorrelationId: {CurrentCorrelationId}");
+                Assert.IsNotNull(CurrentCorrelationId, "CorrelationId should not be null");
 
-                Assert.IsNotNull(_stateRequestCorrelationId, "CorrelationId should not be null");
 
                 // Got here, so we got a message that looks ok...
                 var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
@@ -260,16 +198,16 @@ namespace Silhouette.EndToEndTests
 
             RunAndBlock(async () =>
             {
-                Assert.IsNotNull(_stateRequestCorrelationId, "Should have a correlationId saved from a previous step");
+                Assert.IsNotNull(CurrentCorrelationId, "Should have a correlationId saved from a previous step");
                 Func<dynamic, bool> messagePredicate = m => ((string)m.type) == "CommandResponse"
-                                && ((string)m.correlationId) == _stateRequestCorrelationId;
+                                && ((string)m.correlationId) == CurrentCorrelationId;
 
                 var stopwatch = Stopwatch.StartNew();
                 dynamic message = await RetryAsync(cancellationToken => FindMessageAsync(deviceId, messagePredicate, cancellationToken)
                                                 , timeout);
                 var elapsedTime = stopwatch.Elapsed;
 
-                Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{_stateRequestCorrelationId}'");
+                Assert.IsNotNull(message, $"No CommandResponse found with correlationId '{CurrentCorrelationId}'");
 
                 Log($"elapsed time: {elapsedTime}");
 
@@ -284,61 +222,14 @@ namespace Silhouette.EndToEndTests
             });
         }
 
-        [Then]
-        public void Then_the_device_receieves_the_state_request_within_TARGETTIME_seconds_but_wait_up_to_TIMEOUT_seconds_to_verify(int targetTime, int timeout)
-        {
-            // target time - this is the elapsed time that we assert against
-            // timeout - this is the maximum time that the test will wait. Useful to assess whether the message arrived or not
-
-            RunAndBlock(async () =>
-            {
-                var stopwatch = Stopwatch.StartNew();
-
-                var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeout));
-                var task = await Task.WhenAny(_deviceReceivedMessageTask, timeoutTask);
-                if (task == timeoutTask)
-                {
-                    Assert.Fail("Timed out waiting for device to receive message");
-                }
-                var elapsedTime = stopwatch.Elapsed;
-
-
-                Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
-
-                _deviceReceivedMessage = _deviceReceivedMessages[0];
-
-                Assert.AreEqual("CommandRequest", _deviceReceivedMessage.MessageType, "The message received by the device should have type CommandRequest");
-                Assert.AreEqual("SetState", _deviceReceivedMessage.MessageSubType, "The message received by the device should have subtype SetState");
-
-                dynamic body = JToken.Parse(_deviceReceivedMessage.Body);
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(body.test != null, "The message received by the device should have a test property");
-                Assert.AreEqual(_testStateValue, (int)body.test, "The message received by the device should hace the same property value as the requested state");
-
-                Log($"Elapsed time: {elapsedTime}");
-                // Got here, so the message looks ok
-                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
-                if (elapsedTime > targetTimeSpan)
-                {
-                    AddTimeoutMessage($"Waited {elapsedTime} for message. Target: {targetTimeSpan}");
-                }
-            });
-        }
-        [Then]
-        public void Then_the_device_message_matches_the_messages_API_correlationId()
-        {
-            Assert.IsNotNull(_deviceReceivedMessage, "This step requires a received message");
-            Assert.IsNotNull(_stateRequestCorrelationId, "This step requires that the correlation id has been retrieved");
-
-            Assert.AreEqual(_stateRequestCorrelationId, _deviceReceivedMessage.CorrelationId, "Device Message choudl match correlation id in API");
-        }
-
+       
         [Then]
         public void Then_the_command_API_contains_the_command_for_the_state_request_for_device_DEVICEID(string deviceId)
         {
             RunAndBlock(async () =>
             {
                 var client = GetApiClient();
-                Assert.IsFalse(string.IsNullOrEmpty(_stateRequestCorrelationId), "State request correlation id should be set before invoking this test method");
+                Assert.IsFalse(string.IsNullOrEmpty(CurrentCorrelationId), "State request correlation id should be set before invoking this test method");
                 Assert.IsFalse(string.IsNullOrEmpty(_commandUrl), "command url should be set before invoking this test method");
 
                 var response = await client.GetAsync(_commandUrl);
@@ -351,12 +242,12 @@ namespace Silhouette.EndToEndTests
                 Assert.IsNotNull(_command.request, "Command.Request should not be null");
 
                 Assert.IsNotNull(_command.id, "CorrelationId should not be null");
-                Assert.AreEqual(_stateRequestCorrelationId, (string)_command.id, "Command id should match state request correlation id");
+                Assert.AreEqual(CurrentCorrelationId, (string)_command.id, "Command id should match state request correlation id");
                 Assert.AreEqual("CommandRequest", (string)_command.request.type, "Command request type should be CommandRequest");
                 Assert.AreEqual("SetState", (string)_command.request.subtype, "Command request subtype should be SetState");
                 Assert.IsTrue(_command.request.values != null, "Command request values should be set");
                 Assert.IsTrue(_command.request.values.test != null, "Command request values test property should be set");
-                Assert.AreEqual(_testStateValue, (int)_command.request.values.test, "Command request values test property should be the requested value");
+                Assert.AreEqual(TestStateValue, (int)_command.request.values.test, "Command request values test property should be the requested value");
             });
         }
 
@@ -436,35 +327,6 @@ namespace Silhouette.EndToEndTests
         //
         // Helpers
         //
-        private static async Task<TResult> RetryAsync<TResult>(
-            Func<CancellationToken, Task<TResult>> action,
-            int timeoutInSeconds,
-            double waitIntervalInSeconds = 0.25)
-        {
-            var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
-
-            TResult result;
-            while ((result = await action(cancellationToken)) == null)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(waitIntervalInSeconds), cancellationToken);
-            }
-
-            return result;
-        }
-        private static async Task<dynamic> FindMessageWithRetryAsync(string deviceId, Func<dynamic, bool> messagePredicate, int timeoutInSeconds)
-        {
-            var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
-
-            dynamic message;
-            while ((message = await FindMessageAsync(deviceId, messagePredicate, cancellationToken)) == null)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(0.25), cancellationToken);
-            }
-
-            return message;
-        }
-
-
         private static Task<dynamic> FindMessageAsync(string deviceId, Func<dynamic, bool> messagePredicate)
         {
             return FindMessageAsync(deviceId, messagePredicate, CancellationToken.None);
@@ -505,37 +367,6 @@ namespace Silhouette.EndToEndTests
             return null;
         }
 
-
-        private void RunAndBlock(Func<Task> asyncAction)
-        {
-            try
-            {
-                asyncAction().Wait();
-            }
-            catch (AggregateException ae) when (ae.InnerException is AssertFailedException)
-            {
-                var afe = (AssertFailedException)ae.InnerException;
-                throw new AssertFailedException("Wrapped: " + afe.Message, afe); // wrap the exception so that the inner exception preserves the stack trace
-            }
-        }
-
-        private async Task<DeviceSimulator> GetDeviceAsync(string deviceId)
-        {
-            const string templateConnectionString = "%Silhouette_IotHubConnectionString%";
-            string connectionString = Environment.ExpandEnvironmentVariables(templateConnectionString);
-            if (connectionString == templateConnectionString)
-            {
-                throw new Exception("Ensure that the Silhouette_IotHubConnectionString environment variable is set");
-            }
-
-            var device = new DeviceSimulator(connectionString, deviceId);
-
-            await device.InitializeAsync();
-
-            return device;
-        }
-
-
         private static HttpClient GetApiClient()
         {
             return new HttpClient()
@@ -543,21 +374,5 @@ namespace Silhouette.EndToEndTests
                 BaseAddress = new Uri(BaseUrlAddress)
             };
         }
-
-        private static void Log(string message)
-        {
-            Console.WriteLine($"\t{DateTime.Now:yyyy-MM-dd-HH-mm-ss} {message}");
-        }
-
-        /// <summary>
-        /// Add a timeout to flag at the end of the scenario without halting the test
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="memberName"></param>
-        private void AddTimeoutMessage(string message, [CallerMemberName] string memberName = null)
-        {
-            _timeoutMessages.Add($"Step '{memberName}': {message}");
-        }
-
     }
 }

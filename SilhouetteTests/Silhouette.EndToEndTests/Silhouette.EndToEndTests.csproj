@@ -64,6 +64,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Steps\ApiCommandSteps.cs" />
+    <Compile Include="Steps\DeviceSteps.cs" />
     <Compile Include="GeneralApiBehaviour.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -74,8 +76,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SimpleEndToEnd.feature</DependentUpon>
     </Compile>
-    <Compile Include="SimpleEndToEndSteps.cs" />
+    <Compile Include="Steps\SimpleEndToEndSteps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Steps\StepsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
