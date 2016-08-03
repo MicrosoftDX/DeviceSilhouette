@@ -32,7 +32,7 @@ namespace DeviceRepository
         private readonly MessagePurger _messagePurger;
         private readonly double _messagesRetentionMilliseconds;
 
-        private IActorTimer _purgeTimer;
+        private IActorTimer _messagesTimer;
 
         public DeviceRepositoryActor(double messagesRetentionMilliseconds)
         {
@@ -40,13 +40,35 @@ namespace DeviceRepository
             _messagePurger = new MessagePurger(messagesRetentionMilliseconds);
         }
 
-        private async Task PurgeStates(object arg)
+        /// <summary>
+        /// Process Messages by the messages timer - persist and purge messages
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private async Task ProcessMessages(object arg)
         {
             var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
             if (stateMessages.HasValue)
             {              
                 var messages = stateMessages.Value;
+                PersistMessages(messages);
                 _messagePurger.Purge(messages);
+            }
+        }
+
+        private void PersistMessages(List<DeviceMessage> messages)
+        {
+            List<DeviceMessage> toPersist = messages.Where(m => !m.Persisted).ToList<DeviceMessage>();
+            StorageProviderServiceClient.StoreStateMessagesAsync(toPersist);
+            toPersist.ForEach(m => m.Persisted = true);
+        }
+
+        private async Task PersistMessage(DeviceMessage state)
+        {
+            if (!state.Persisted)
+            {
+                await StorageProviderServiceClient.StoreStateMessageAsync(state);
+                state.Persisted = true;
             }
         }
 
@@ -146,14 +168,8 @@ namespace DeviceRepository
             // check if this state is for this actor : DeviceID == ActorId
             if (message.DeviceId == this.GetActorId().ToString())
             {
-                message.Version = await GetNextMessageVersionAsync();
-
-                // persist the message and add to actor state (in parallel)
-                await Task.WhenAll(
-                    PersistMessage(message),
-                    AddDeviceMessageToMessageListAsync(message)
-                    );
-
+                message.Version = await GetNextMessageVersionAsync();                
+                await AddDeviceMessageToMessageListAsync(message);
                 return message;
             }
             else
@@ -178,16 +194,7 @@ namespace DeviceRepository
                 nextMessageVersion = 1;
             }
             return nextMessageVersion;
-        }
-
-        private async Task PersistMessage(DeviceMessage state)
-        {
-            if (!state.Persisted)
-            {
-                await StorageProviderServiceClient.StoreStateMessageAsync(state);
-                state.Persisted = true;
-            }
-        }
+        }        
 
         private async Task AddDeviceMessageToMessageListAsync(DeviceMessage state)
         {
@@ -205,15 +212,15 @@ namespace DeviceRepository
         protected override Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
-            _purgeTimer = RegisterTimer(PurgeStates, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+            _messagesTimer = RegisterTimer(ProcessMessages, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
             return Task.FromResult((object)null);
         }
 
         protected override Task OnDeactivateAsync()
         {
-            if (_purgeTimer != null)
+            if (_messagesTimer != null)
             {
-                UnregisterTimer(_purgeTimer);
+                UnregisterTimer(_messagesTimer);
             }
             return Task.FromResult((object)null);
         }

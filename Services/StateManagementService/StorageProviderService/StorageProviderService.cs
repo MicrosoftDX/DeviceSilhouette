@@ -40,7 +40,7 @@ namespace StorageProviderService
 
         public async Task StoreStateMessagesAsync(List<DeviceMessage> stateMessages)
         {
-            await _storageProvider.StoreStateMessagesAsync(stateMessages);
+            await _storageProvider.StoreStateMessagesAsync(stateMessages);            
         }
 
         /// <summary>

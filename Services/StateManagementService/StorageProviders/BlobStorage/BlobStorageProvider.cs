@@ -9,6 +9,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
+using Newtonsoft.Json;
 
 namespace PersistencyProviders.BlobStorage
 {
@@ -46,11 +47,13 @@ namespace PersistencyProviders.BlobStorage
 
         private MemoryStream SerializeToStream(DeviceMessage stateMessage)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(DeviceMessage));
+            var json = JsonConvert.SerializeObject(stateMessage);
             MemoryStream stream = new MemoryStream();
-            serializer.Serialize(XmlWriter.Create(stream), stateMessage);
-            stream.Seek(0, SeekOrigin.Begin);
-            return stream;
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(json);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;           
         }
 
         /// <summary>
@@ -70,8 +73,17 @@ namespace PersistencyProviders.BlobStorage
         /// <returns></returns>
         public async Task StoreStateMessagesAsync(List<DeviceMessage> stateMessages)
         {
-            var processingTasks = stateMessages.Select(internalStoreMessageAsync);
-            await Task.WhenAll(processingTasks);
+            DateTime now = DateTime.Now;
+            String blobName = String.Concat(now.Year, "/", now.Month, "/", now.Day, "/", now.Minute, "/", Guid.NewGuid().ToString(), ".log");
+
+            CloudBlobContainer container = _blobClient.GetContainerReference(_storageContainer);
+            CloudAppendBlob appendBlob = container.GetAppendBlobReference(blobName);
+            if (!appendBlob.Exists())
+            {
+                await appendBlob.CreateOrReplaceAsync();
+            }
+
+            stateMessages.ForEach(m => appendBlob.AppendFromStream(SerializeToStream(m)));                       
         }
 
         private async Task internalStoreMessageAsync(DeviceMessage stateMessage)
