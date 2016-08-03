@@ -16,6 +16,8 @@ using System.Web.Http.Results;
 using StateManagementServiceWebAPI.Filters;
 using StateManagementServiceWebAPI.Models.DeviceCommand;
 using StateManagementServiceWebAPI.Helpers;
+using StateManagementServiceWebAPI.Models.DeviceMessage;
+using System.Linq;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -27,6 +29,8 @@ namespace StateManagementServiceWebAPI.Controllers
     {
         private IStateProcessorRemoting _stateProcessor;
         private ICommunicationProviderRemoting _communicationProvider;
+
+        private const int CommandResultPageSize = 10;
 
         /// <summary>
         /// Lazy DI constructor ;-)
@@ -62,7 +66,7 @@ namespace StateManagementServiceWebAPI.Controllers
         public async Task<IHttpActionResult> Get([FromUri] string deviceId,
             string commandId)
         {
-            var messages = await _stateProcessor.GetMessagesByCorrelationIdAsync(deviceId, commandId);
+            var messages = await _stateProcessor.GetMessagesWithCorrelationIdAsync(deviceId, commandId);
             if (messages == null || messages.Length == 0)
             {
                 return this.NotFound(new ErrorModel
@@ -73,6 +77,28 @@ namespace StateManagementServiceWebAPI.Controllers
             }
             return Ok(new CommandModel(messages));
         }
+
+        /// <summary>
+        /// Get messages reported by the device
+        /// </summary>
+        /// <param name="deviceId">The id of the device</param>
+        /// <param name="continuationToken"></param>
+        /// <returns></returns>
+        [Route("", Name = "GetCommands")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ListModel<CommandModel>))]
+        public async Task<IHttpActionResult> GetCommands(string deviceId, [FromUri]string continuationToken = null)
+        {
+            IHttpActionResult result;
+            var commandMessages = await _stateProcessor.GetCommandMessagessAsync(deviceId, CommandResultPageSize, continuationToken);
+            var resultModel = new ListModel<CommandModel>
+            {
+                Values = commandMessages?.Messages?.Select(m=> new CommandModel(m)),
+                NextLink = continuationToken == null ? null : Url.Link("getCommands", new { deviceId, continuationToken = commandMessages.Continuation })
+            };
+            result = Ok(resultModel);
+            return result;
+        }
+
 
 
         /// <summary>

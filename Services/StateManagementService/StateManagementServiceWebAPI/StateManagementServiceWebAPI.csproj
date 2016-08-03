@@ -120,7 +120,7 @@
     <Compile Include="Models\DeviceMessage\MessageModel.cs" />
     <Compile Include="Models\DeviceState\DeviceStateModel.cs" />
     <Compile Include="Models\ErrorModel.cs" />
-    <Compile Include="Models\DeviceMessage\MessageListModel.cs" />
+    <Compile Include="Models\MessageListModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\DeviceStateController.cs" />
     <Compile Include="OwinCommunicationListener.cs" />

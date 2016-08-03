@@ -79,18 +79,18 @@ namespace StateManagementServiceWebAPI.Controllers
         }
 
         /// <summary>
-        /// Get the last state reported by the device
+        /// Get messages reported by the device
         /// </summary>
         /// <param name="deviceId">The id of the device</param>
         /// <param name="continuationToken"></param>
         /// <returns></returns>
         [Route("", Name = "GetMessages")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MessageListModel))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ListModel<MessageModel>))]
         public async Task<IHttpActionResult> GetMessages(string deviceId, [FromUri]int? continuationToken = null)
         {
             IHttpActionResult result;
             var messages = await _stateProcessor.GetMessagesAsync(deviceId, MessageResultPageSize, continuationToken);
-            var resultModel = new MessageListModel
+            var resultModel = new ListModel<MessageModel>
             {
                 Values = messages?.Messages?.Select(ToMessageModel),
                 NextLink = continuationToken == null ? null : Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })

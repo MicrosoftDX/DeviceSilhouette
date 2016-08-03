@@ -47,7 +47,14 @@ namespace DeviceRepository.Interfaces
         /// </summary>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string correlationId);
+        Task<DeviceMessage[]> GetMessagesWithCorrelationIdAsync(string correlationId);
+        /// <summary>
+        /// Get command messages
+        /// </summary>
+        /// <param name="pageSize"></param>
+        /// <param name="continuationToken"></param>
+        /// <returns></returns>
+        Task<CommandList> GetCommandMessagesAsync(int pageSize, string continuationToken);
     }
 
     public class MessageList
@@ -60,5 +67,17 @@ namespace DeviceRepository.Interfaces
         /// The continuation token to pass to retrieve the next set of messages
         /// </summary>
         public int? Continuation { get; set; }
+    }
+
+    public class CommandList
+    {
+        /// <summary>
+        /// The command messages. Each item in the list is an array containing the messages for a command
+        /// </summary>
+        public List<DeviceMessage[]> Messages { get; set; }
+        /// <summary>
+        /// The continuation token to pass to retrieve the next set of commands
+        /// </summary>
+        public string Continuation { get; set; }
     }
 }

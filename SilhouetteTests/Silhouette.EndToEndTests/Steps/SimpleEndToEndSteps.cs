@@ -221,6 +221,21 @@ timeout
             Assert.AreEqual("Acknowledged", (string)_command.response.subtype, "Command.Response.Subtype should be Acknowledged");
         }
 
+        [Then]
+        public void Then_the_commands_API_contains_the_command_for_the_state_request_for_device_DEVICEID(string deviceId)
+        {
+            Func<dynamic, bool> commandPredicate = c => c.request.subtype == "SetState"
+                          && c.request.values != null && c.request.values.test != null && c.request.values.test == TestStateValue;
+
+            dynamic command = RunAndBlock(
+                async () => await FindCommandAsync(deviceId, commandPredicate)
+            );
+
+            Assert.IsNotNull(command, "Command should not be null");
+
+            string commandId = (string)command.id;
+            Assert.AreEqual(CurrentCorrelationId, commandId, "Command.Id should match correlation id");
+        }
 
 
         [Then]
@@ -262,8 +277,7 @@ timeout
                 _lastHttpResponse.EnsureSuccessStatusCode();
                 dynamic messages = await _lastHttpResponse.Content.ReadAsAsync<dynamic>();
 
-                object messageList = messages.values;
-                Assert.IsNull(messageList, "Response.values should be null");
+                Assert.IsTrue(messages.values == null, "Response should be null");
             });
         }
 
@@ -321,6 +335,48 @@ timeout
                     return message;
                 }
                 messagesUrl = (string)((JToken)messages)["@nextLink"];
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            return null;
+        }
+
+        private static Task<dynamic> FindCommandAsync(
+            string deviceId,
+            Func<dynamic, bool> commandPredicate)
+        {
+            return FindCommandAsync(deviceId, commandPredicate, CancellationToken.None);
+        }
+        private static async Task<dynamic> FindCommandAsync(
+           string deviceId,
+           Func<dynamic, bool> commandPredicate,
+           CancellationToken cancellationToken)
+        {
+            var client = GetApiClient();
+            string commandsUrl = $"devices/{deviceId}/commands";
+            Func<dynamic, dynamic> findCommandInCommandList = commandList =>
+            {
+                foreach (dynamic m in commandList)
+                {
+                    if (commandPredicate(m))
+                    {
+                        return m;
+                    }
+                }
+                return null;
+            };
+
+            while (!string.IsNullOrEmpty(commandsUrl))
+            {
+                var response = await client.GetAsync(commandsUrl, cancellationToken);
+                response.EnsureSuccessStatusCode();
+                dynamic commands = await response.Content.ReadAsAsync<dynamic>(cancellationToken);
+                dynamic command = findCommandInCommandList(commands.values);
+                if (command != null)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    return command;
+                }
+                commandsUrl = (string)((JToken)commands)["@nextLink"];
             }
             cancellationToken.ThrowIfCancellationRequested();
             return null;

@@ -150,7 +150,7 @@ namespace DeviceRepository
             };
 
         }
-        public async Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string correlationId)
+        public async Task<DeviceMessage[]> GetMessagesWithCorrelationIdAsync(string correlationId)
         {
             var messages = await GetDeviceMessagesAsync();
             if (messages == null)
@@ -162,6 +162,59 @@ namespace DeviceRepository
                         .OrderBy(m => m.Timestamp)
                         .ToArray();
         }
+        public async Task<CommandList> GetCommandMessagesAsync(int pageSize, string continuationToken)
+        {
+            var messages = await GetDeviceMessagesAsync();
+            if (messages == null)
+            {
+                return null;
+            }
+            var responseLookup = new Dictionary<string, DeviceMessage>(); // key = correlationId, value= = command response message
+            var messagesToReturn = new List<DeviceMessage[]>(pageSize+1);
+            bool reachedContinuationToken = string.IsNullOrEmpty(continuationToken); // if no continuationToken then start taking messages
+
+            // iterate messages in reverse
+            // store responses by correlation id as we go
+            // skip command requests until we find the continuation token
+            // then take (pagesize + 1) requests (with correlated response)
+            for (int i = messages.Count - 1; i >= 0; i--)
+            {
+                var message = messages[i];
+                if (message.MessageType == MessageType.CommandRequest)
+                {
+                    if (reachedContinuationToken || message.CorrelationId == continuationToken)
+                    {
+                        reachedContinuationToken = true;
+                        DeviceMessage responseMessage;
+                        responseLookup.TryGetValue(message.CorrelationId, out responseMessage);
+                        messagesToReturn.Add(new[] { message, responseMessage });
+
+                        if (messagesToReturn.Count == pageSize+1) // take one extra to get the next continuation token!
+                        {
+                            break; 
+                        }
+                    }
+
+                }
+                else if (message.MessageType == MessageType.CommandResponse)
+                {
+                    responseLookup.Add(message.CorrelationId, message);
+                }
+            }
+
+            string newContinuation = null;
+            if (messagesToReturn.Count > pageSize)
+            {
+                newContinuation = messagesToReturn[pageSize][0].CorrelationId; // set next continuation value to be the Version of the next item in the list
+                messagesToReturn.RemoveAt(pageSize);
+            }
+            return new CommandList
+            {
+                Messages = messagesToReturn,
+                Continuation = newContinuation
+            };
+        }
+
 
         public async Task<DeviceMessage> StoreDeviceMessageAsync(DeviceMessage message)
         {
@@ -224,7 +277,6 @@ namespace DeviceRepository
             }
             return Task.FromResult((object)null);
         }
-
 
     }
 }

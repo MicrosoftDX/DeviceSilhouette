@@ -44,7 +44,15 @@ namespace StateProcessorService
         /// <param name="deviceId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string deviceId, string correlationId);
+        Task<DeviceMessage[]> GetMessagesWithCorrelationIdAsync(string deviceId, string correlationId);
+        /// <summary>
+        /// Get Paged command messages
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="commandResultPageSize"></param>
+        /// <param name="continuationToken"></param>
+        /// <returns></returns>
+        Task<CommandList> GetCommandMessagessAsync(string deviceId, int pageSize, string continuationToken);
     }
 
     /// <summary>
@@ -121,10 +129,16 @@ namespace StateProcessorService
             return await silhouette.GetMessagesAsync(pageSize, continuation);
         }
 
-        public async Task<DeviceMessage[]> GetMessagesByCorrelationIdAsync(string deviceId, string correlationId)
+        public async Task<DeviceMessage[]> GetMessagesWithCorrelationIdAsync(string deviceId, string correlationId)
         {
             IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
-            return await silhouette.GetMessagesByCorrelationIdAsync(correlationId);
+            return await silhouette.GetMessagesWithCorrelationIdAsync(correlationId);
+        }
+
+        public async Task<CommandList> GetCommandMessagessAsync(string deviceId, int pageSize, string continuationToken)
+        {
+            IDeviceRepositoryActor silhouette = GetDeviceActor(deviceId);
+            return await silhouette.GetCommandMessagesAsync(pageSize, continuationToken);
         }
 
 
@@ -147,6 +161,5 @@ namespace StateProcessorService
             IDeviceRepositoryActor silhouette = ActorProxy.Create<IDeviceRepositoryActor>(actorId, RepositoryUri);
             return silhouette;
         }
-
     }
 }

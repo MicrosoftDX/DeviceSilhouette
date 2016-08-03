@@ -80,6 +80,8 @@ this.ScenarioSetup(scenarioInfo);
 #line 6
  testRunner.And("the message API returns NotFound for device invalidDeviceId for message version 1" +
                     "23", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 7
+ testRunner.Then("the commands API contains no commands for device invalidDeviceId", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 8
  testRunner.And("the command API returns NotFound for device invalidDeviceId for command id invali" +
                     "dId", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");

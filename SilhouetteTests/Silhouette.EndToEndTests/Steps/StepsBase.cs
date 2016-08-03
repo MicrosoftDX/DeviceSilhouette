@@ -77,6 +77,19 @@ namespace Silhouette.EndToEndTests.Steps
                 throw new AssertFailedException("Wrapped: " + afe.Message, afe); // wrap the exception so that the inner exception preserves the stack trace
             }
         }
+        public TResult RunAndBlock<TResult>(Func<Task<TResult>> asyncFunc)
+        {
+            try
+            {
+                return asyncFunc().Result;
+            }
+            catch (AggregateException ae) when (ae.InnerException is AssertFailedException)
+            {
+                var afe = (AssertFailedException)ae.InnerException;
+                throw new AssertFailedException("Wrapped: " + afe.Message, afe); // wrap the exception so that the inner exception preserves the stack trace
+            }
+        }
+
 
         public TResult RunAndBlockWithTargetTime<TResult>(int targetTime,
             string actionDescription,

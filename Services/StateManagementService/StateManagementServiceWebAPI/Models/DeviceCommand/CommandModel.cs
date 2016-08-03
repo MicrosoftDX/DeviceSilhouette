@@ -42,8 +42,8 @@ namespace StateManagementServiceWebAPI.Models.DeviceCommand
             {
                 throw new ArgumentException("messages should be an array with 1 or 2 elements");
             }
-            var request = messages.First(m=>m.MessageType == MessageType.CommandRequest);
-            var response = messages.FirstOrDefault(m => m.MessageType == MessageType.CommandResponse);
+            var request = messages.First(m => m != null && m.MessageType == MessageType.CommandRequest);
+            var response = messages.FirstOrDefault(m => m != null && m.MessageType == MessageType.CommandResponse);
 
             Id = request.CorrelationId;
             DeviceId = request.DeviceId;

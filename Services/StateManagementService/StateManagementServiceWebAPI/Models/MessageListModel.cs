@@ -10,13 +10,13 @@ namespace StateManagementServiceWebAPI.Models.DeviceMessage
     /// <summary>
     /// 
     /// </summary>
-    public class MessageListModel
+    public class ListModel<TItem>
     {
 
         /// <summary>
         /// The messages in the current page
         /// </summary>
-        public IEnumerable<MessageModel> Values { get; set; }
+        public IEnumerable<TItem> Values { get; set; }
         /// <summary>
         /// The link to use to get the next page of messages
         /// </summary>

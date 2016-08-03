@@ -30,7 +30,7 @@
         </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.GetMessages(System.String,System.Nullable{System.Int32})">
             <summary>
-            Get the last state reported by the device
+            Get messages reported by the device
             </summary>
             <param name="deviceId">The id of the device</param>
             <param name="continuationToken"></param>
@@ -59,6 +59,14 @@
             </summary>
             <param name="deviceId">The id of the device</param>
             <param name="commandId">The id of the command to retrieve (this is the correlation id for the command messages)</param>
+            <returns></returns>
+        </member>
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.GetCommands(System.String,System.String)">
+            <summary>
+            Get messages reported by the device
+            </summary>
+            <param name="deviceId">The id of the device</param>
+            <param name="continuationToken"></param>
             <returns></returns>
         </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceCommandController.Post(System.String,StateManagementServiceWebAPI.Models.CreateCommandRequestModel)">
@@ -347,17 +355,17 @@
             The message time-to-live (TTL) in milliseconds
             </summary>
         </member>
-        <member name="T:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel">
+        <member name="T:StateManagementServiceWebAPI.Models.DeviceMessage.ListModel`1">
             <summary>
             
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel.Values">
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.ListModel`1.Values">
             <summary>
             The messages in the current page
             </summary>
         </member>
-        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.MessageListModel.NextLink">
+        <member name="P:StateManagementServiceWebAPI.Models.DeviceMessage.ListModel`1.NextLink">
             <summary>
             The link to use to get the next page of messages
             </summary>
