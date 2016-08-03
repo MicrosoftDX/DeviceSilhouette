@@ -25,15 +25,13 @@ namespace StateManagementServiceWebAPI.Controllers
     public class DeviceStateController : ApiController
     {
         private readonly IStateProcessorRemoting _stateProcessor;
-        private readonly ICommunicationProviderRemoting _communicationProvider;
 
         /// <summary>
         /// Lazy DI constructor ;-)
         /// </summary>
         public DeviceStateController()
             : this(
-                  stateProcessor: ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
-                  communicationProvider: ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"))
+                  stateProcessor: ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"))
                   )
         {
 
@@ -43,10 +41,9 @@ namespace StateManagementServiceWebAPI.Controllers
         /// </summary>
         /// <param name="stateProcessor"></param>
         /// <param name="communicationProvider"></param>
-        public DeviceStateController(IStateProcessorRemoting stateProcessor, ICommunicationProviderRemoting communicationProvider)
+        public DeviceStateController(IStateProcessorRemoting stateProcessor)
         {
             _stateProcessor = stateProcessor;
-            _communicationProvider = communicationProvider;
         }
 
         /// <summary>

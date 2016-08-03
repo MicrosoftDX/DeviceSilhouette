@@ -27,7 +27,6 @@ namespace StateManagementServiceWebAPI.Controllers
     public class DeviceMessageController : ApiController
     {
         private readonly IStateProcessorRemoting _stateProcessor;
-        private readonly ICommunicationProviderRemoting _communicationProvider;
 
         private const int MessageResultPageSize = 10;
 
@@ -36,8 +35,7 @@ namespace StateManagementServiceWebAPI.Controllers
         /// </summary>
         public DeviceMessageController()
             : this(
-                  stateProcessor: ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService")),
-                  communicationProvider: ServiceProxy.Create<ICommunicationProviderRemoting>(new Uri("fabric:/StateManagementService/CommunicationProviderService"))
+                  stateProcessor: ServiceProxy.Create<IStateProcessorRemoting>(new Uri("fabric:/StateManagementService/StateProcessorService"))
                   )
         {
 
@@ -46,11 +44,9 @@ namespace StateManagementServiceWebAPI.Controllers
         /// 
         /// </summary>
         /// <param name="stateProcessor"></param>
-        /// <param name="communicationProvider"></param>
-        public DeviceMessageController(IStateProcessorRemoting stateProcessor, ICommunicationProviderRemoting communicationProvider)
+        public DeviceMessageController(IStateProcessorRemoting stateProcessor)
         {
             _stateProcessor = stateProcessor;
-            _communicationProvider = communicationProvider;
         }
 
         /// <summary>

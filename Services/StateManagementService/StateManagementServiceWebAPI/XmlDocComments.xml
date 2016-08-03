@@ -14,12 +14,11 @@
             Lazy DI constructor ;-)
             </summary>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.#ctor(StateProcessorService.IStateProcessorRemoting,CommunicationProviderService.ICommunicationProviderRemoting)">
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.#ctor(StateProcessorService.IStateProcessorRemoting)">
             <summary>
             
             </summary>
             <param name="stateProcessor"></param>
-            <param name="communicationProvider"></param>
         </member>
         <member name="M:StateManagementServiceWebAPI.Controllers.DeviceMessageController.GetMessage(System.String,System.Int32)">
             <summary>
@@ -80,7 +79,7 @@
             Lazy DI constructor ;-)
             </summary>
         </member>
-        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.#ctor(StateProcessorService.IStateProcessorRemoting,CommunicationProviderService.ICommunicationProviderRemoting)">
+        <member name="M:StateManagementServiceWebAPI.Controllers.DeviceStateController.#ctor(StateProcessorService.IStateProcessorRemoting)">
             <summary>
             
             </summary>
