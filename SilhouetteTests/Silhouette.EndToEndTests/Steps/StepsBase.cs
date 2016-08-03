@@ -38,9 +38,10 @@ namespace Silhouette.EndToEndTests.Steps
         /// </summary>
         /// <param name="message"></param>
         /// <param name="memberName"></param>
-        protected void AddTimeoutMessage(string message, [CallerMemberName] string memberName = null)
+        protected void AddTimeoutMessage(string message)
         {
-            _timeoutMessages.Add($"Step '{memberName}': {message}");
+            var stepText = ScenarioContext.Current.StepContext.StepInfo.Text;
+            _timeoutMessages.Add($"Step '{stepText}': {message}");
         }
 
 
@@ -105,7 +106,7 @@ namespace Silhouette.EndToEndTests.Steps
                 if (elapsedTime > targetTimeSpan)
                 {
                     var stepText = ScenarioContext.Current.StepContext.StepInfo.Text;
-                    AddTimeoutMessage($"Step '{stepText}', action '{actionDescription}' took {elapsedTime} with a target of {targetTimeSpan}");
+                    AddTimeoutMessage($"action '{actionDescription}' took {elapsedTime} with a target of {targetTimeSpan}");
                 }
                 return result;
             }

@@ -17,6 +17,7 @@ using StateManagementServiceWebAPI.Filters;
 using StateManagementServiceWebAPI.Helpers;
 using StateManagementServiceWebAPI.Models.DeviceMessage;
 using System.Linq;
+using CommonUtils;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -92,7 +93,7 @@ namespace StateManagementServiceWebAPI.Controllers
             var messages = await _stateProcessor.GetMessagesAsync(deviceId, MessageResultPageSize, continuationToken);
             var resultModel = new ListModel<MessageModel>
             {
-                Values = messages?.Messages?.Select(ToMessageModel),
+                Values = messages?.Messages?.Select(ToMessageModel) ?? Enumerable.Empty<MessageModel>(),
                 NextLink = continuationToken == null ? null : Url.Link("GetMessages", new { deviceId, continuationToken = messages.Continuation })
             };
             result = Ok(resultModel);

@@ -18,6 +18,7 @@ using StateManagementServiceWebAPI.Models.DeviceCommand;
 using StateManagementServiceWebAPI.Helpers;
 using StateManagementServiceWebAPI.Models.DeviceMessage;
 using System.Linq;
+using CommonUtils;
 
 namespace StateManagementServiceWebAPI.Controllers
 {
@@ -92,7 +93,7 @@ namespace StateManagementServiceWebAPI.Controllers
             var commandMessages = await _stateProcessor.GetCommandMessagessAsync(deviceId, CommandResultPageSize, continuationToken);
             var resultModel = new ListModel<CommandModel>
             {
-                Values = commandMessages?.Messages?.Select(m=> new CommandModel(m)),
+                Values = commandMessages?.Messages?.Select(m=> new CommandModel(m)) ?? Enumerable.Empty<CommandModel>(),
                 NextLink = continuationToken == null ? null : Url.Link("getCommands", new { deviceId, continuationToken = commandMessages.Continuation })
             };
             result = Ok(resultModel);

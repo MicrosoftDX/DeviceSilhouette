@@ -249,7 +249,8 @@ timeout
                 _lastHttpResponse.EnsureSuccessStatusCode();
                 dynamic messages = await _lastHttpResponse.Content.ReadAsAsync<dynamic>();
 
-                Assert.IsTrue(messages.values == null, "Response.values should be null");
+                Assert.IsTrue(messages.values != null, "Response.values should not be null");
+                Assert.AreEqual(0, messages.values.Count, "Response.values should have no items");
             });
         }
 
@@ -275,9 +276,10 @@ timeout
                 string commandsUrl = $"devices/{deviceId}/commands";
                 _lastHttpResponse = await client.GetAsync(commandsUrl);
                 _lastHttpResponse.EnsureSuccessStatusCode();
-                dynamic messages = await _lastHttpResponse.Content.ReadAsAsync<dynamic>();
+                dynamic commands = await _lastHttpResponse.Content.ReadAsAsync<dynamic>();
 
-                Assert.IsTrue(messages.values == null, "Response should be null");
+                Assert.IsTrue(commands.values != null, "Response.values should not be null");
+                Assert.AreEqual(0, commands.values.Count, "Response.values should have no items");
             });
         }
 
@@ -328,6 +330,10 @@ timeout
                 var response = await client.GetAsync(messagesUrl, cancellationToken);
                 response.EnsureSuccessStatusCode();
                 dynamic messages = await response.Content.ReadAsAsync<dynamic>(cancellationToken);
+                if (messages.values == null)
+                {
+                    return null;
+                }
                 dynamic message = findMessageInMessagesList(messages.values);
                 if (message != null)
                 {
