@@ -8,11 +8,11 @@ The Device Silhouette solution is comprised from the following components:
 
 Service Fabric microservices:
 
-1. Device State Managment Service REST API
-2. State Processor Service
-2. Device State Repository
-4. Feedback Service
-5. Device Communication Provider
+1. Device State Managment Service REST API (Stateless)
+2. State Processor Service (Stateless)
+2. Device State Repository (statefull Actor based)
+4. Feedback Service (Stateless)
+5. Device Communication Provider (Stateless)
 
 The State Processor Service main functionality is to receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Services, it also receives requests from devices through the Device Communication Provider endpoints. Then it execute the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
 
