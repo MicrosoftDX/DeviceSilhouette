@@ -19,6 +19,10 @@ The State Processor Service main functionality is to receive state get/set reque
 The Device Communication Provider is an interface to enable the communication between the Cloud and the Device. It's purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
 
 
+The Device State Repository is a Cloud Service, extension to Azure IoT Hub, that holds the current state of devices managed by IoT Hub. A state is a set of user defined key-value properties. For example a device state may be the set of the following properties
+
+
+
 
 
 
