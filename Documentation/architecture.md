@@ -1,5 +1,9 @@
 # Architecture
 
+
+
+# TODO: ADD DIAGRAM HERE
+
 ## Main Components:
 
 The Device Silhouette solution is comprised from the following components:
