@@ -2,7 +2,9 @@
 
 **Direction:** C2D
 
-**Message:** "State:Set"
+**MessageType:** "CommandRequest"
+
+**MessageSubType:** "SetState"
 
 **Flow:**
 
@@ -84,7 +86,9 @@
 
 **Direction:** C2D
 
-**Message:** "State:Get"
+**MessageType:** "CommandRequest"
+
+**MessageSubType:** "ReportState"
 
 **Flow:**
 
@@ -162,11 +166,13 @@
 
 **Direction:** D2C 
 
-**Message:** "State:Get"
+**MessageType:** "InquiryRequest"
+
+**MessageSubType:** "GetState"
 
 **Flow:**
 
-(1) Device write a message from type in "Send D2C" endpoint. MessageType=InquiryRequestand MessageSubType=GetState  
+(1) Device write a message from type in "Send D2C" endpoint. MessageType=InquiryRequest and MessageSubType=GetState  
 
 (2) Message received on the "Receive D2C" endpoint
 
@@ -208,7 +214,9 @@
 
 **Direction:** D2C 
 
-**Message:** "State:Set"
+**MessageType:** "Report"
+
+**MessageSubType:** "State"
 
 **Flow:**
 
