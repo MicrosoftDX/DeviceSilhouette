@@ -12,9 +12,11 @@ Service Fabric microservices:
 2. State Processor Service
 2. Device State Repository
 4. Feedback Service
-5. 
+5. Device Communication Provider
 
 The State Processor Service main functionality is to receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Services, it also receives requests from devices through the Device Communication Provider endpoints. Then it execute the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
+
+The Device Communication Provider is an interface to enable the communication between the Cloud and the Device. It's purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
 
 
 
