@@ -1,5 +1,7 @@
 ### C2D Update State
 
+**Purpose:** Cloud send the device a command to change it's state.
+
 **Direction:** C2D
 
 **MessageType:** "CommandRequest"
@@ -84,6 +86,8 @@
 
 ### C2D Get State
 
+**Purpose:** Cloud send the device a message, asking to reports its current state.
+
 **Direction:** C2D
 
 **MessageType:** "CommandRequest"
@@ -164,6 +168,8 @@
 
 ### D2C Get State
 
+**Purpose:** Device query the cloud to get its last reported state.
+
 **Direction:** D2C 
 
 **MessageType:** "InquiryRequest"
@@ -211,6 +217,8 @@
 
 
 ### D2C Set State
+
+**Purpose:** Device updates the cloud with its current state.
 
 **Direction:** D2C 
 
