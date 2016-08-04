@@ -12,6 +12,9 @@ Service Fabric microservices:
 2. State Processor Service
 2. Device State Repository
 4. Feedback Service
+5. 
+
+The State Processor Service main functionality is to receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Services, it also receives requests from devices through the Device Communication Provider endpoints. Then it execute the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
 
 
 
