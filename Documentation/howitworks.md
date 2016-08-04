@@ -26,21 +26,9 @@ Detailed explanation about messages lifecycle in Silhouette see [Messages Flow](
 ## Messages purging and persistancy 
 
 
- - Long term persistency and analytics 
 For long term access, and to allow analytics, messages are being output to external storage. Currently to blob storage, but it can be extended to a different storage type.
 
-- Purging the Silhouette state:
-In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted.
-
-## Purging actor state
-In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted. Messages are being only after  they are known to have been persisted to long-term storage.
-
-Alternatively, having a minimum number of retained messages could work.
-
-Either way, how long the retention period should be probably or how large the minimum number of messages should be will likely depend on the scenario. For scenarios with a high frequency of messages have a long period/high number probably doesn't add any value and would have a negative impact on performance. As a result, it would make sense to provide a configuration option for this.
-
-
-
+In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted. The message retention period and the number of maximum messages to retain are configurabe.
 
 
 
