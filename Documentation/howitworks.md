@@ -26,21 +26,14 @@ Detailed explanation about messages lifecycle in Silhouette see [Messages Flow](
 ## Messages purging and persistancy 
 
 
-## Long term persistency and analytics 
-For long term access (and to allow analytics), messages are being output to external storage. Currently to blob storage, but it can be extended to a different storage type.
+ - Long term persistency and analytics 
+For long term access, and to allow analytics, messages are being output to external storage. Currently to blob storage, but it can be extended to a different storage type.
 
-## Purging actor state
+- Purging the Silhouette state:
 In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted.
 
-This section documents the requirements for purging state from the Silhouette:
-
-* Messages should only be purged once they are known to have been persisted to long-term storage.
-* There should be at least 1 reported state retained (assuming there are any to start with). Note that this applies in v1 with the constraint that state reports should contain the full state. This requirement may not be sufficient if/when the constraint is relaxed)
-* Any command request message without a response message should be retained.
-* If retaining a message then any other messages with the same correlation id must be retained. This is to allow an application to correctly reason about state
-* If retaining a message then all later messages must be kept. Again, this is to allow an application to correctly reason about state
-
-We should consider having a retention period for which all messages will be retained. E.g. if the retention period is 30 minutes, then all messages in the last 30 minutes will be retained. There may well be additional retained messages based on the above rules.
+## Purging actor state
+In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted. Messages are being only after  they are known to have been persisted to long-term storage.
 
 Alternatively, having a minimum number of retained messages could work.
 
