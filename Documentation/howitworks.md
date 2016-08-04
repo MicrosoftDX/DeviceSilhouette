@@ -19,8 +19,10 @@ A message sent to/from Silhouette has a specific direction, out of the two follo
 Detailed explanation about messages lifecycle in Silhouette see [Messages Flow](messagesflow.md)
 
 
+## Web API 
 
-
+External applications should interact with the Silhoutte through the REST API.
+The REST API provides the functionality to retreive information about the the most current state of the device and to send commands to the device.
 
 
 ## Messages purging and persistancy 
@@ -32,6 +34,6 @@ In addition to persistency, the Silhouette state needs to be purged periodically
 
 
 
-## Web API 
+
 ## Example scenarios
 
