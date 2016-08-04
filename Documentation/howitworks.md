@@ -24,6 +24,33 @@ Detailed explanation about messages lifecycle in Silhouette see [Messages Flow](
 
 
 ## Messages purging and persistancy 
+
+
+## Long term persistency and analytics 
+For long term access (and to allow analytics), messages are being output to external storage. Currently to blob storage, but it can be extended to a different storage type.
+
+## Purging actor state
+In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted.
+
+This section documents the requirements for purging state from the Silhouette:
+
+* Messages should only be purged once they are known to have been persisted to long-term storage.
+* There should be at least 1 reported state retained (assuming there are any to start with). Note that this applies in v1 with the constraint that state reports should contain the full state. This requirement may not be sufficient if/when the constraint is relaxed)
+* Any command request message without a response message should be retained.
+* If retaining a message then any other messages with the same correlation id must be retained. This is to allow an application to correctly reason about state
+* If retaining a message then all later messages must be kept. Again, this is to allow an application to correctly reason about state
+
+We should consider having a retention period for which all messages will be retained. E.g. if the retention period is 30 minutes, then all messages in the last 30 minutes will be retained. There may well be additional retained messages based on the above rules.
+
+Alternatively, having a minimum number of retained messages could work.
+
+Either way, how long the retention period should be probably or how large the minimum number of messages should be will likely depend on the scenario. For scenarios with a high frequency of messages have a long period/high number probably doesn't add any value and would have a negative impact on performance. As a result, it would make sense to provide a configuration option for this.
+
+
+
+
+
+
 ## Web API 
 ## Example scenarios
 
