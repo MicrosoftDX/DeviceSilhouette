@@ -8,9 +8,9 @@ The Device Silhouette solution is comprised from the following components:
 
 Service Fabric microservices:
 
-1. REST API
-2. State Repository
-3. State Processor
+1. Device State Managment Service REST API
+2. State Processor Service
+2. Device State Repository
 4. Feedback Service
 
 
