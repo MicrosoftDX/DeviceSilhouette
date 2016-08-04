@@ -1,3 +1,7 @@
+# Messages Flow
+
+Currently in Silhouette there are 4 patterns of messages:
+
 ### C2D Update State
 
 **Purpose:** Cloud send the device a command to change it's state.
