@@ -9,15 +9,17 @@ The Silhouette holds a sequence of received messages. A message can be received 
 Messages are being logged in the Silhouette where every message has its own version number which indicates the order the messages have been received by the Silhouette.
 For details about the message schema held by the Silhouette see the [Silhouette Message](silhouettemessage.md) page.
 
-## Messaging endpoints (C2D and D2C)
+## Messaging endpoints and lifecycle
 
 A message sent to/from Silhouette has a specific direction, out of the two following directions:
 
-1. D2C - Messages from Device to Cloud. Messages in this direction can be from type Report or InquiryRequest.
-2. C2D - Messages from Cloud to Device. Messages in this direction can be from type CommandRequest.
+1. Device To Cloud (D2C) - Messages sent from Device to Cloud. Messages in this direction can be from type Report or InquiryRequest.
+2. Cloud To Device (C2D) - Messages sent from Cloud to Device. Messages in this direction can be from type CommandRequest.
+
+Detailed explanation about messages lifecycle in Silhouette see [Messages Flow](messagesflow.md)
 
 
-## Messages flow
+
 
 
 
