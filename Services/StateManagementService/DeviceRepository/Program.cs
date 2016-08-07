@@ -37,8 +37,10 @@ namespace DeviceRepository
         {
             var configurationSection = context.GetConfigurationSection("DeviceRepositorySettings");
             double retention = Double.Parse(configurationSection["MessagesRetentionMilliseconds"]);
+            int messagesTimerInterval = int.Parse(configurationSection["MessagesTimerInterval"]);
+            int minMessagesToKeep = int.Parse(configurationSection["MinMessagesToKeep"]);
 
-            return new ActorService(context, actorType, () => new DeviceRepositoryActor(retention));
+            return new ActorService(context, actorType, () => new DeviceRepositoryActor(retention, messagesTimerInterval, minMessagesToKeep));
         }
     }
 }

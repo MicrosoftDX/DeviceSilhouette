@@ -19,8 +19,10 @@ namespace DeviceRepository.Tests
         public void Initialize()
         {
             SystemTime.Reset();
-            _messageRetentionInMilliseconds = -1;
-            _messages = null;
+            _messageRetentionInMilliseconds = -1;            
+            _minMessagesToKeep = -1;
+
+        _messages = null;
         }
 
 
@@ -33,6 +35,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(3);
             WithMessages(messages);
             ExpectLastPurgeIndexToBe(-1);
         }
@@ -44,6 +47,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(3);
             var messages = new List<DeviceMessage>
             {
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-9), persisted:true),
@@ -60,6 +64,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(3);
             var messages = new List<DeviceMessage>
             {
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-20), persisted:false), // not persisted
@@ -76,6 +81,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(3);
             var messages = new List<DeviceMessage>
             {
                 // Index 0 is before the retention window, is persisted, and has later StateReport => can be purged
@@ -95,6 +101,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(3);
             var messages = new List<DeviceMessage>
             {
                 // All messages are outside the retention window, but the initial message isn't persisted so can't be purged
@@ -115,6 +122,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(3);
             var messages = new List<DeviceMessage>
             {
                 // Whilst the command is persisted and outside the retention window, it doesn't have a response so cannot be purged
@@ -135,6 +143,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(3);
             var messages = new List<DeviceMessage>
             {
                 // Whilst the command is persisted and outside the retention window, 
@@ -149,13 +158,15 @@ namespace DeviceRepository.Tests
         }
 
         #region helpers
-        private int _messageRetentionInMilliseconds;
+        private int _messageRetentionInMilliseconds;        
+        private int _minMessagesToKeep;
         private List<DeviceMessage> _messages;
 
         private const int Seconds = 1000;
         private const int Minutes = 60 * Seconds;
 
-        private const string DeviceId = "a-device";
+        private const string DeviceId = "a-device";        
+
         private DeviceMessage ReportedState(DateTime timestamp, bool persisted)
         {
             var message = DeviceMessage.CreateReport(
@@ -204,13 +215,17 @@ namespace DeviceRepository.Tests
         {
             _messageRetentionInMilliseconds = messageRetentionInMilliseconds;
         }
+        private void WithMinMessagesToKeep(int minMessagesToKeep)
+        {
+            _minMessagesToKeep = minMessagesToKeep;
+        }
         private void WithMessages(List<DeviceMessage> messages)
         {
             _messages = messages;
         }
         private void ExpectLastPurgeIndexToBe(int expectedIndex)
         {
-            var messagePurger = new MessagePurger(_messageRetentionInMilliseconds);
+            var messagePurger = new MessagePurger(_messageRetentionInMilliseconds, _minMessagesToKeep);
             int actualIndex = messagePurger.GetIndexOfLastPurgeableMessage(_messages);
             Assert.AreEqual(expectedIndex, actualIndex);
         }

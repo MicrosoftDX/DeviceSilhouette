@@ -62,6 +62,8 @@ $env:Silhouette_IotHubConnectionString="HostName=yourhub.azure-devices.net;Share
 $env:Silhouette_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
 $env:Persistent_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
 $env:Repository_MessagesRetentionMilliseconds = 120000
+$env:Repository_MessagesTimerInterval=1
+$env:Repository_MinMessagesToKeep=3
 ```
 
 If you are deploying through Visual Studio then run the script in the Package Manager Console before running the Publish.
@@ -84,6 +86,8 @@ If you are deploying from PowerShell then simply run the script before runnigng 
 | Silhouette_StorageConnectionString             | The connection string used to synchronise consuming messages across partitions of the IoT Hub |
 | Persistent_StorageConnectionString             | The connection string to the storage account to write the blob history to |
 | Repository_MessagesRetentionMilliseconds       | The minimum time period to retain state messages for in the actor (in milliseconds) |
+| Repository_MessagesTimerInterval				 | Messages purge and persist interval in minutes |
+| Repository_MinMessagesToKeep					 | Minimum number of messages to store in repository memory after purge action |
 
 #### Rationale
 There are two approaches to configuration in .NET services on Service Fabric

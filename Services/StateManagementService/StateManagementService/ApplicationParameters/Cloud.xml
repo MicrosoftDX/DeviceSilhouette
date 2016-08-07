@@ -11,5 +11,7 @@
     <Parameter Name="Silhouette_StorageConnectionString" Value="" />
     <Parameter Name="Persistent_StorageConnectionString" Value="" />
     <Parameter Name="Repository_MessagesRetentionMilliseconds" Value="" />
+    <Parameter Name="Repository_MessagesTimerInterval" Value="" />
+    <Parameter Name="Repository_MinMessagesToKeep" Value="" />
   </Parameters>
 </Application>

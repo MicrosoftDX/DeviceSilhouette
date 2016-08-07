@@ -31,13 +31,18 @@ namespace DeviceRepository
         private readonly IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
         private readonly MessagePurger _messagePurger;
         private readonly double _messagesRetentionMilliseconds;
+        private readonly int _messagesTimerInterval;
+        private readonly int _minMessagesToKeep;
 
-        private IActorTimer _messagesTimer;
+        // timer used for persisting and perging messages
+        private IActorTimer _messagesTimer;        
 
-        public DeviceRepositoryActor(double messagesRetentionMilliseconds)
+        public DeviceRepositoryActor(double messagesRetentionMilliseconds, int messagesTimerInterval, int minMessagesToKeep)
         {
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
-            _messagePurger = new MessagePurger(messagesRetentionMilliseconds);
+            _messagesTimerInterval = messagesTimerInterval;
+            _minMessagesToKeep = minMessagesToKeep;
+            _messagePurger = new MessagePurger(_messagesRetentionMilliseconds, _minMessagesToKeep);
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DeviceRepository
         /// <returns></returns>
         private async Task ProcessMessages(object arg)
         {
-            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
+           var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
             if (stateMessages.HasValue)
             {              
                 var messages = stateMessages.Value;
@@ -61,16 +66,7 @@ namespace DeviceRepository
             List<DeviceMessage> toPersist = messages.Where(m => !m.Persisted).ToList<DeviceMessage>();
             StorageProviderServiceClient.StoreStateMessagesAsync(toPersist);
             toPersist.ForEach(m => m.Persisted = true);
-        }
-
-        private async Task PersistMessage(DeviceMessage state)
-        {
-            if (!state.Persisted)
-            {
-                await StorageProviderServiceClient.StoreStateMessageAsync(state);
-                state.Persisted = true;
-            }
-        }
+        }        
 
         public async Task<DeviceMessage> GetLastKnownReportedStateAsync()
         {
@@ -265,7 +261,7 @@ namespace DeviceRepository
         protected override Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
-            _messagesTimer = RegisterTimer(ProcessMessages, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+            _messagesTimer = RegisterTimer(ProcessMessages, null, TimeSpan.FromMinutes(_messagesTimerInterval), TimeSpan.FromMinutes(_messagesTimerInterval));
             return Task.FromResult((object)null);
         }
 

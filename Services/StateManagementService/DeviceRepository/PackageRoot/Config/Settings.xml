@@ -9,5 +9,7 @@
   </Section>
   <Section Name="DeviceRepositorySettings">
     <Parameter Name="MessagesRetentionMilliseconds" Value="" />
+    <Parameter Name="MessagesTimerInterval" Value="" />
+    <Parameter Name="MinMessagesToKeep" Value="" />
   </Section>
 </Settings>

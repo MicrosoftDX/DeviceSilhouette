@@ -10,14 +10,16 @@ namespace DeviceRepository
     public class MessagePurger
     {
         private readonly double _messagesRetentionMilliseconds;
+        private readonly int _minMessagesToKeep;
 
-        public MessagePurger(double messagesRetentionMilliseconds)
+        public MessagePurger(double messagesRetentionMilliseconds, int minMessagesToKeep)
         {
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
+            _minMessagesToKeep = minMessagesToKeep;
         }
 
         public void Purge(List<DeviceMessage> messages)
-        {
+        {            
             var indexOfLastPurgeableMessage = GetIndexOfLastPurgeableMessage(messages);
             if (indexOfLastPurgeableMessage >= 0)
             {
@@ -30,7 +32,7 @@ namespace DeviceRepository
             // Handle requirements in https://github.com/dx-ted-emea/pudding/wiki/3.7-Long-term-persistency-and-analytics
 
 
-            if (messages.Count == 0)
+            if (messages.Count == 0 || messages.Count <= _minMessagesToKeep)
             {
                 return -1;
             }
@@ -147,13 +149,22 @@ namespace DeviceRepository
             {
                 latestMessageBeforeRetentionTimeWindowIndex = messages.Count - 1;
             }
-            return Min(
+
+            int result = Min(
                 latestReportedStateMessageIndex,
                 latestMessageBeforeRetentionTimeWindowIndex,
                 lastPersistedMessageInSequenceIndex,
                 earliestCorrelatedMessageIndex - 1,
                 earliestCommandRequestWithoutResponseIndex - 1
             );
+
+            // check that the number of messages kept in the list is not less than minMessagesToKeep
+            if (messages.Count - result < _minMessagesToKeep)
+            {
+                int diff = messages.Count - result;
+                result = result - (_minMessagesToKeep - diff) - 1; // -1 since we will return an index (starting from 0), and not count of items to purge
+            }
+            return result;
         }
 
         public int Min(int value1, int value2, int value3, int value4, int value5)
