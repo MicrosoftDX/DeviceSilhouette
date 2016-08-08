@@ -210,9 +210,9 @@ namespace DeviceRepository.Tests
                 // it has a response that is in the retention window so can't be purged
                 /* index 0 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), // safe to purge
                 /* index 1 */ Command       (baseDateTime + TimeSpan.FromMinutes(-19), persisted:true, correlationId: "correlation1"),
-                /* index 2 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-18), persisted:true),
-                /* index 3 */ Response      (baseDateTime + TimeSpan.FromMinutes(-9), persisted:true, correlationId: "correlation2"), 
-                /* index 4 */ Command       (baseDateTime + TimeSpan.FromMinutes(-8), persisted:true, correlationId: "correlation1"),
+                /* index 2 */ Command       (baseDateTime + TimeSpan.FromMinutes(-18), persisted:true, correlationId: "correlation2"),
+                /* index 3 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-17), persisted:true),
+                /* index 4 */ Response      (baseDateTime + TimeSpan.FromMinutes(-9), persisted:true, correlationId: "correlation1"), 
                 /* index 5 */ Response      (baseDateTime + TimeSpan.FromMinutes(-7), persisted:true, correlationId: "correlation2"), 
                 /* index 6 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-6), persisted:true),
             };

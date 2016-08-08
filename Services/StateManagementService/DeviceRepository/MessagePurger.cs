@@ -61,7 +61,7 @@ namespace DeviceRepository
             // Track the first index for a message with a given correlation Id
             // key = correlation Id, value = earliest index
             var earliestIndexForCorrelationIdLookup = new Dictionary<string, int>();
-            int earliestCorrelatedMessageIndex = -1;
+            int earliestCorrelatedMessageIndex = messages.Count;
 
             // Track index for command requests. Remove when we encounter the response
             // key = correlation Id, value = index of command request
@@ -108,7 +108,7 @@ namespace DeviceRepository
                         int earliestIndexForCurrentCorrelationId;
                         if (earliestIndexForCorrelationIdLookup.TryGetValue(message.CorrelationId, out earliestIndexForCurrentCorrelationId))
                         {
-                            earliestCorrelatedMessageIndex = earliestIndexForCurrentCorrelationId;
+                            earliestCorrelatedMessageIndex = Math.Min(earliestCorrelatedMessageIndex, earliestIndexForCurrentCorrelationId);
                         }
                     }
                     else
@@ -144,10 +144,6 @@ namespace DeviceRepository
             if (!gotNonPersistedMessage)
             {
                 lastPersistedMessageInSequenceIndex = messages.Count - 1;
-            }
-            if (earliestCorrelatedMessageIndex == -1)
-            {
-                earliestCorrelatedMessageIndex = messages.Count;
             }
             if (latestReportedStateMessageIndex < 0)
             {
