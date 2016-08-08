@@ -42,7 +42,7 @@ namespace StateManagementServiceWebAPI.Models
         /// The time-to-live for the command message
         /// </summary>
         [Required]
-        [Range(1, double.MaxValue, ErrorMessage = "Message TTL must be greater than zero")]
+        [Range(1, int.MaxValue, ErrorMessage = "Message TTL must be greater than zero")]
         public int TimeToLiveMilliSec { get; set; }
     }
 }

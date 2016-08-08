@@ -36,7 +36,7 @@ namespace DeviceRepository
         private static ActorService CreateActorService(StatefulServiceContext context, ActorTypeInformation actorType)
         {
             var configurationSection = context.GetConfigurationSection("DeviceRepositorySettings");
-            double retention = Double.Parse(configurationSection["MessagesRetentionMilliseconds"]);
+            long retention = long.Parse(configurationSection["MessagesRetentionMilliseconds"]);
             int messagesTimerInterval = int.Parse(configurationSection["MessagesTimerInterval"]);
             int minMessagesToKeep = int.Parse(configurationSection["MinMessagesToKeep"]);
 

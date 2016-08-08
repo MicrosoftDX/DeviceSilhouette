@@ -81,7 +81,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(3);
+            WithMinMessagesToKeep(2);
             var messages = new List<DeviceMessage>
             {
                 // Index 0 is before the retention window, is persisted, and has later StateReport => can be purged

@@ -9,10 +9,10 @@ namespace DeviceRepository
 {
     public class MessagePurger
     {
-        private readonly double _messagesRetentionMilliseconds;
+        private readonly long _messagesRetentionMilliseconds;
         private readonly int _minMessagesToKeep;
 
-        public MessagePurger(double messagesRetentionMilliseconds, int minMessagesToKeep)
+        public MessagePurger(long messagesRetentionMilliseconds, int minMessagesToKeep)
         {
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
             _minMessagesToKeep = minMessagesToKeep;

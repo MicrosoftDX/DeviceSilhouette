@@ -30,14 +30,14 @@ namespace DeviceRepository
         private const string StateName = "silhouetteMessage";
         private readonly IStorageProviderRemoting StorageProviderServiceClient = ServiceProxy.Create<IStorageProviderRemoting>(new Uri("fabric:/StateManagementService/StorageProviderService"));
         private readonly MessagePurger _messagePurger;
-        private readonly double _messagesRetentionMilliseconds;
+        private readonly long _messagesRetentionMilliseconds;
         private readonly int _messagesTimerInterval;
         private readonly int _minMessagesToKeep;
 
         // timer used for persisting and perging messages
         private IActorTimer _messagesTimer;        
 
-        public DeviceRepositoryActor(double messagesRetentionMilliseconds, int messagesTimerInterval, int minMessagesToKeep)
+        public DeviceRepositoryActor(long messagesRetentionMilliseconds, int messagesTimerInterval, int minMessagesToKeep)
         {
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
             _messagesTimerInterval = messagesTimerInterval;
