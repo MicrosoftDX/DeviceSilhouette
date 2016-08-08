@@ -56,6 +56,22 @@ namespace DeviceRepository.Tests
             WithMessages(messages);
             ExpectLastPurgeIndexToBe(-1);
         }
+        [TestMethod()]
+        public void WithMessagePurger_WhenNoMessagesAreOutsideTheMinimumMessageCount_ThenNoMessagesAreIdentifiedToPurge()
+        {
+            var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
+
+            WithSystemTimeUtc(baseDateTime);
+            WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(100);
+            var messages = new List<DeviceMessage>
+            {
+                /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-19), persisted:true),
+                /* index 1 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-18), persisted:true),
+            };
+            WithMessages(messages);
+            ExpectLastPurgeIndexToBe(-1);
+        }
 
         [TestMethod()]
         public void WithMessagePurger_WhenNoMessagesArePersisted_ThenNoMessagesAreIdentifiedToPurge()
