@@ -33,6 +33,7 @@
     <ProjectReference Include="..\StorageProviderService\StorageProviderService.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ApplicationParameters\Cloud-generated.xml" />
     <Content Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

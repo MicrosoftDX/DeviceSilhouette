@@ -16,7 +16,7 @@
                                     StoreName="My" />
 
   -->
-  <ClusterConnectionParameters ConnectionEndpoint="silhouettecluster.westeurope.cloudapp.azure.com:19000" />
+  <ClusterConnectionParameters ConnectionEndpoint="silhouetteclusteraad.westeurope.cloudapp.azure.com:19000" AzureActiveDirectory="true" ServerCertThumbprint="D1ED3D7DA04F65F4D7F8600780D563EEA6AFAEBB" />
   <!-- The ApplicationParameterFile should point to the -generated.xml version of the parameters
        This file is generated at deploy time from the non-generated version by applying environment variable overrides
   -->
