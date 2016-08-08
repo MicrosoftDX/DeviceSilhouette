@@ -42,6 +42,13 @@ namespace DeviceRepository
             DateTime latestMessageTimeStampToPurge = SystemTime.UtcNow().AddMilliseconds(-_messagesRetentionMilliseconds);
             bool gotMessageInRetentionTimeWindow = false;
             int latestMessageBeforeRetentionTimeWindowIndex = -1;
+            int latestMessageBeforeMinimumMessagesIndex = messages.Count - _minMessagesToKeep - 1;
+
+            if (messages[0].Timestamp > latestMessageTimeStampToPurge)
+            {
+                // fail fast!
+                return -1;
+            }
 
             // Can't persist after the latest persisted message in a chain of persisted messages
             // e.g. in the following sequence lastPersistedMessageInSequenceIndex would be 2 as that is the 
@@ -92,9 +99,10 @@ namespace DeviceRepository
                 // earliestIndexForCorrelationId
                 if (!string.IsNullOrEmpty(message.CorrelationId))
                 {
-                    if (message.Timestamp > latestMessageTimeStampToPurge)
+                    if (message.Timestamp > latestMessageTimeStampToPurge
+                        || messageIndex > latestMessageBeforeMinimumMessagesIndex)
                     {
-                        // we're in the retention window
+                        // we're in the retention window (time or message count)
                         // we don't need to track the correlation IDs any more, 
                         // but we need to check that we retain messages with this correlation ID outside the retention window
                         int earliestIndexForCurrentCorrelationId;
@@ -153,20 +161,19 @@ namespace DeviceRepository
             int result = Min(
                 latestReportedStateMessageIndex,
                 latestMessageBeforeRetentionTimeWindowIndex,
+                latestMessageBeforeMinimumMessagesIndex,
                 lastPersistedMessageInSequenceIndex,
                 earliestCorrelatedMessageIndex - 1,
                 earliestCommandRequestWithoutResponseIndex - 1
             );
 
-            // check that the number of messages kept in the list is not less than minMessagesToKeep
-            if (messages.Count - result < _minMessagesToKeep)
-            {
-                int diff = messages.Count - result;
-                result = result - (_minMessagesToKeep - diff) - 1; // -1 since we will return an index (starting from 0), and not count of items to purge
-            }
             return result;
         }
 
+        public int Min(int value1, int value2, int value3, int value4, int value5, int value6)
+        {
+            return Min(Min(value1, value2, value3, value4), Min(value5, value6));
+        }
         public int Min(int value1, int value2, int value3, int value4, int value5)
         {
             return Min(Min(value1, value2, value3, value4), value5);
