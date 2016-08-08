@@ -35,7 +35,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(3);
+            WithMinMessagesToKeep(0);
             WithMessages(messages);
             ExpectLastPurgeIndexToBe(-1);
         }
@@ -47,7 +47,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(3);
+            WithMinMessagesToKeep(0);
             var messages = new List<DeviceMessage>
             {
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-9), persisted:true),
@@ -64,7 +64,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(3);
+            WithMinMessagesToKeep(0);
             var messages = new List<DeviceMessage>
             {
                 /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-20), persisted:false), // not persisted
@@ -81,7 +81,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(2);
+            WithMinMessagesToKeep(0);
             var messages = new List<DeviceMessage>
             {
                 // Index 0 is before the retention window, is persisted, and has later StateReport => can be purged
@@ -95,13 +95,35 @@ namespace DeviceRepository.Tests
 
 
         [TestMethod()]
+        public void WithMessagePurger_WhenAllMessagesArePersistedAndOutsideTheRetentionWindow_ThenOnlyMessagesOutsideTheMinimumCountArePurged()
+        {
+            var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
+
+            WithSystemTimeUtc(baseDateTime);
+            WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(2);
+            var messages = new List<DeviceMessage>
+            {
+                // all messages are outside the time window
+                /* index 0 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), //purgeable
+                /* index 1 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-19), persisted:true), // Need to keep to satisfy minimum number of messages 
+                /* index 2 */ ReportedState(baseDateTime + TimeSpan.FromMinutes(-16), persisted:true), // Need to keep to satisfy minimum number of messages
+            };
+            WithMessages(messages);
+            ExpectLastPurgeIndexToBe(0);
+        }
+
+
+
+
+        [TestMethod()]
         public void WithMessagePurger_WhenAnEarlierMessageIsNotPersisted_ThenLaterMessagesAreNotPurged()
         {
             var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(3);
+            WithMinMessagesToKeep(0);
             var messages = new List<DeviceMessage>
             {
                 // All messages are outside the retention window, but the initial message isn't persisted so can't be purged
@@ -122,7 +144,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(3);
+            WithMinMessagesToKeep(0);
             var messages = new List<DeviceMessage>
             {
                 // Whilst the command is persisted and outside the retention window, it doesn't have a response so cannot be purged
@@ -143,7 +165,7 @@ namespace DeviceRepository.Tests
 
             WithSystemTimeUtc(baseDateTime);
             WithMessageRetentionOf(10 * Minutes);
-            WithMinMessagesToKeep(3);
+            WithMinMessagesToKeep(0);
             var messages = new List<DeviceMessage>
             {
                 // Whilst the command is persisted and outside the retention window, 
@@ -155,6 +177,28 @@ namespace DeviceRepository.Tests
             };
             WithMessages(messages);
             ExpectLastPurgeIndexToBe(0);
+        }
+
+
+        [TestMethod()]
+        public void WithMessagePurger_WhenMinimumMessagesRequirementsAddsAResponse_ThenOtherMessagesWithTheSameCorrelationIdAreNotPurged()
+        {
+            var baseDateTime = new DateTime(2016, 07, 22, 10, 00, 00, DateTimeKind.Utc);
+
+            WithSystemTimeUtc(baseDateTime);
+            WithMessageRetentionOf(10 * Minutes);
+            WithMinMessagesToKeep(2);
+            var messages = new List<DeviceMessage>
+            {
+                // Whilst the response is outside the time window and persisted, it is included in the minimum message count
+                // This means that the command also needs to be kept
+                /* index 0 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-20), persisted:true), // safe to purge
+                /* index 1 */ Command       (baseDateTime + TimeSpan.FromMinutes(-19), persisted:true, correlationId: "correlation1"),
+                /* index 2 */ Response      (baseDateTime + TimeSpan.FromMinutes(-12), persisted:true, correlationId: "correlation1"),  
+                /* index 3 */ ReportedState (baseDateTime + TimeSpan.FromMinutes(-8), persisted:true),
+            };
+            WithMessages(messages);
+            ExpectLastPurgeIndexToBe(1);
         }
 
         #region helpers
