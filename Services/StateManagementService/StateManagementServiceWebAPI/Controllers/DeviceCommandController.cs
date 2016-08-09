@@ -123,7 +123,7 @@ namespace StateManagementServiceWebAPI.Controllers
                                                     messageSubType: command.Subtype.Value,
                                                     messageTtlMs: command.TimeToLiveMilliSec);
 
-            await _communicationProvider.SendCloudToDeviceMessageAsync(deviceMessage);
+            deviceMessage = await _communicationProvider.SendCloudToDeviceMessageAsync(deviceMessage);
 
             return Created(
                 Url.Link("GetCommand", new { commandId = deviceMessage.CorrelationId }),
