@@ -5,7 +5,7 @@
             "name": "Launch",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/sample_client_new.js",
+            "program": "${workspaceRoot}/sample_client_simple.js",
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",
@@ -15,7 +15,9 @@
                 "--nolazy"
             ],
             "env": {
-                "NODE_ENV": "development"
+                "NODE_ENV": "development",
+                "Silhouette_DeviceIotHubConnectionString" : "HostName=<iothubname>.azure-devices.net;DeviceId=<deviceid>;SharedAccessKey=<SAS>"
+
             },
             "externalConsole": false,
             "sourceMaps": false,
