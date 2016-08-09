@@ -86,8 +86,8 @@ If you are deploying from PowerShell then simply run the script before runnigng 
 | Silhouette_StorageConnectionString             | The connection string used to synchronise consuming messages across partitions of the IoT Hub |
 | Persistent_StorageConnectionString             | The connection string to the storage account to write the blob history to |
 | Repository_MessagesRetentionMilliseconds       | The minimum time period to retain state messages for in the actor (in milliseconds) |
-| Repository_MessagesTimerInterval				 | Messages purge and persist interval in minutes |
-| Repository_MinMessagesToKeep					 | Minimum number of messages to store in repository memory after purge action |
+| Repository_MessagesTimerInterval				       | Messages purge and persist interval in minutes |
+| Repository_MinMessagesToKeep				        	 | Minimum number of messages to store in repository memory after purge action |
 
 #### Rationale
 There are two approaches to configuration in .NET services on Service Fabric
@@ -115,12 +115,12 @@ One potential issue with this approach is that the application configuration set
 #### Implementation in code
 You can access the Service Fabric configuration through the `System.Fabric.ServiceContext` reference that is passed into your service factory (often just a delegate on the ServiceRuntime.RegisterServiceAsync call). 
 
-To simplify working with the configuration, the solution has a ServiceFabricUtilies project with some configuration helpers. These allow you to access the configuration in a way that feels similar to the way ConfigurationManager allowed access to AppSettings in app.config.
+To simplify working with the configuration, the solution has a ServiceFabricUtilities project with some configuration helpers. These allow you to access the configuration in a way that feels similar to the way ConfigurationManager allowed access to AppSettings in app.config.
 
 ```csharp
-            var configurationSection = context.GetConfigurationSection("CommunicationProviderServiceSettings");
-            string iotHubConnectionString = configurationSection["IotHubConnectionString"];
-            string storageConnectionString = configurationSection["StorageConnectionString"];
+var configurationSection = context.GetConfigurationSection("CommunicationProviderServiceSettings");
+string iotHubConnectionString = configurationSection["IotHubConnectionString"];
+string storageConnectionString = configurationSection["StorageConnectionString"];
 ```
 
 ## Reporting issues and feedback
