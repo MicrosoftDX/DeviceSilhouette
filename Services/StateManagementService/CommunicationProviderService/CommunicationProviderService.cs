@@ -86,7 +86,7 @@ namespace CommunicationProviderService
         {
             // TODO: error handling!
             DeviceMessage deviceMessage = ToDeviceMessage(message);
-            await StoreMessageInActor(deviceMessage);
+            await StoreMessageInActorAsync(deviceMessage);
 
             // Any actions to take on the message (should this be handled here?)
             switch (message.MessageType)
@@ -123,7 +123,7 @@ namespace CommunicationProviderService
 
         public async Task<DeviceMessage> SendCloudToDeviceMessageAsync(DeviceMessage deviceMessage)
         {
-            deviceMessage = await StoreMessageInActor(deviceMessage);
+            deviceMessage = await StoreMessageInActorAsync(deviceMessage);
 
             // update C2D end point with the request to state update
             await _messageSender.SendCloudToDeviceAsync(deviceMessage);
@@ -131,7 +131,7 @@ namespace CommunicationProviderService
             return deviceMessage;
         }
 
-        private async Task<DeviceMessage> StoreMessageInActor(DeviceMessage deviceMessage)
+        private async Task<DeviceMessage> StoreMessageInActorAsync(DeviceMessage deviceMessage)
         {
             // update the state repository with the new message
             IDeviceRepositoryActor actor = GetDeviceActor(deviceMessage.DeviceId);

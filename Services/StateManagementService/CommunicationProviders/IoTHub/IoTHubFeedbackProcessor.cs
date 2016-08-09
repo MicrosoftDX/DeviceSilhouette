@@ -20,7 +20,7 @@ namespace CommunicationProviders.IoTHub
         }
        
 
-        public async Task ReceviceFeedback(CancellationToken cancellationToken)
+        public async Task ReceviceFeedbackAsync(CancellationToken cancellationToken)
         {
             while (true)
             {

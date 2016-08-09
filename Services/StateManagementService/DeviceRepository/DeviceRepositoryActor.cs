@@ -50,7 +50,7 @@ namespace DeviceRepository
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task ProcessMessages(object arg)
+        private async Task ProcessMessagesAsync(object arg)
         {
            var stateMessages = await StateManager.TryGetStateAsync<List<DeviceMessage>>(StateName);
             if (stateMessages.HasValue)
@@ -261,7 +261,7 @@ namespace DeviceRepository
         protected override Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
-            _messagesTimer = RegisterTimer(ProcessMessages, null, TimeSpan.FromMinutes(_messagesTimerInterval), TimeSpan.FromMinutes(_messagesTimerInterval));
+            _messagesTimer = RegisterTimer(ProcessMessagesAsync, null, TimeSpan.FromMinutes(_messagesTimerInterval), TimeSpan.FromMinutes(_messagesTimerInterval));
             return Task.FromResult((object)null);
         }
 

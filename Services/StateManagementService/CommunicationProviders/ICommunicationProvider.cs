@@ -27,7 +27,7 @@ namespace CommunicationProviders
     public interface IFeedbackReceiver
     {
         // process feedbacks from C2D messages
-        Task ReceviceFeedback(CancellationToken cancellationToken);
+        Task ReceviceFeedbackAsync(CancellationToken cancellationToken);
     }
 
     /// <summary>

@@ -82,7 +82,7 @@ namespace IoTHubFeedbackService
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {                                
-            await _feedbackProcessor.ReceviceFeedback(cancellationToken);                           
+            await _feedbackProcessor.ReceviceFeedbackAsync(cancellationToken);                           
         }
     }
 }

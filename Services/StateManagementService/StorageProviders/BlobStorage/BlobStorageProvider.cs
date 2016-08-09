@@ -63,7 +63,7 @@ namespace PersistencyProviders.BlobStorage
         /// <returns></returns>
         public async Task StoreStateMessageAsync(DeviceMessage stateMessage)
         {
-            await internalStoreMessageAsync(stateMessage);
+            await InternalStoreMessageAsync(stateMessage);
         }
         
         /// <summary>
@@ -86,7 +86,7 @@ namespace PersistencyProviders.BlobStorage
             stateMessages.ForEach(m => appendBlob.AppendFromStream(SerializeToStream(m)));                       
         }
 
-        private async Task internalStoreMessageAsync(DeviceMessage stateMessage)
+        private async Task InternalStoreMessageAsync(DeviceMessage stateMessage)
         {
             // create a unique name for the blob based on device id and message stamptime
             String folderPath = String.Concat(stateMessage.Timestamp.Year, "/", stateMessage.Timestamp.Month, "/", stateMessage.Timestamp.Day, "/", stateMessage.MessageType.ToString(), "_", "/");
