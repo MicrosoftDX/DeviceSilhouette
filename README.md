@@ -46,7 +46,7 @@ node sample_client_new.js
 ## Testing REST APIs using Swagger
 The visual studio solution contains a swagger UI for the REST APIs. 
 
-If run locally, can be accessed via [http://localhost:9013/swagger/ui/index](http://localhost:9013/swagger/ui/index). Alternatively, if a Service Fabric cluster is deployed in Azure, the swagger UI can be accessed at [<cluster url>:9013/swagger/ui/index](<cluster url>:9013/swagger/ui/index).
+If run locally, can be accessed via [http://localhost:80/swagger/ui/index](http://localhost:80/swagger/ui/index). Alternatively, if a Service Fabric cluster is deployed in Azure, the swagger UI can be accessed at [<cluster url>:80/swagger/ui/index](<cluster url>:80/swagger/ui/index).
 
 
 ## Setting configuration
