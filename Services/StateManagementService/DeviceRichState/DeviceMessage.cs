@@ -190,7 +190,7 @@ namespace DeviceRichState
                 deviceId,
                 null, // don't have app metadata in Inquiry
                 values,
-                MessageType.Report,
+                MessageType.Inquiry,
                 messageSubType.ToString(),
                 -1, // don't have ttl in Inquiry
                 correlationId,
