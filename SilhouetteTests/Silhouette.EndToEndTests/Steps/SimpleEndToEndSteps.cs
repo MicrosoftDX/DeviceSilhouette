@@ -19,7 +19,7 @@ namespace Silhouette.EndToEndTests.Steps
     [Binding]
     public class SimpleEndToEndStepsa : StepsBase
     {
-        private const string BaseUrlAddress = "http://localhost:9013/v0.1/";
+        private const string BaseUrlAddress = "http://localhost:80/v0.1/";
 
         private readonly Random _random = new Random();
 

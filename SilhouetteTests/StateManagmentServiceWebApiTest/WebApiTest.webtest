@@ -31,6 +31,6 @@
     </Request>
   </Items>
   <ContextParameters>
-    <ContextParameter Name="StateManagmentServiceWebApi" Value="http://localhost:9013" />
+    <ContextParameter Name="StateManagmentServiceWebApi" Value="http://localhost:80" />
   </ContextParameters>
 </WebTest>
