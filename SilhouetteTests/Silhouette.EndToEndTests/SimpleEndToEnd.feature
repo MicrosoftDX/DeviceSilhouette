@@ -11,6 +11,15 @@ Scenario: State reports from device are received in API
 	Then the messages API contains the reported state message for device e2eDevice1 within 2 seconds but wait up to 60 seconds to verify
 	And the reported state API contains the reported state for device e2eDevice1
 
+# Before running this test, make sure Silhouette holds state for the device (execute the previuse test)
+Scenario: State request from device
+	Given a registered and connected device with id e2eDevice1
+
+	When the device requests its state
+	And we set up a trigger for the device receiving messages
+	And  the device receieves the state update within 5 seconds but wait up to 60 seconds to verify
+	Then the commands API contains the command for the latest state for device e2eDevice1
+	
 
 Scenario: State requests via the API are receieved by a connected device and the message status is accessible in the API
 	Given a registered and connected device with id e2eDevice2

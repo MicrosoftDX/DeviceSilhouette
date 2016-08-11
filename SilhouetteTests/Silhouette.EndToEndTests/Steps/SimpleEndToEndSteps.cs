@@ -237,6 +237,19 @@ timeout
             Assert.AreEqual(CurrentCorrelationId, commandId, "Command.Id should match correlation id");
         }
 
+        [Then(@"the commands API contains the command for the latest state for device (.*)")]
+        public void ThenTheCommandsAPIContainsTheCommandForTheLatestStateForDeviceEeDevice(string deviceId)
+        {
+            Func<dynamic, bool> commandPredicate = c => c.request.subtype == "LatestState" && c.request.values != null;
+
+            dynamic command = RunAndBlock(
+                async () => await FindCommandAsync(deviceId, commandPredicate)
+            );
+
+            Assert.IsNotNull(command, "Command should not be null");
+        }
+
+
 
         [Then]
         public void Then_the_messages_API_contains_no_messages_for_device_DEVICEID(string deviceId)
