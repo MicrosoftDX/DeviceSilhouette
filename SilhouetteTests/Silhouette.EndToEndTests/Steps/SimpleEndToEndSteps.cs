@@ -78,6 +78,28 @@ namespace Silhouette.EndToEndTests.Steps
             });
         }
 
+        [When(@"a get state command is sent thorugh the Api for device (.*) with timeoutMs (.*)")]
+        public void WhenAGetStateCommandIsSentThorughTheApiForDeviceEeDeviceWithTimeoutMs(string deviceId, int timeoutMs)
+        {
+            RunAndBlock(async () =>
+            {
+                TestStateValue = _random.Next(1, 1000000);
+                _appMetadataValue = Guid.NewGuid().ToString();
+
+                Log($"Sending state request via API. Test value {TestStateValue}, metadata value {_appMetadataValue}");
+
+                var client = GetApiClient();
+                _lastHttpResponse = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
+                    new
+                    {
+                        subtype = "ReportState",
+                        appMetadata = new { testMetadata = _appMetadataValue },
+                        values = new { test = TestStateValue },
+                        timeToLiveMilliSec = timeoutMs
+                    });
+            });
+        }
+
 
 
 
