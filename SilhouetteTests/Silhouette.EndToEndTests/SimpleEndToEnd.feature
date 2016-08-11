@@ -4,6 +4,7 @@
 # TODO - Some of the tests below have a wait to allow time for messages to be processes
 #        we should look at other ways to handle this rather than just waiting for a fixed time!	
 
+# D2C:SetState
 Scenario: State reports from device are received in API
 	Given a registered and connected device with id e2eDevice1
 	
@@ -12,6 +13,7 @@ Scenario: State reports from device are received in API
 	And the reported state API contains the reported state for device e2eDevice1
 
 # Before running this test, make sure Silhouette holds state for the device (execute the previuse test)
+# D2C:GetState
 Scenario: State request from device
 	Given a registered and connected device with id e2eDevice1
 
@@ -20,7 +22,7 @@ Scenario: State request from device
 	And  the device receieves the state update within 5 seconds but wait up to 60 seconds to verify
 	Then the commands API contains the command for the latest state for device e2eDevice1
 	
-
+#C2D:SetState
 Scenario: State requests via the API are receieved by a connected device and the message status is accessible in the API
 	Given a registered and connected device with id e2eDevice2
 	
