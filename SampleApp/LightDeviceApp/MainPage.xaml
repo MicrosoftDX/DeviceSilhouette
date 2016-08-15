@@ -5,12 +5,13 @@
     xmlns:local="using:LightDeviceApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Height="457.709">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ToggleSwitch x:Name="toggleSwitch" Header="Home Light" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="114,71,0,0" Toggled="toggleSwitch_Toggled"/>
+        <ToggleSwitch x:Name="toggleSwitch" Header="Home Light" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="66,77,0,0" Toggled="toggleSwitch_Toggled"/>
         <TextBlock x:Name="incomingMessage" HorizontalAlignment="Left" Margin="30,204,0,0" TextWrapping="Wrap" Text="Last Incoming Message" VerticalAlignment="Top"/>
         <TextBlock x:Name="outgoingMessage" HorizontalAlignment="Left" Margin="30,277,0,0" TextWrapping="Wrap" Text="Last Outgoing Message" VerticalAlignment="Top"/>
+        <Button x:Name="button" Content="Start Sensor" HorizontalAlignment="Left" Margin="223,99,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.593,-2.801" Click="button_Click"/>
 
     </Grid>
 </Page>

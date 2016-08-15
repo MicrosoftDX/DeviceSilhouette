@@ -120,6 +120,22 @@ namespace LightDeviceApp
                 reportState();            
             }
         }
+
+        private async void button_Click(object sender, RoutedEventArgs e)
+        {
+            button.Content = "Sensor Activated";
+            button.IsEnabled = false;
+            // simulate light sensor changing the light status every 5 minutes
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                while (true)
+                {                    
+                    await Task.Delay(TimeSpan.FromMinutes(1));
+                    toggleSwitch.IsOn = !toggleSwitch.IsOn;
+                }
+            });
+        }
+      
     }
 
     internal class DeviceMessage
