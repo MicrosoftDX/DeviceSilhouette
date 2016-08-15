@@ -5,16 +5,21 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeLightsMobile", "HomeLightsMobile\HomeLightsMobile.csproj", "{CA1544D3-407E-415A-8248-417FBC896731}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilhouetteRestClient", "SilhouetteRestClient\SilhouetteRestClient.csproj", "{99C0188B-0078-4CDE-93EE-591256FFC611}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA1544D3-407E-415A-8248-417FBC896731}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Debug|ARM.ActiveCfg = Debug|ARM
 		{CA1544D3-407E-415A-8248-417FBC896731}.Debug|ARM.Build.0 = Debug|ARM
 		{CA1544D3-407E-415A-8248-417FBC896731}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -24,6 +29,7 @@ Global
 		{CA1544D3-407E-415A-8248-417FBC896731}.Debug|x86.ActiveCfg = Debug|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Debug|x86.Build.0 = Debug|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Debug|x86.Deploy.0 = Debug|x86
+		{CA1544D3-407E-415A-8248-417FBC896731}.Release|Any CPU.ActiveCfg = Release|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|ARM.ActiveCfg = Release|ARM
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|ARM.Build.0 = Release|ARM
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|ARM.Deploy.0 = Release|ARM
@@ -33,6 +39,22 @@ Global
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|x86.ActiveCfg = Release|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|x86.Build.0 = Release|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|x86.Deploy.0 = Release|x86
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|ARM.ActiveCfg = Debug|ARM
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|ARM.Build.0 = Debug|ARM
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|x64.ActiveCfg = Debug|x64
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|x64.Build.0 = Debug|x64
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|x86.ActiveCfg = Debug|x86
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Debug|x86.Build.0 = Debug|x86
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|ARM.ActiveCfg = Release|ARM
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|ARM.Build.0 = Release|ARM
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|x64.ActiveCfg = Release|x64
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|x64.Build.0 = Release|x64
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|x86.ActiveCfg = Release|x86
+		{99C0188B-0078-4CDE-93EE-591256FFC611}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /Config_gitignor
+/Clients/node/Home_lights_sample_client.js
