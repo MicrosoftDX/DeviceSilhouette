@@ -12,13 +12,18 @@ namespace LightConsoleApp
     class Program
     {
         static DeviceClient deviceClient;
-        const string deviceConnectionString = "HostName=silhouette-tests.azure-devices.net;DeviceId=light;SharedAccessKey=Zz0dD62TWmphjMVW3qL8owkfBSyBJpMQB9PpInQ+CIY=";
+        static string deviceConnectionString;
 
         private static bool light;
 
         static void Main(string[] args)
         {           
-            Console.WriteLine("Starting...");
+            Console.WriteLine("Welcome to Home Light simulation app!");
+            Console.WriteLine("Please Enter Device Connection String");
+            deviceConnectionString = Console.ReadLine();
+
+            Console.WriteLine("To turn on the light, type +. To turn off, type -");
+
             try
             {
                 //MainAsync(args).Wait();
