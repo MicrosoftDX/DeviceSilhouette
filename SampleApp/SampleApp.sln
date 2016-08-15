@@ -5,10 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeLightsMobile", "HomeLightsMobile\HomeLightsMobile.csproj", "{CA1544D3-407E-415A-8248-417FBC896731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightDeviceApp", "LightDeviceApp\LightDeviceApp.csproj", "{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightConsoleApp", "LightConsoleApp\LightConsoleApp.csproj", "{22D7A22B-DEA5-4819-82E0-F6370E55365B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,42 +37,6 @@ Global
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|x86.ActiveCfg = Release|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|x86.Build.0 = Release|x86
 		{CA1544D3-407E-415A-8248-417FBC896731}.Release|x86.Deploy.0 = Release|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|ARM.ActiveCfg = Debug|ARM
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|ARM.Build.0 = Debug|ARM
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|ARM.Deploy.0 = Debug|ARM
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|x64.ActiveCfg = Debug|x64
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|x64.Build.0 = Debug|x64
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|x64.Deploy.0 = Debug|x64
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|x86.ActiveCfg = Debug|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|x86.Build.0 = Debug|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Debug|x86.Deploy.0 = Debug|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|Any CPU.ActiveCfg = Release|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|ARM.ActiveCfg = Release|ARM
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|ARM.Build.0 = Release|ARM
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|ARM.Deploy.0 = Release|ARM
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|x64.ActiveCfg = Release|x64
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|x64.Build.0 = Release|x64
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|x64.Deploy.0 = Release|x64
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|x86.ActiveCfg = Release|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|x86.Build.0 = Release|x86
-		{F8F01273-1BCE-4FFA-A797-6A9F6F9A5452}.Release|x86.Deploy.0 = Release|x86
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|ARM.Build.0 = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|x64.Build.0 = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Debug|x86.Build.0 = Debug|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|ARM.ActiveCfg = Release|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|ARM.Build.0 = Release|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|x64.ActiveCfg = Release|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|x64.Build.0 = Release|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|x86.ActiveCfg = Release|Any CPU
-		{22D7A22B-DEA5-4819-82E0-F6370E55365B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
