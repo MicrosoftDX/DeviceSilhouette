@@ -130,7 +130,7 @@ namespace LightDeviceApp
             {
                 while (true)
                 {                    
-                    await Task.Delay(TimeSpan.FromMinutes(1));
+                    await Task.Delay(TimeSpan.FromMinutes(5));
                     toggleSwitch.IsOn = !toggleSwitch.IsOn;
                 }
             });
