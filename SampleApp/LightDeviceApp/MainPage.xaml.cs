@@ -32,13 +32,14 @@ namespace LightDeviceApp
     {
         public MainPage()
         {
-            this.InitializeComponent();           
-        
+            this.InitializeComponent();
+           
             Task.Run(
                  async () => {
                      while (true)
                      {                         
                          var message = await AzureIoTHub.ReceiveCloudToDeviceMessageAsync();
+                         
                          await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => {                             
                              proccesMessage(message);                             
                          });                         
@@ -46,6 +47,20 @@ namespace LightDeviceApp
                  }
                  );
 
+        }
+
+        
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                while (true)
+                {
+                    reportState();
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                }
+                
+            });
         }
 
         private void proccesMessage(Message message)
