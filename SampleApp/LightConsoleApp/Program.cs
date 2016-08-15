@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace LightConsoleApp
 {
@@ -16,15 +17,50 @@ namespace LightConsoleApp
         private static bool light;
 
         static void Main(string[] args)
-        {
+        {           
             Console.WriteLine("Starting...");
             try
             {
-                MainAsync(args).Wait();
+                //MainAsync(args).Wait();
+                Thread t = new Thread(() => { RunSimulation(args); });
+                t.IsBackground = true;
+                t.Start();
+
+
+                char input;
+                while (true)
+                {
+                    ConsoleKeyInfo info = Console.ReadKey();
+                    if (info != null)
+                    {
+                        input = info.KeyChar;
+                        switch (input)
+                        {
+                            case '+':
+                                Console.WriteLine("Recevied input from user. Changing light to on");
+                                light = true;
+                                break;
+                            case '-':
+                                Console.WriteLine("Recevied input from user. Changing light to off");
+                                light = false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
             catch (AggregateException ae)
             {
                 Console.WriteLine(ae.InnerException);
+            }
+        }
+
+        private static void RunSimulation(string[] args)
+        {
+            while (true)
+            {
+                MainAsync(args).Wait();
             }
         }
 
@@ -43,7 +79,7 @@ namespace LightConsoleApp
             while (true)
             {
                 // change the light status every 5 minutes
-                Task.Delay(1 * 60 * 1000).Wait();
+                Task.Delay(5 * 60 * 1000).Wait();
                 Console.WriteLine("Sensor changing status");
                 light = !light;
             }
