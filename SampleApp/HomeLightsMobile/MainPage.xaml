@@ -8,8 +8,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button x:Name="button" Content="Check State" HorizontalAlignment="Left" Margin="129,171,0,0" VerticalAlignment="Top" Height="69" Width="214" Click="button_Click"/>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="439" Margin="519,171,0,0" VerticalAlignment="Top" Width="343" RenderTransformOrigin="-0.073,0.723" Source="Assets\off.gif"/>
+        <Button x:Name="button" Content="Check State" HorizontalAlignment="Left" Margin="73,171,0,0" VerticalAlignment="Top" Height="69" Width="214" Click="button_Click"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="439" Margin="607,171,0,0" VerticalAlignment="Top" Width="343" RenderTransformOrigin="-0.073,0.723" Source="Assets\off.gif"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="339,171,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="439" Width="214"/>
+        <Button x:Name="buttonUpdate" Content="Change State" HorizontalAlignment="Left" Margin="73,285,0,0" VerticalAlignment="Top" Height="69" Width="214" Click="buttonUpdate_Click"/>
 
     </Grid>
 </Page>

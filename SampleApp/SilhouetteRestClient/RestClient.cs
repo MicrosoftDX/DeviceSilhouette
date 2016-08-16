@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Http;
+using Windows.Web.Http.Filters;
 using Windows.Foundation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,40 +33,57 @@ namespace SilhouetteRestClient
 
         public async Task<string> GetLatestReportedState()
         {
+            var uri = new Uri(_connectionString + _deviceID + "/state/latest-reported");
 
-            var uri = new Uri(_connectionString + _deviceID + "/state/latest-reported" );
-            var httpClient = new HttpClient();
-
-            
+            var RootFilter = new HttpBaseProtocolFilter();
+            RootFilter.CacheControl.ReadBehavior = Windows.Web.Http.Filters.HttpCacheReadBehavior.MostRecent;
+            RootFilter.CacheControl.WriteBehavior = Windows.Web.Http.Filters.HttpCacheWriteBehavior.NoCache;
+           
+            var httpClient = new HttpClient(RootFilter);
+           
+            string strJson = null;
 
             try
             {
                 var result = await httpClient.GetAsync(uri);
+
                 if (result.IsSuccessStatusCode)
                 {
-                    string strJson = result.Content.ToString();
-                    dynamic jObj = (JObject)JsonConvert.DeserializeObject(strJson);
-                    var status = jObj["values"]["status"].Value;
-                    return status;
-
+                    strJson = result.Content.ToString();
                 }
-                return "unknown";
-
-                
+    
             }
-            catch
+            catch (Exception ex)
             {
-                // Details in ex.Message and ex.HResult.       
+                strJson = ex.Message;
+                   
             }
 
+            httpClient.Dispose();
 
-            // Once your app is done using the HttpClient object call dispose to 
-            // free up system resources (the underlying socket and memory used for the object)
+            return strJson; ;
+        }
 
+        public async Task<string> UpdateState(string newState)
+        {
+            var uri = new Uri(_connectionString + _deviceID + "/commands");
+            var httpClient = new HttpClient();
 
-            //httpclient.Dispose();
+            
 
-            return "unknown";
+            string JsonString =
+            @"{
+                ""subtype"": ""setState"",
+                ""appMetadata"": { ""origin"" : ""UWPApp"" },
+                ""values"": { ""status"" : """ + newState + @""" },
+                ""timeToLiveMilliSec"": 5000
+            }";
+
+           
+            var result = await httpClient.PostAsync(uri, new HttpStringContent(JsonString,Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json"));
+
+            return result.ToString();
+            
         }
     }
 }

@@ -14,6 +14,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using SilhouetteRestClient;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -35,12 +37,28 @@ namespace HomeLightsMobile
         {
             RestClient restClient = new RestClient();
             var result = await restClient.GetLatestReportedState();
-            state = result;
+            GetStateFromResult(result);
 
             change_image();
+            textBox.Text = result;
 
 
 
+        }
+
+        private void GetStateFromResult(string result)
+        {
+            try
+            {
+                dynamic jObj = (JObject)JsonConvert.DeserializeObject(result);
+                state = jObj["values"]["status"].Value;
+            }
+            catch (Exception ex) // result is null or contain error message
+            {
+
+            }
+   
+           
         }
 
         private void change_image()
@@ -69,6 +87,13 @@ namespace HomeLightsMobile
                 image.Source = newImage;
                
             }
+        }
+
+        private async void buttonUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            RestClient restClient = new RestClient();
+            var result = await restClient.UpdateState(state);
+            textBox.Text = result;
         }
     }
 }
