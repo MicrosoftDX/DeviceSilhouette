@@ -20,6 +20,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Windows.System.Threading;
+using System.Threading;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -30,6 +31,9 @@ namespace LightDeviceApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private bool sensorActivated = false;
+        CancellationTokenSource _sensorCancellationTokenSource = new CancellationTokenSource();
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -123,17 +127,27 @@ namespace LightDeviceApp
 
         private async void button_Click(object sender, RoutedEventArgs e)
         {
-            button.Content = "Sensor Activated";
-            button.IsEnabled = false;
-            // simulate light sensor changing the light status every 5 minutes
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            if (!sensorActivated)
             {
-                while (true)
-                {                    
-                    await Task.Delay(TimeSpan.FromMinutes(5));
-                    toggleSwitch.IsOn = !toggleSwitch.IsOn;
-                }
-            });
+                button.Content = "Stop Sensor";
+                sensorActivated = true;
+                _sensorCancellationTokenSource = new CancellationTokenSource();
+                // simulate light sensor changing the light status every 5 minutes
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
+                    while (!_sensorCancellationTokenSource.IsCancellationRequested)
+                    {
+                        await Task.Delay(TimeSpan.FromMinutes(5));
+                        toggleSwitch.IsOn = !toggleSwitch.IsOn;
+                    }
+                });
+            }
+            else
+            {
+                button.Content = "Start Sensor";
+                sensorActivated = false;
+                _sensorCancellationTokenSource.Cancel();
+            }
         }
       
     }
