@@ -7,9 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Height="642.272">
 
-    <StackPanel>
+    <StackPanel >
         <StackPanel>
-            <TextBox x:Name="connectStr" TextWrapping="Wrap" Text="Enter Device Connection String" Margin="20,20,0,10"/>
+            <TextBox x:Name="connectStr" TextWrapping="Wrap" Text="Enter Device Connection String" Margin="20,20,10,10"/>
             <Button x:Name="connectButton" Content="Start Simulation" Margin="20,20,0,10" Click="Connect_Click" />
         </StackPanel>
         <Frame Name="MyFrame"></Frame>

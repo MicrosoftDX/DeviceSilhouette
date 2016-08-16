@@ -71,10 +71,11 @@ namespace LightDeviceApp
             var messageData = Encoding.ASCII.GetString(message.GetBytes());
             incomingMessage.Text = "Last incoming message: " + messageData;
 
-            // TODO: add error handling
+            // TODO: add error handling 
             string messageType = message.Properties["MessageType"];
             string messageSubType = message.Properties["MessageSubType"];
 
+            // TODO: log other message types
             if (messageType.Equals("CommandRequest"))
             {
                 switch (messageSubType)
@@ -83,16 +84,13 @@ namespace LightDeviceApp
                         setState(messageData);
                         break;
                     case "LatestState":
+                        setState(messageData);
                         break;
                     case "ReportState":
                         reportState();
                         break;
                 }
-            }
-            else if (messageType.Equals("InquiryResponse") && messageSubType.Equals("GetState"))
-            {
-                reportState();
-            }
+            }           
         }
 
         private void reportState()
@@ -123,11 +121,11 @@ namespace LightDeviceApp
             }
         }
 
-        private async void button_Click(object sender, RoutedEventArgs e)
+        private async void sensorButton_Click(object sender, RoutedEventArgs e)
         {
             if (!sensorActivated)
             {
-                button.Content = "Stop Sensor";
+                sensorButton.Content = "Stop Sensor";
                 sensorActivated = true;
                 _sensorCancellationTokenSource = new CancellationTokenSource();
                 // simulate light sensor changing the light status every 5 minutes
@@ -142,16 +140,22 @@ namespace LightDeviceApp
             }
             else
             {
-                button.Content = "Start Sensor";
+                sensorButton.Content = "Start Sensor";
                 sensorActivated = false;
                 _sensorCancellationTokenSource.Cancel();
             }
+        }
+
+        private void requestStateButton_Click(object sender, RoutedEventArgs e)
+        {
+            // request the device latest reported state
+            AzureIoTHub.SendDeviceToCloudMessageAsync("{}", "Inquiry", "GetState");
         }
     }
 
     internal class DeviceMessage
     {
-        public string status;
+        public string status;        
 
         public DeviceMessage(bool isOn)
         {

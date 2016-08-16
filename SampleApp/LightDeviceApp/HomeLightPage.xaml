@@ -9,11 +9,12 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <StackPanel>
+            <StackPanel Height="637">
                 <ToggleSwitch x:Name="toggleSwitch" Header="Home Light" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,10,10" Toggled="toggleSwitch_Toggled"/>
+                <Button x:Name="sensorButton" Content="Start Sensor" HorizontalAlignment="Left" Margin="20,20,0,10" VerticalAlignment="Top" Click="sensorButton_Click" RenderTransformOrigin="1.679,-4.705"/>
+                <Button x:Name="requestStateButton" Content="Request State Update" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,10,10" Click="requestStateButton_Click"/>
                 <TextBlock x:Name="incomingMessage" HorizontalAlignment="Left" Margin="20,20,10,10" TextWrapping="Wrap" Text="Last Incoming Message" VerticalAlignment="Top"/>
                 <TextBlock x:Name="outgoingMessage" HorizontalAlignment="Left" Margin="20,20,10,10" TextWrapping="Wrap" Text="Last Outgoing Message" VerticalAlignment="Top"/>
-                <Button x:Name="button" Content="Start Sensor" HorizontalAlignment="Left" Margin="20,20,0,10" VerticalAlignment="Top" Click="button_Click" RenderTransformOrigin="1.679,-4.705"/>
             </StackPanel>
         </StackPanel>
     </Grid>
