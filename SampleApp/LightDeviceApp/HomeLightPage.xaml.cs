@@ -143,12 +143,12 @@ namespace LightDeviceApp
                 sensorButton.Content = "Stop Sensor";
                 sensorActivated = true;
                 _sensorCancellationTokenSource = new CancellationTokenSource();
-                // simulate light sensor changing the light status every 5 minutes
+                // simulate light sensor changing the light status every 1 minutes
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     while (!_sensorCancellationTokenSource.IsCancellationRequested)
                     {
-                        await Task.Delay(TimeSpan.FromMinutes(5));
+                        await Task.Delay(TimeSpan.FromMinutes(1));
                         toggleSwitch.IsOn = !toggleSwitch.IsOn;
                     }
                 });
