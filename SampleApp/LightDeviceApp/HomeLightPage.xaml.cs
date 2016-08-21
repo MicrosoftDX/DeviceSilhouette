@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -110,6 +111,14 @@ namespace LightDeviceApp
             // "{"status" : "on"}"           
             DeviceMessage msg = JsonConvert.DeserializeObject<DeviceMessage>(messageData);
             toggleSwitch.IsOn = msg.status.Equals("on");
+            setImage(msg.status);
+        }
+
+        private void setImage(string state)
+        {
+            BitmapImage newImage = new BitmapImage();
+            newImage.UriSource = new Uri(string.Format("ms-appx:///Assets/{0}.gif",state));
+            image.Source = newImage;
         }
 
         private void toggleSwitch_Toggled(object sender, RoutedEventArgs e)
@@ -118,8 +127,14 @@ namespace LightDeviceApp
             if (toggleSwitch != null)
             {
                 reportState();
+
+                if (toggleSwitch.IsOn)
+                    setImage("on");
+                else
+                    setImage("off");     
             }
         }
+      
 
         private async void sensorButton_Click(object sender, RoutedEventArgs e)
         {
