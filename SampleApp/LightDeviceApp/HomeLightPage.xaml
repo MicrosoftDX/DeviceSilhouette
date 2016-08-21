@@ -7,15 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel>
-            <StackPanel Height="637">
-                <ToggleSwitch x:Name="toggleSwitch" Header="Home Light" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,10,10" Toggled="toggleSwitch_Toggled"/>
-                <Button x:Name="sensorButton" Content="Start Sensor" HorizontalAlignment="Left" Margin="20,20,0,10" VerticalAlignment="Top" Click="sensorButton_Click" RenderTransformOrigin="1.679,-4.705"/>
-                <Button x:Name="requestStateButton" Content="Request State Update" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,10,10" Click="requestStateButton_Click"/>
-                <TextBlock x:Name="incomingMessage" HorizontalAlignment="Left" Margin="20,20,10,10" TextWrapping="Wrap" Text="Last Incoming Message" VerticalAlignment="Top"/>
-                <TextBlock x:Name="outgoingMessage" HorizontalAlignment="Left" Margin="20,20,10,10" TextWrapping="Wrap" Text="Last Outgoing Message" VerticalAlignment="Top"/>
-            </StackPanel>
-        </StackPanel>
-    </Grid>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <Button x:Name="sensorButton" Content="Start Sensor" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Height="40" Width="200" Click="sensorButton_Click"/>
+        <Button x:Name="requestStateButton" Content="Request State Update" HorizontalAlignment="Left" Margin="20,120,0,0" VerticalAlignment="Top" Height="40" Width="200" Click="requestStateButton_Click"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="291" Margin="500,20,0,0" VerticalAlignment="Top" Width="207" RenderTransformOrigin="-0.073,0.723" Source="Assets\off.gif"/>
+        <ToggleSwitch x:Name="toggleSwitch" Header="Home Light" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,324,0,0" Toggled="toggleSwitch_Toggled"/>
+        <TextBlock x:Name="incomingMessage" HorizontalAlignment="Left" Margin="271,20,0,0" TextWrapping="Wrap" Text="Last Incoming Message" VerticalAlignment="Top" Height="150" Width="214"/>
+        <TextBlock x:Name="outgoingMessage" HorizontalAlignment="Left" Margin="271,120,0,0" TextWrapping="Wrap" Text="Last Outgoing Message" VerticalAlignment="Top" Height="150" Width="214"/>
+    </Grid>    
 </Page>

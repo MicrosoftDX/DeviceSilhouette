@@ -108,9 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\off.gif" />
+    <Content Include="Assets\off.jpg" />
     <Content Include="Assets\on.gif" />
+    <Content Include="Assets\on.jpg" />
     <Content Include="Assets\tall.gif" />
     <Content Include="Assets\unknown.gif" />
+    <Content Include="Assets\unknown.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

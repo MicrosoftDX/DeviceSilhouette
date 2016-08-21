@@ -17,6 +17,16 @@ using SilhouetteRestClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+
+
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+
+using Windows.UI.Core;
+
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace HomeLightsMobile
@@ -26,14 +36,42 @@ namespace HomeLightsMobile
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private string state = "off";
+        private string _state = "unknown";
         public MainPage()
         {
           
             this.InitializeComponent();
+
+            Task.Run(
+                 async () =>
+                 {
+                     while (true)
+                     {
+                         
+
+                         await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                         {
+                             CheckCurrentState();
+                         });
+                     }
+                 }
+                 );
         }
 
         private async void button_Click(object sender, RoutedEventArgs e)
+        {
+            RestClient restClient = new RestClient();
+            var result = await restClient.GetLatestReportedState();
+            GetStateFromResult(result);
+
+            change_image();
+            textBox.Text = result;
+
+
+
+        }
+
+        private async void CheckCurrentState()
         {
             RestClient restClient = new RestClient();
             var result = await restClient.GetLatestReportedState();
@@ -51,7 +89,7 @@ namespace HomeLightsMobile
             try
             {
                 dynamic jObj = (JObject)JsonConvert.DeserializeObject(result);
-                state = jObj["values"]["status"].Value;
+                _state = jObj["values"]["status"].Value;
             }
             catch (Exception ex) // result is null or contain error message
             {
@@ -63,7 +101,7 @@ namespace HomeLightsMobile
 
         private void change_image()
         {
-            if (state == "on")
+            if (_state == "on")
             {
 
                 BitmapImage newImage = new BitmapImage();
@@ -71,7 +109,7 @@ namespace HomeLightsMobile
                 image.Source = newImage;
                
             }
-            else if (state == "off")
+            else if (_state == "off")
             {
 
                 BitmapImage newImage = new BitmapImage();
@@ -79,7 +117,7 @@ namespace HomeLightsMobile
                 image.Source = newImage;
                
             }
-            else // (state == "unknown")
+            else // (_state == "unknown")
             {
 
                 BitmapImage newImage = new BitmapImage();
@@ -92,8 +130,25 @@ namespace HomeLightsMobile
         private async void buttonUpdate_Click(object sender, RoutedEventArgs e)
         {
             RestClient restClient = new RestClient();
-            var result = await restClient.UpdateState(state);
+            ChangeState();
+            var result = await restClient.UpdateState(_state);
             textBox.Text = result;
         }
+
+        private void ChangeState()
+        {
+            if (_state == "on")
+                _state = "off";
+            else if (_state == "off")
+                _state = "on";
+
+        }
+      
+    }
+
+    public enum state
+    {
+        off,
+        on
     }
 }
