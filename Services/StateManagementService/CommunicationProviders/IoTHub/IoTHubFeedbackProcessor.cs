@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CommonUtils.SilhouetteEventSource;
 
 namespace CommunicationProviders.IoTHub
 {
@@ -15,8 +16,18 @@ namespace CommunicationProviders.IoTHub
 
         public IoTHubFeedbackProcessor(string iotHubConnectionString, Func<FeedbackRecord, Task> feedbackHandler)
         {
-            _feedbackReceiver = ServiceClient.CreateFromConnectionString(iotHubConnectionString).GetFeedbackReceiver();
-            _feedbackHandler = feedbackHandler;
+            try
+            {
+                _feedbackReceiver = ServiceClient.CreateFromConnectionString(iotHubConnectionString).GetFeedbackReceiver();
+                _feedbackHandler = feedbackHandler;
+            }
+            // Write the exception to ETW but still through the exception to prevent deployment of an unhealthy service
+            catch (Exception ex)
+            {
+                SilhouetteEventSource.Current.logException(ex.ToString());
+                throw ex;
+
+            }
         }
        
 

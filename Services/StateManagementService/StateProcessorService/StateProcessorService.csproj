@@ -100,6 +100,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonUtils\CommonUtils.csproj">
+      <Project>{b7313376-b9c8-46f4-a2d1-ca4a8313c861}</Project>
+      <Name>CommonUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CommunicationProviderService\CommunicationProviderService.csproj">
       <Project>{18f7db3a-4ab9-4279-8160-bb7004373129}</Project>
       <Name>CommunicationProviderService</Name>
