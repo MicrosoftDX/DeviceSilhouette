@@ -4,7 +4,7 @@ using System.Fabric;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommonUtils.SilhouetteEventSource;
+using CommonUtils;
 
 namespace Silhouette.ServiceFabricUtilities
 {

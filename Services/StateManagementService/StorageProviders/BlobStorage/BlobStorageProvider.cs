@@ -10,7 +10,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
 using Newtonsoft.Json;
-using CommonUtils.SilhouetteEventSource;
+using CommonUtils;
 
 namespace PersistencyProviders.BlobStorage
 {
@@ -40,7 +40,7 @@ namespace PersistencyProviders.BlobStorage
             }
             catch (Exception ex)
             {
-                SilhouetteEventSource.Current.logException(ex.ToString());
+                SilhouetteEventSource.Current.LogException(ex.ToString());
                 throw ex;
             }
 

@@ -8,7 +8,7 @@ using System.Diagnostics.Tracing;
 //using System.Linq;
 //using System.Text;
 
-namespace CommonUtils.SilhouetteEventSource
+namespace CommonUtils
 {
     [EventSource(Name = "MyCompany-DeviceSilhouette")]
     public class SilhouetteEventSource : EventSource
@@ -25,7 +25,7 @@ namespace CommonUtils.SilhouetteEventSource
         // Instance constructor is private to enforce singleton semantics
         private SilhouetteEventSource() : base() { }
 
-        public class Keywords
+        private static class Keywords
         {
             public const EventKeywords SilhouetteException = (EventKeywords)1;
             public const EventKeywords SilhouetteInfo = (EventKeywords)2;
@@ -35,7 +35,7 @@ namespace CommonUtils.SilhouetteEventSource
      
 
         [Event(1, Message = "Silhouette Failure: {0}", Level = EventLevel.Error, Keywords = Keywords.SilhouetteException)]
-        public void logException(string message)
+        public void LogException(string message)
         {
         
             WriteEvent(1, message);
@@ -44,7 +44,7 @@ namespace CommonUtils.SilhouetteEventSource
        
 
         [Event(2, Message = "Silhouette Information: {0}", Level = EventLevel.Informational, Keywords = Keywords.SilhouetteInfo)]
-        public void logInfo(string message) { WriteEvent(2, message); }
+        public void LogInfo(string message) { WriteEvent(2, message); }
 
 
 

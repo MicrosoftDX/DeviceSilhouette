@@ -29,7 +29,7 @@ namespace Silhouette.ServiceFabricUtilities
             {
                 parameter = _section.Parameters[key];
             }
-            catch(KeyNotFoundException knfe)
+            catch(KeyNotFoundException)
             {
                 throw new ArgumentException($"Configuration value '{key}' not found");
             }

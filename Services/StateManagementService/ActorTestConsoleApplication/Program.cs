@@ -19,7 +19,6 @@ namespace ActorTestConsoleApplication
 
         static void Main(string[] args)
         {
-            var jsonState = @"{ ""silhouetteProperties"": { },""appMetadata"": { },""deviceValues"": { } }";
             var deviceId = "RichSilhouette1";
             var deviceMessage = DeviceMessage.CreateReport(deviceId, "", ReportMessageSubType.State);
 

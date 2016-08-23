@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CommonUtils.SilhouetteEventSource;
+using CommonUtils;
 
 namespace CommunicationProviders.IoTHub
 {
@@ -24,7 +24,7 @@ namespace CommunicationProviders.IoTHub
             // Write the exception to ETW but still through the exception to prevent deployment of an unhealthy service
             catch (Exception ex)
             {
-                SilhouetteEventSource.Current.logException(ex.ToString());
+                SilhouetteEventSource.Current.LogException(ex.ToString());
                 throw ex;
 
             }
