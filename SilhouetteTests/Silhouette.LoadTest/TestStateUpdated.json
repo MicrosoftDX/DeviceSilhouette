@@ -1,0 +1,27 @@
+﻿{
+  "Alerts": [
+    {
+      "Value": "Temp threshold exceeded 60",
+      "TimeStamp": "2016-08-26T14:22:09"
+    },
+    {
+      "Value": "Battery level below 50%",
+      "TimeStamp": "2016-08-26T14:22:09"
+    },
+    {
+      "Value": "Unplanned system restart",
+      "TimeStamp": "2016-08-26T14:22:09"
+    },
+    {
+      "Value": "Unplanned system restart",
+      "TimeStamp": "2016-08-26T14:22:09"
+    }
+  ],
+  "BatteryLevel": 44,
+  "ExtTemperature": 21.6,
+  "Humidity": 88.5,
+  "IntTemperature": 68.2,
+  "LastRestart": "2009-06-15T13:50:40",
+  "Lumen": 720,
+  "WifiSignal": 20
+}
