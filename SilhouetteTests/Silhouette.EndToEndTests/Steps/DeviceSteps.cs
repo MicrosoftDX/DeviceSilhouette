@@ -83,6 +83,18 @@ namespace Silhouette.EndToEndTests.Steps
             });
         }
 
+        [When(@"the device requests its state")]
+        public void WhenTheDeviceRequestsItsState()
+        {
+            this.RunAndBlock(async () =>
+            {                
+                Log($"Device requesting state");
+
+                await _device.RequestStateMessageAsync();
+            });
+        }
+
+
         [When]
         public void When_the_device_accepts_the_state_request()
         {
@@ -149,6 +161,81 @@ namespace Silhouette.EndToEndTests.Steps
                 }
             });
         }
+
+        [Then(@"the device receieves the get state command within (.*) seconds but wait up to (.*) seconds to verify")]
+        public void ThenTheDeviceReceievesTheGetStateCommandWithinSecondsButWaitUpToSecondsToVerify(int targetTime, int timeout)
+        {
+            // target time - this is the elapsed time that we assert against
+            // timeout - this is the maximum time that the test will wait. Useful to assess whether the message arrived or not
+
+            this.RunAndBlock(async () =>
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeout));
+                var task = await Task.WhenAny(_deviceReceivedMessageTask, timeoutTask);
+                if (task == timeoutTask)
+                {
+                    Assert.Fail("Timed out waiting for device to receive message");
+                }
+                var elapsedTime = stopwatch.Elapsed;
+
+
+                Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
+
+                _deviceReceivedMessage = _deviceReceivedMessages[0];
+
+                Assert.AreEqual("CommandRequest", _deviceReceivedMessage.MessageType, "The message received by the device should have type CommandRequest");
+                Assert.AreEqual("ReportState", _deviceReceivedMessage.MessageSubType, "The message received by the device should have subtype ReportState");
+
+                Log($"Elapsed time: {elapsedTime}");
+                // Got here, so the message looks ok
+                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
+                if (elapsedTime > targetTimeSpan)
+                {
+                    AddTimeoutMessage($"Waited {elapsedTime} for message. Target: {targetTimeSpan}");
+                }
+            });
+        }
+
+
+        [When(@"the device receieves the state update within (.*) seconds but wait up to (.*) seconds to verify")]
+        public void WhenTheDeviceReceievesTheStateUpdateWithinSecondsButWaitUpToSecondsToVerify(int targetTime, int timeout)
+        {
+            // target time - this is the elapsed time that we assert against
+            // timeout - this is the maximum time that the test will wait. Useful to assess whether the message arrived or not
+
+            this.RunAndBlock(async () =>
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeout));
+                var task = await Task.WhenAny(_deviceReceivedMessageTask, timeoutTask);
+                if (task == timeoutTask)
+                {
+                    Assert.Fail("Timed out waiting for device to receive message");
+                }
+                var elapsedTime = stopwatch.Elapsed;
+
+
+                Assert.AreEqual(1, _deviceReceivedMessages.Count, "Device should have received one message");
+
+                _deviceReceivedMessage = _deviceReceivedMessages[0];
+
+                Assert.AreEqual("CommandRequest", _deviceReceivedMessage.MessageType, "The message received by the device should have type CommandRequest");
+                Assert.AreEqual("LatestState", _deviceReceivedMessage.MessageSubType, "The message received by the device should have subtype LatestState");
+
+                Log($"Elapsed time: {elapsedTime}");
+                // Got here, so the message looks ok
+                var targetTimeSpan = TimeSpan.FromSeconds(targetTime);
+                if (elapsedTime > targetTimeSpan)
+                {
+                    AddTimeoutMessage($"Waited {elapsedTime} for message. Target: {targetTimeSpan}");
+                }
+            });
+        }
+
+
         [Then]
         public void Then_the_device_message_matches_the_messages_API_correlationId()
         {

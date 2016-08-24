@@ -4,6 +4,7 @@ using System.Fabric;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonUtils;
 
 namespace Silhouette.ServiceFabricUtilities
 {
@@ -16,6 +17,13 @@ namespace Silhouette.ServiceFabricUtilities
             var configurationPackage = context.CodePackageActivationContext.GetConfigurationPackageObject("Config");
             var section = configurationPackage.Settings.Sections[name];
             return new ServiceFabricConfigurationSection(section);
+
+           
+          
+
+
+
+
         }
     }
 }

@@ -10,6 +10,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
 using Newtonsoft.Json;
+using CommonUtils;
 
 namespace PersistencyProviders.BlobStorage
 {
@@ -31,9 +32,19 @@ namespace PersistencyProviders.BlobStorage
         public BlobStorageProvider(string storageConnectionString)
         {
             _storageConnectionString = storageConnectionString;
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_storageConnectionString);
-            _blobClient = storageAccount.CreateCloudBlobClient();
-            createMainContainer();
+            try
+            {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_storageConnectionString);
+                _blobClient = storageAccount.CreateCloudBlobClient();
+                createMainContainer();
+            }
+            catch (Exception ex)
+            {
+                SilhouetteEventSource.Current.LogException(ex.ToString());
+                throw ex;
+            }
+
+            
         }
 
         private void createMainContainer()

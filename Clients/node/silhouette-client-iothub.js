@@ -128,7 +128,7 @@ SilhouetteClientIoTHub.prototype.updateState = function(metadata, values, device
 SilhouetteClientIoTHub.prototype.getState = function(state, deviceID)
 {	
   var message = new Message("{}");
-  message.properties.add('MessageType', 'InquiryRequest');
+  message.properties.add('MessageType', 'Inquiry');
   message.properties.add('MessageSubType', 'GetState');
   client.sendEvent(message, function(err, res) {
     // TODO: add callback for error handling

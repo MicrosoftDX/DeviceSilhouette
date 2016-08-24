@@ -19,7 +19,7 @@ namespace Silhouette.EndToEndTests.Steps
     [Binding]
     public class SimpleEndToEndStepsa : StepsBase
     {
-        private const string BaseUrlAddress = "http://localhost:9013/v0.1/";
+        private const string BaseUrlAddress = "http://localhost:80/v0.1/";
 
         private readonly Random _random = new Random();
 
@@ -71,6 +71,28 @@ namespace Silhouette.EndToEndTests.Steps
                     new
                     {
                         subtype = "setState",
+                        appMetadata = new { testMetadata = _appMetadataValue },
+                        values = new { test = TestStateValue },
+                        timeToLiveMilliSec = timeoutMs
+                    });
+            });
+        }
+
+        [When(@"a get state command is sent thorugh the Api for device (.*) with timeoutMs (.*)")]
+        public void WhenAGetStateCommandIsSentThorughTheApiForDeviceEeDeviceWithTimeoutMs(string deviceId, int timeoutMs)
+        {
+            RunAndBlock(async () =>
+            {
+                TestStateValue = _random.Next(1, 1000000);
+                _appMetadataValue = Guid.NewGuid().ToString();
+
+                Log($"Sending state request via API. Test value {TestStateValue}, metadata value {_appMetadataValue}");
+
+                var client = GetApiClient();
+                _lastHttpResponse = await client.PostAsJsonAsync($"devices/{deviceId}/commands",
+                    new
+                    {
+                        subtype = "ReportState",
                         appMetadata = new { testMetadata = _appMetadataValue },
                         values = new { test = TestStateValue },
                         timeToLiveMilliSec = timeoutMs
@@ -236,6 +258,19 @@ timeout
             string commandId = (string)command.id;
             Assert.AreEqual(CurrentCorrelationId, commandId, "Command.Id should match correlation id");
         }
+
+        [Then(@"the commands API contains the command for the latest state for device (.*)")]
+        public void ThenTheCommandsAPIContainsTheCommandForTheLatestStateForDeviceEeDevice(string deviceId)
+        {
+            Func<dynamic, bool> commandPredicate = c => c.request.subtype == "LatestState" && c.request.values != null;
+
+            dynamic command = RunAndBlock(
+                async () => await FindCommandAsync(deviceId, commandPredicate)
+            );
+
+            Assert.IsNotNull(command, "Command should not be null");
+        }
+
 
 
         [Then]

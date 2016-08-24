@@ -78,6 +78,19 @@ namespace DotNetClient
             await _deviceClient.SendEventAsync(message);
         }
 
+        public async Task RequestStateMessageAsync()
+        {
+            var message = new Microsoft.Azure.Devices.Client.Message()
+            {
+                Properties =
+                {
+                    { "MessageType", "Inquiry" },
+                    { "MessageSubType", "GetState" },
+                }               
+            };
+            await _deviceClient.SendEventAsync(message);
+        }
+
         public void StartReceiveMessageLoop()
         {
             // TODO - check if already got cancellation token source etc
@@ -90,7 +103,8 @@ namespace DotNetClient
         public async Task CompleteReceivedMessageAsync(DeviceMessage message)
         {
             await _deviceClient.CompleteAsync(message.Message);
-        }
+        }        
+
         public async Task RejectReceivedMessageAsync(DeviceMessage message)
         {
             await _deviceClient.RejectAsync(message.Message);
