@@ -28,6 +28,7 @@ namespace Silhouette.LoadTest
         string _testStateUpdated;
         string _deviceId;
         string _connectionString;
+        WebTestRequest _request;
 
         public SilhouetteDeviceLoadTest()
         {
@@ -36,32 +37,38 @@ namespace Silhouette.LoadTest
 
 
            this.
-            _connectionString = (string)this.Context["IoTHubConnectionString"];
             _testState = File.ReadAllText("TestState.json");
             _testStateUpdated = File.ReadAllText("TestStateUpdated.json");
-
+            //Non-existing URL to force WebTest result (404), so we can a use the WebTest icw IoTHub
+            _request = new WebTestRequest("http://localhost/deviceloadtest");
+            _request.ExpectedHttpStatusCode = 404;
 
         }
 
         public override IEnumerator<WebTestRequest> GetRequestEnumerator()
         {
-            
-            Debug.WriteLine("Device:" + this.Context.WebTestUserId);
-            _deviceId = "TestDevice-" + this.Context.WebTestUserId;
-            _device = new DeviceSimulator(_connectionString, _deviceId);
+            _connectionString = (string)this.Context["IoTHubConnectionString"];
 
-            if (this.Context.IsNewUser)
-            {
-                _device.InitializeAsync();
+            _deviceId = "TestDevice-" + this.Context.WebTestUserId;
+
+            Debug.WriteLine("State Report for Device: " + _deviceId);
+
+            _device = new DeviceSimulator(_connectionString, _deviceId);
+            _device.InitializeAsync().Wait();
+
+            //if (((Microsoft.VisualStudio.TestTools.LoadTesting.LoadTestUserContext)(this.Context["$LoadTestUserContext"])).IsNewUser)
+            // if (this.Context.IsNewUser)
+           // {
+
                 _device.SendStateMessageAsync(_testState);
 
-            }
-            else
-            {
-                _device.SendStateMessageAsync(_testStateUpdated);
-            }
+            //}
+            //else
+            //{
+            //    _device.SendStateMessageAsync(_testStateUpdated);
+            //}
 
-            yield return new WebTestRequest("");
+            yield return _request;
         }
     }
 }

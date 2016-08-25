@@ -30,19 +30,19 @@ namespace Silhouette.LoadTest
             this.PreAuthenticate = true;
             this.Proxy = "default";
 
-            _baseAddress = "http://localhost:87/v0.1";
         }
 
         public override IEnumerator<WebTestRequest> GetRequestEnumerator()
         {
             _deviceId = "TestDevice-" + this.Context.WebTestUserId;
           
-            Debug.WriteLine("DeviceID:" +_deviceId);
+            Debug.WriteLine("API Call for DeviceID: " +_deviceId);
             yield return Call("/devices/" + _deviceId + "/state/latest-reported");
         }
 
         private WebTestRequest Call(string requestRoute)
         {
+            _baseAddress = this.Context["WebAPIEndpoint"].ToString();
             WebTestRequest request = new WebTestRequest(_baseAddress + requestRoute);
             request.Encoding = System.Text.Encoding.GetEncoding("utf-8");
             request.ExpectedHttpStatusCode = 200;
