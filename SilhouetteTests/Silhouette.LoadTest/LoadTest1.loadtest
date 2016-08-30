@@ -441,7 +441,7 @@
       </LoadGeneratorLocations>
       <ContextParameters>
         <ContextParameter Name="IoTHubConnectionString" Value="HostName=silhouette-tests.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=3GP77YoaR0+OXw8WX8DLKJiHUfbmr27XcSVSRi7Qi3s=" />
-        <ContextParameter Name="WebAPIEndpoint" Value="http://silhouetteclusteraad.westeurope.cloudapp.azure.com:9013/v0.1" />
+        <ContextParameter Name="WebAPIEndpoint" Value="http://silhouetteclusteraad.westeurope.cloudapp.azure.com/v0.1" />
       </ContextParameters>
     </RunConfiguration>
   </RunConfigurations>

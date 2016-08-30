@@ -56,17 +56,16 @@ namespace Silhouette.LoadTest
             _device = new DeviceSimulator(_connectionString, _deviceId);
             _device.InitializeAsync().Wait();
 
-            //if (((Microsoft.VisualStudio.TestTools.LoadTesting.LoadTestUserContext)(this.Context["$LoadTestUserContext"])).IsNewUser)
-            // if (this.Context.IsNewUser)
-           // {
+            if (((Microsoft.VisualStudio.TestTools.LoadTesting.LoadTestUserContext)(this.Context["$LoadTestUserContext"])).IsNewUser) //(this.Context.IsNewUser) doesn't work
+            {
 
-                _device.SendStateMessageAsync(_testState);
+                 _device.SendStateMessageAsync(_testState);
 
-            //}
-            //else
-            //{
-            //    _device.SendStateMessageAsync(_testStateUpdated);
-            //}
+            }
+            else
+            {
+                _device.SendStateMessageAsync(_testStateUpdated);
+            }
 
             yield return _request;
         }
