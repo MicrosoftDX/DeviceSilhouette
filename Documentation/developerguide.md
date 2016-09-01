@@ -29,10 +29,12 @@ Create the following Azure resources and take a note of their connection strings
 1. Azure IoTHub 
 2. Azure Storage Account (We will use Blob only)
 
-### 3. Create Configuration Files
+### 3. Create Configuration File
 
 
-All configurations in this repro are driven by environment variables. The easiest way to set the environment variables is by creating a Power Shell script.
+All configurations in this repro are driven by environment variables. 
+Detailed explanation about this approach can be found in the [Configuration](Configuration.md) section.
+The easiest way to set the environment variables is by creating a Power Shell script.
 
 
 ```posh
