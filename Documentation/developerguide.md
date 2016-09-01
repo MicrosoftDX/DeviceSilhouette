@@ -46,13 +46,18 @@ $env:Repository_MessagesTimerInterval=1
 $env:Repository_MinMessagesToKeep=3
 ```
 
-If you are deploying through Visual Studio then run the script in the Package Manager Console before running the Publish.
-
 ### 4. Running the service
 
-Clone this repository, and compile the Visual Studio solution under Services/StateManagementService. Update the connection strings for IoTHub and storage in the StateProcessorService app.config file
+* If you have not done yet, clone this repository to your development machine.
+* Run Visual Studio as Administartor and open Services/StateManagementService/StateManagementService.sln
+* Make sure StateManagementService is set as the startup project.
+* In VS, open Package Manager Console and run the MyConfig.ps1 file you created. This will set the environment variables.
+* Run the project by pressing Start. This will deploy the service to the locall Service Fabric Cluster.
+* Once the Service deployment is completed check its avilability on: http://localhost:9013/swagger/ui/index#/ 
+* Note: you can chnage the port 
 
-The Device Silhouette is a Service Fabric application. You can run the solution on your local machine (set the StateManagementService as the startup project), using a local cluster of Service Fabric, or deploy it to Azure Service Fabric cluster.
+
+
 
 ### 5. Running the node.js sample app
 
