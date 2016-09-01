@@ -9,8 +9,7 @@
  *  Benefits
  * Scenarios 
 3.	[How it works?](howitworks.md)
- * Main concepts:
- * Rich state
+ * Silhouette Message(silhouettemessage.md)
  * Messaging endpoints (C2D and D2C)
  * Messages flow
  * Messages purging and persistancy 
