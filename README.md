@@ -9,7 +9,7 @@ The Device Silhouette is a solution for managing IoT devices state in the cloud.
 
 The Silhouette holds information about all state messages sent and received to/from the device, including delivery status updates. With the Silhouette you can send desired state to the device, set a TTL for the request and check if the message was delivered successfully or not. Every message sent increase the version of the Silhouette state and you can retrieve a short term history of all messages, this functionality enables building a rule engine, state machine and solve conflicts.
 
-## Documentation 
+## Documentation Index
 
 2.	[Overview](Documentation/overview.md)
  * Introduction - What is Device Silhouette? 
