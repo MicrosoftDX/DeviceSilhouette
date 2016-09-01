@@ -9,11 +9,11 @@
  *  Benefits
  * Scenarios 
 3.	[How it works?](howitworks.md)
- * Silhouette Message(silhouettemessage.md)
+ * [Silhouette Message](silhouettemessage.md)
  * Messaging endpoints (C2D and D2C)
- * Messages flow
+ * [Messages flow](messagesflow.md)
  * Messages purging and persistancy 
- * Web API 
+ * [Web API]() 
  * Example scenarios
 4.	Architecture
  * General architecture
