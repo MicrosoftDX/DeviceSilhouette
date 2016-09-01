@@ -1,4 +1,4 @@
-# Oven Maintenance Scenario
+# Oven maintenance scenario
 
 This scenario deals with determining (in the cloud) errors in the functioning of an cloud-connected oven based on reported metrics.
 
