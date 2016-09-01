@@ -68,43 +68,43 @@ npm install azure-iot-device azure-iot-device-http
 ```
 3. Node.JS SDK have not yet implemented system properties properly in the SDK. Below is a workaround in order to be able to access the MessageType.
 
-Modify the file node_modules\azure-iot-device-http\node_modules\azure-iot-http-base\lib\http.js as follows:
+  Modify the file node_modules\azure-iot-device-http\node_modules\azure-iot-http-base\lib\http.js as follows:
 
-Find this block of code:
-```javascript
-/*Codes_SRS_NODE_HTTP_05_010: [If the HTTP response has an 'iothub-correlationid' header, it shall be saved as the correlationId property on the created Message.]*/
-else if (item.toLowerCase() === "iothub-correlationid") {
+  Find this block of code:
+  ```javascript
+  /*Codes_SRS_NODE_HTTP_05_010: [If the HTTP response has an 'iothub-correlationid' header, it shall be saved as the correlationId property on the created Message.]*/
+  else if (item.toLowerCase() === "iothub-correlationid") {
   msg.correlationId = response.headers[item];
-}
-```
-
-Paste this block of code right after the block of code mentioned above:
-```javascript
-  else if (item.search("iothub-app-") === 0) { // starts with iothub-app-
-      var propertyName = item.substring("iothub-app-".length);
-      msg.properties.add(propertyName, response.headers[item]);
   }
-}
-```
+  ```
 
-For more details, see [azure-iot-sdks #414 - EventData Properties dictionary empty ](https://github.com/Azure/azure-iot-sdks/issues/414)
+  Paste this block of code right after the block of code mentioned above:
+  ```javascript
+    else if (item.search("iothub-app-") === 0) { // starts with iothub-app-
+       var propertyName = item.substring("iothub-app-".length);
+       msg.properties.add(propertyName, response.headers[item]);
+    }
+  }
+  ```
+
+  For more details, see [azure-iot-sdks #414 - EventData Properties dictionary empty ](https://github.com/Azure/azure-iot-sdks/issues/414)
 
 4. Add a device to the IoTHub and take a note of its name and connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases/download/2016-02-03/SetupDeviceExplorer.msi).
 
-5. Set environment 
-6. 
+5. Set environment variables: 
 
-Same as the service, the config for sample_client_simple.js and sample_client_interactive.js use the environment variables.
+
+  Same as the service, the config for sample_client_simple.js and sample_client_interactive.js use the environment variables.
 This client expect to find environment variable for "Silhouette_DeviceIotHubConnectionString".
 This should be the IoTHub connection string for device with ID "device1" for sample_client_simple.js and "device42" sample_client_interactive.js.
 
-The connection string expected format is:
-```
-HostName=<IoTHubName>.azure-devices.net;DeviceId=device1;SharedAccessKey=<The_Device_SAS_Token_for_IoTHub>
-```
+  The connection string expected format is:
+  ```
+  HostName=<IoTHubName>.azure-devices.net;DeviceId=device1;SharedAccessKey=<The_Device_SAS_Token_for_IoTHub>
+  ```
 
 
-When working with VSCODE, you can set the environment variables in the launch.json under "env"
+  When working with VSCODE, you can set the environment variables in the launch.json under "env"
 
 ```javascript
 {
