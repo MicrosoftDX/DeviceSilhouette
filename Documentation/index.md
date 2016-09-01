@@ -13,7 +13,7 @@
  * Messaging endpoints and lifecycle
  * [Messages flow](messagesflow.md)
  * Messages purging and persistancy 
- * [Web API](RESTAPI.md) 
+ * [REST API](RESTAPI.md) 
  * Example scenarios
 4.	Architecture
  * General architecture
