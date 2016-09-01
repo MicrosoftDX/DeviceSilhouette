@@ -18,7 +18,7 @@
 4.	[Architecture](architecture.md)
  * General architecture
  * Service Fabric Services
-5.	Developer guide
+5.	[Developer guide](developerguide.md)
  * Providers (existing and extending)
  * Setting the dev environment
  * Service
