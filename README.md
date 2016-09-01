@@ -11,13 +11,13 @@ The Silhouette holds information about all state messages sent and received to/f
 
 ## Documentation 
 
-1. [Overview](documentation/overview.md)
-2. [How it works](documentation/howitworks.md)
-3. [Architecture](documentation/architecture.md)
-4. [Developer Guide](documentation/developerguide.md)
-5. [Deployment](documentation/deployment.md)
-6. [Security](documentation/security.md)
-7. [Related Services](documentation/relatedservices.md)
+1. [Overview](Documentation/overview.md)
+2. [How it works](Documentation/howitworks.md)
+3. [Architecture](Documentation/architecture.md)
+4. [Developer Guide](Documentation/developerguide.md)
+5. [Deployment](Documentation/deployment.md)
+6. [Security](Documentation/security.md)
+7. [Related Services](Documentation/relatedservices.md)
 
 
 ## Reporting issues and feedback
