@@ -1,6 +1,8 @@
-## Setting configuration
+## Configuration
 
-### StateManagementService
+In this repository all configurations are driven by environment variables. 
+
+### Configuration for StateManagementService
 
 #### Getting started
 
