@@ -61,6 +61,30 @@ $env:Repository_MinMessagesToKeep=3
 
 ### 5. Running the node.js sample app
 
+* The node.js client is located under Client/node/sample_client_simple.js
+* Make sure requiered node packages are installed:
+```modules
+npm install azure-iot-device azure-iot-device-http
+```
+
+
+* Add a device to the IoTHub and take a note of its name and connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases/download/2016-02-03/SetupDeviceExplorer.msi).
+
+. Edit the files:
+
+- sample_client_simple.js
+
+And replace connectionString with the device connection string, and DeviceID with the device name.
+
+Install the IOT modules needed
+
+
+Run sample_client_simple.js - it will send messages to IoTHub Device2Cloud endpoint for Device Silhouette to capture and process. The same client will read messages from the Cloud2Device endpoint. 
+
+```node
+node sample_client_new.js
+```
+
 
 
 ## Providers (existing and extending)
