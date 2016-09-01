@@ -4,10 +4,19 @@
 ## Setting the development environment
 
 Development Environment:
-Visual Studio 2015 Update 3
-Azure Service Fabric SDK - follow the intructions on !(service fabric get started](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-get-started/) for installtion
 
-https://azure.microsoft.com/en-us/documentation/articles/service-fabric-get-started/
+Make sure you have the following components installed on your development machine:
+
+Must have components to run the service and the client:
+
+1. Visual Studio 2015 Update 3
+2. Azure Service Fabric SDK - follow the intructions on [service fabric get started](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-get-started/) for installtion
+3. Node.js - This is requiered for running the node.js client sample
+
+Additional components may be required:
+
+1. Spec Flow - This is required for running the test project, insatall can be found [here](https://visualstudiogallery.msdn.microsoft.com/c74211e7-cb6e-4dfa-855d-df0ad4a37dd6 )
+2. Windows 10 
 
 
 Requiered Azure Services:
