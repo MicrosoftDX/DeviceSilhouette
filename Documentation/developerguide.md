@@ -13,7 +13,8 @@ Make sure the following components are installed on your development machine, th
 
 You may also want to install additional components listed below, you will need those components for enhenced features in this repro:
 
-1. Spec Flow - This is required for running the test project, insatall can be found [here](https://visualstudiogallery.msdn.microsoft.com/c74211e7-cb6e-4dfa-855d-df0ad4a37dd6 )
+1. VS Code - You may want to use it for running and debugging node.js
+2. Spec Flow - This is required for running the test project, insatall can be found [here](https://visualstudiogallery.msdn.microsoft.com/c74211e7-cb6e-4dfa-855d-df0ad4a37dd6 )
 2. Windows 10 Universal Windows Platform (UWP) SDK - Requiered for running the Home Lights Sample App.
 
 
