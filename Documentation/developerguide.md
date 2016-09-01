@@ -153,6 +153,8 @@ This should be the IoTHub connection string for device with ID "device1".
   node sample_client_new.js
   ```
 
+  When running succesfully the output will look like this:
+  ![sample_client_simple.js](images/sample_client_simple.PNG)
 
 
 
