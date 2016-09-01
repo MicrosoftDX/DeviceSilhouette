@@ -1,4 +1,4 @@
-# Lighting scenarios
+# Home lighting sample scenarios
 
 ## Scenario 1
 In this scenario the light, switch and light sensor all communication with IOT Hub.
