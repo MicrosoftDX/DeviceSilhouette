@@ -15,7 +15,7 @@
  * Messages purging and persistancy 
  * [REST API](RESTAPI.md) 
  * Example scenarios
-4.	Architecture
+4.	[Architecture](architecture.md)
  * General architecture
  * Service Fabric Services
 5.	Developer guide
