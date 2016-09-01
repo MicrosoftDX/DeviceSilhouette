@@ -1,4 +1,4 @@
-1.	[General](README.md)
+1.	[General](../README.md)
  * About
  * Report issues
  * Contribute Code
