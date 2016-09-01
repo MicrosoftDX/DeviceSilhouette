@@ -155,6 +155,10 @@ This should be the IoTHub connection string for device with ID "device1".
 
   When running succesfully the output will look like this:
   ![sample_client_simple.js](images/sample_client_simple.PNG)
+  
+7. To test the service and the client together, while both are running go to: http://localhost/swagger/ui/index#!/DeviceMessage/DeviceMessage_GetMessages
+
+
 
 
 
