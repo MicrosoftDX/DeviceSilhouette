@@ -29,7 +29,22 @@ Create the following Azure resources and take a note of their connection strings
 1. Azure IoTHub 
 2. Azure Storage Account (We will use Blob only)
 
-### 3. Configuration
+### 3. Create Configuration Files
+
+
+All configurations in this repro are driven by environment variables. The easiest way to set the environment variables is by creating a Power Shell script.
+
+
+```posh
+$env:Silhouette_IotHubConnectionString="HostName=yourhub.azure-devices.net;SharedAccessKeyName=hubowner;SharedAccessKey=JHMBDjasb12masbdk1289askbsd9SjfHkJSFjqwhfqq="
+$env:Silhouette_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
+$env:Persistent_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
+$env:Repository_MessagesRetentionMilliseconds = 120000
+$env:Repository_MessagesTimerInterval=1
+$env:Repository_MinMessagesToKeep=3
+```
+
+If you are deploying through Visual Studio then run the script in the Package Manager Console before running the Publish.
 
 ### 4. Running the service
 
