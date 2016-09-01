@@ -8,9 +8,17 @@
 
 The Device Silhouette solution is comprised from the following components:
 
-1. **Messaging broker** - being used to send messages and receive messages to/from the device. This project can support the usage of any messaging broker by implementing a Device Communication provider. The provider is implemented as an interface and can be implemented as a provider for additional messaging broker technologies like Kafka, Event Hub, RabbitMQ etc. In this current repro there is a provider implemented for Azure IoT Hub. 
-2. **Service Fabric Cluster** - this is the service side, runs in the cloud, comprised from a few microservices, listed below.
-3. **Long term persiatancy storage** - the storage where messages are being persistage for long term and analytics. Implemented as an iterface so it can be extended to suppot any desired storage. Currently implemented in this repro for Azure blob storage.
+1. **Messaging broker**
+  
+  Being used to send messages and receive messages to/from the device. This project can support the usage of any messaging broker by implementing a Device Communication provider. The provider is implemented as an interface and can be implemented as a provider for additional messaging broker technologies like Kafka, Event Hub, RabbitMQ etc. In this current repro there is a provider implemented for Azure IoT Hub. 
+
+2. **Service Fabric Cluster**
+
+  This is the service side, runs in the cloud, comprised from a few microservices, listed below.
+  
+3. **Long term persiatancy storage**
+
+  The storage where messages are being persistage for long term and analytics. Implemented as an iterface so it can be extended to suppot any desired storage. Currently implemented in this repro for Azure blob storage.
 
 ## Service Fabric microservices:
 
