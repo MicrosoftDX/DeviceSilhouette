@@ -32,7 +32,7 @@ The Device Silhouette solution is comprised from the following components:
   
 5. **Device Communication Provider (Stateless)**
   
-  interface to enable the communication between the Cloud and the Device. It's purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
+  Interface to enable the communication between the Cloud and the Device. It's purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
 
 6. **Storage Provider Service (Stateless)**
 
