@@ -59,9 +59,6 @@ $env:Repository_MinMessagesToKeep=3
 
 ![swaggerUI](images/swaggerUI.PNG)
 
-
-
-
 ### 5. Running the node.js sample app
 
 
