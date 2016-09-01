@@ -53,8 +53,9 @@ $env:Repository_MinMessagesToKeep=3
 * Make sure StateManagementService is set as the startup project.
 * In VS, open Package Manager Console and run the MyConfig.ps1 file you created. This will set the environment variables.
 * Run the project by pressing Start. This will deploy the service to the locall Service Fabric Cluster.
-* Once the Service deployment is completed check its avilability on: http://localhost/swagger/ui/index#/ 
+* Once the Service deployment is completed check its avilability on: http://localhost/swagger/ui/index
 * Note: you can chnage the service port by setting the endpoint in StateManagementServiceWebAPI\PackageRoot\ServiceManifest.xml
+* If all run succesfuly you should be able to see the swagger UI:
 
 ![swaggerUI](images/swaggerUI.PNG)
 
