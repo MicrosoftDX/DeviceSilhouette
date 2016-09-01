@@ -57,7 +57,7 @@ $env:Repository_MinMessagesToKeep=3
 * Note: you can chnage the service port by setting the endpoint in StateManagementServiceWebAPI\PackageRoot\ServiceManifest.xml
 * If all run succesfuly you should be able to see the swagger UI:
 
-![swaggerUI](images/swaggerUI.PNG)
+![swaggerUI](images/swaggerUI1.PNG)
 
 ### 5. Running the node.js sample app
 
