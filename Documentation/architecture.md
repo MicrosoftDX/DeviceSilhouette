@@ -22,15 +22,18 @@ The Device Silhouette solution is comprised from the following components:
 6. Storage Provider Service (Stateless)
 
 
-**Device State Managment Service REST API** is..
+**Device State Managment Service REST API** enables external applications to communicate 
 
-The **State Processor Service** main functionality is to receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Services, it also receives requests from devices through the Device Communication Provider endpoints. Then it execute the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
+The **State Processor Service** main functionality is to receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Service REST API, it also receives requests from devices through the Device Communication Provider endpoints. Then it execute the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
 
-The **Device State Repository** holds the SIlhouette itself. Its a statful Actor based service that saves the list of the last messages sent to/from the device. 
+The **Device State Repository** holds the Silhouette itself. Its a statful Actor based service that saves the list of the last messages sent to/from the device. 
 
-The **Feddback service** is...
+The **Feddback service** responsible for check messages delivery status from IoT Hub, meaning for messages sent to the device it will look for aknoledgment/non-aknoledgment and update the Device State Repository with the latest message delivery status.
 
 The **Device Communication Provider** is an interface to enable the communication between the Cloud and the Device. It's purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
+
+
+** Storage Provider Service (Stateless) **
 
 
 
