@@ -3,9 +3,7 @@
 
 ## Setting the development environment
 
-Development Environment:
-
-Make sure you have the following components installed on your development machine:
+Installations:
 
 Must have components to run the service and the client:
 
@@ -16,7 +14,7 @@ Must have components to run the service and the client:
 Additional components may be required:
 
 1. Spec Flow - This is required for running the test project, insatall can be found [here](https://visualstudiogallery.msdn.microsoft.com/c74211e7-cb6e-4dfa-855d-df0ad4a37dd6 )
-2. Windows 10 
+2. Windows 10 Universal Windows Platform (UWP) SDK - Requiered for running the Home Lights Sample App.
 
 
 Requiered Azure Services:
