@@ -158,11 +158,13 @@ This should be the IoTHub connection string for device with ID "device1".
   
 ### Test
 
-To test the service and the client together, while both are running go to: http://localhost/swagger/ui/index#!/DeviceMessage/DeviceMessage_GetMessages and set deviceID to device1
+To test the service and the client together, while both are running go to: http://localhost/swagger/ui/index#!/DeviceMessage/DeviceMessage_GetMessages and set deviceID to device1:
 
 ![test_device_messages](images/test_device_messages.PNG)
 
+In the response you can see some messages:
 
+![test_device_messages_response](images/test_device_messages_response.PNG)
 
 
 
