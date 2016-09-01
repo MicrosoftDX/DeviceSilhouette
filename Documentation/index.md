@@ -5,9 +5,9 @@
  * License
 2.	[Overview](overview.md)
  * Introduction - What is Device Silhouette? 
- * Scenarios 
- * Benefits
  * Features 
+ *  Benefits
+ * Scenarios 
 3.	How it works?
  * Main concepts:
  * Rich state
