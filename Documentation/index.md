@@ -8,7 +8,7 @@
  * Features 
  *  Benefits
  * Scenarios 
-3.	How it works?
+3.	[How it works?](howitworks.md)
  * Main concepts:
  * Rich state
  * Messaging endpoints (C2D and D2C)
