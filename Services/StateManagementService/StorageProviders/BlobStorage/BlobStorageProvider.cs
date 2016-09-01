@@ -91,9 +91,7 @@ namespace PersistencyProviders.BlobStorage
 
             string deviceId = stateMessages.FirstOrDefault().DeviceId;
             DateTime now = DateTime.Now;
-            String blobName = String.Concat(deviceId, "/", now.Year, "/", now.Month, "/", now.Day, "/", now.Hour, "/", Guid.NewGuid().ToString(), ".log");
-            String blobName = String.Concat(now.Year, "/", now.Month, "/", now.Day, "/", now.Minute, "/", Guid.NewGuid().ToString(), ".log");
-
+            String blobName = String.Concat(deviceId, "/", now.Year, "/", now.Month, "/", now.Day, "/", now.Hour, "/", Guid.NewGuid().ToString(), ".log");        
 
             CloudBlobContainer container = _blobClient.GetContainerReference(_storageContainer);
             CloudAppendBlob appendBlob = container.GetAppendBlobReference(blobName);
