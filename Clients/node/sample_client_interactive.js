@@ -39,9 +39,8 @@ function C2D_getState()
 
 // Initialize Silhouette
 
-var deviceID = "device1";
-//var connectionString = process.env.Silhouette_DeviceIotHubConnectionString
-var connectionString = "HostName=silhouette-tests.azure-devices.net;DeviceId=device1;SharedAccessKey=PWb2zbcIRvWTxpLeqYqJh2xDOZmXm1/FOv02l160BpU="
+var deviceID = "device42";
+var connectionString = process.env.Silhouette_DeviceIotHubConnectionString
 
 var silhouette = silhouetteClient.create('iothub', {
   connectionString

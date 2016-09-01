@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices.Client;
 using System.IO;
-using System.ServiceModel.Channels;
 
 namespace DotNetClient
 {

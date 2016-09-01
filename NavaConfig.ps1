@@ -1,7 +1,0 @@
-
-$env:Silhouette_IotHubConnectionString="HostName=silhouette-tests.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=3GP77YoaR0+OXw8WX8DLKJiHUfbmr27XcSVSRi7Qi3s="
-$env:Silhouette_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=iotteststore;AccountKey=q+DEpESjnsfza7umztyEVfgUU54RpHCn6uowWYzo78cjEugjCplAjPuKeMYS5AnlDKAZ0Q/ic8ImEGSQw54TKg=="
-$env:Persistent_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=persistantstore;AccountKey=yB7G6iJmnmqoDmOqpgAk4UTWTNL7Hv+OxPoY34OFFUMEDe6AcQ4aQZqG7Eahkxx6/k3OTh1Id7hL2z/88orCSg=="
-$env:Repository_MessagesRetentionMilliseconds=120000
-$env:Repository_MessagesTimerInterval=1
-$env:Repository_MinMessagesToKeep=15
