@@ -20,6 +20,46 @@ The Silhouette holds information about all state messages sent and received to/f
 7. [Related Services](Documentation/relatedservices.md)
 
 
+
+2.	[Overview](Documentation/overview.md)
+ * Introduction - What is Device Silhouette? 
+ * Features 
+ *  Benefits
+ * Scenarios 
+3.	[How it works?](Documentation/howitworks.md)
+ * [Silhouette Message](Documentation/silhouettemessage.md)
+ * Messaging endpoints and lifecycle
+ * [Messages flow](Documentation/messagesflow.md)
+ * Messages purging and persistancy 
+ * [REST API](Documentation/RESTAPI.md) 
+ * Example scenarios
+4.	[Architecture](Documentation/architecture.md)
+ * General architecture
+ * Service Fabric Services
+5.	[Developer guide](Documentation/developerguide.md)
+ * Providers (existing and extending)
+ * Setting the dev environment
+ * [Configuration](Documentation/configuration.md)
+ * Service
+ * Clients
+ * Test 
+ * Sample app
+6.	[Deploy to production](Documentation/deployment.md)
+ * IoT Hub
+ * Blob Storage
+ * Azure AD
+ * Service fabric
+7.	[Security](Documentation/security.md)
+ * Devices security
+ * Service Fabric Security
+ * REST API Authentication and Authorization
+8.	[Related services](Documentation/relatedservices.md)
+ * Azure IoT Hub
+ * Azure Service Fabric
+ * Azure Blob Storage
+ * Azure Active Directory
+
+
 ## Reporting issues and feedback
 
 If you encounter any bugs with the tool please file an issue in the Issues section of our GitHub repo.
