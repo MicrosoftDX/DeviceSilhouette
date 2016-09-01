@@ -5,7 +5,7 @@
 
 ### 1. Installations
 
-Make sure the following components are installed on your development machine, these are must have components in order to run the service and the client:
+Must have components in order to run the service and the client:
 
 1. Visual Studio 2015 Update 3
 2. Azure Service Fabric SDK - follow the intructions on [service fabric get started](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-get-started/) for installtion
