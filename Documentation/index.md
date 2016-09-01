@@ -10,10 +10,10 @@
  * Scenarios 
 3.	[How it works?](howitworks.md)
  * [Silhouette Message](silhouettemessage.md)
- * Messaging endpoints (C2D and D2C)
+ * Messaging endpoints and lifecycle
  * [Messages flow](messagesflow.md)
  * Messages purging and persistancy 
- * [Web API]() 
+ * [Web API](RESTAPI.md) 
  * Example scenarios
 4.	Architecture
  * General architecture
