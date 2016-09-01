@@ -63,9 +63,9 @@ $env:Repository_MinMessagesToKeep=3
 
 1. The node.js client is located under Client/node/sample_client_simple.js
 2. Make sure requiered node packages are installed:
-```modules
-npm install azure-iot-device azure-iot-device-http
-```
+  ```modules
+  npm install azure-iot-device azure-iot-device-http
+  ```
 3. Node.JS SDK have not yet implemented system properties properly in the SDK. Below is a workaround in order to be able to access the MessageType.
 
   Modify the file node_modules\azure-iot-device-http\node_modules\azure-iot-http-base\lib\http.js as follows:
@@ -89,7 +89,7 @@ npm install azure-iot-device azure-iot-device-http
 
   For more details, see [azure-iot-sdks #414 - EventData Properties dictionary empty ](https://github.com/Azure/azure-iot-sdks/issues/414)
 
-4. Add a device to the IoTHub and take a note of its name and connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases/download/2016-02-03/SetupDeviceExplorer.msi).
+4. Add a device named "device1" the IoTHub and take a note of its connection string. This can be done using [Device Explorer](https://github.com/Azure/azure-iot-sdks/releases/download/2016-02-03/SetupDeviceExplorer.msi).
 
 5. Set environment variables: 
 
@@ -114,7 +114,7 @@ This should be the IoTHub connection string for device with ID "device1" for sam
             "name": "Launch",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/sample_client_interactive.js",
+            "program": "${workspaceRoot}/sample_client_simple.js",
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",
