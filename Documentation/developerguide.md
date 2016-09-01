@@ -34,7 +34,7 @@ Create the following Azure resources and take a note of their connection strings
 
 All configurations in this repro are driven by environment variables. 
 Detailed explanation about this approach can be found in the [Configuration](configuration.md) section.
-The easiest way to set the environment variables is by creating a Power Shell script.
+Create a 
 
 
 ```posh
