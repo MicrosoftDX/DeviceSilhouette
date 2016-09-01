@@ -11,16 +11,6 @@ The Silhouette holds information about all state messages sent and received to/f
 
 ## Documentation 
 
-1. [Overview](Documentation/overview.md)
-2. [How it works](Documentation/howitworks.md)
-3. [Architecture](Documentation/architecture.md)
-4. [Developer Guide](Documentation/developerguide.md)
-5. [Deployment](Documentation/deployment.md)
-6. [Security](Documentation/security.md)
-7. [Related Services](Documentation/relatedservices.md)
-
-
-
 2.	[Overview](Documentation/overview.md)
  * Introduction - What is Device Silhouette? 
  * Features 
