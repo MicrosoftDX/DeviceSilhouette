@@ -15,7 +15,7 @@ The Silhouette holds information about all state messages sent and received to/f
  * Introduction - What is Device Silhouette? 
  * Features 
  *  Benefits
- * Scenarios 
+ * Scenarios: [Home lightning](), [Oven maintenance]()
 3.	[How it works?](Documentation/howitworks.md)
  * [Silhouette Message](Documentation/silhouettemessage.md)
  * Messaging endpoints and lifecycle
