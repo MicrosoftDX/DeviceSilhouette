@@ -96,7 +96,7 @@ $env:Repository_MinMessagesToKeep=3
 
   Same as the service, the config for sample_client_simple.js and sample_client_interactive.js use the environment variables.
 This client expect to find environment variable for "Silhouette_DeviceIotHubConnectionString".
-This should be the IoTHub connection string for device with ID "device1" for sample_client_simple.js and "device42" sample_client_interactive.js.
+This should be the IoTHub connection string for device with ID "device1".
 
   The connection string expected format is:
   ```
@@ -106,8 +106,8 @@ This should be the IoTHub connection string for device with ID "device1" for sam
 
   When working with VSCODE, you can set the environment variables in the launch.json under "env"
 
-```javascript
-{
+  ```javascript
+  {
     "version": "0.2.0",
     "configurations": [
         {
@@ -145,13 +145,13 @@ This should be the IoTHub connection string for device with ID "device1" for sam
         }
     ]
 }
-```
+  ```
 
 6. Run sample_client_simple.js - it will send messages to IoTHub Device2Cloud endpoint for Device Silhouette to capture and process. The same client will read messages from the Cloud2Device endpoint. 
 
-```node
-node sample_client_new.js
-```
+  ```node
+  node sample_client_new.js
+  ```
 
 
 
