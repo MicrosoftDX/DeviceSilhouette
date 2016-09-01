@@ -3,7 +3,7 @@
 
 ## Setting the development environment
 
-Installations:
+### Installations
 
 Must have components to run the service and the client:
 
@@ -17,11 +17,16 @@ Additional components may be required:
 2. Windows 10 Universal Windows Platform (UWP) SDK - Requiered for running the Home Lights Sample App.
 
 
-Requiered Azure Services:
-To run the service in a development environment you will first need to create the following Azure resources, setup those resources and take a note of their connection strings:
+### Requiered Azure Services:
+
+Create the following Azure resources and take a note of their connection strings:
 
 1. Azure IoTHub 
 2. Azure Storage Account (We will use Blob only)
+
+### Configuration
+
+### Running
 
 Clone this repository, and compile the Visual Studio solution under Services/StateManagementService. Update the connection strings for IoTHub and storage in the StateProcessorService app.config file
 
