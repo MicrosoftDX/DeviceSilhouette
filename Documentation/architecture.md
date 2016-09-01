@@ -19,6 +19,7 @@ The Device Silhouette solution is comprised from the following components:
 2. Device State Repository (stateful Actor based)
 4. Feedback Service (Stateless)
 5. Device Communication Provider (Stateless)
+6. Storage Provider Service (Stateless)
 
 
 **Device State Managment Service REST API** is..
