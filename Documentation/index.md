@@ -21,6 +21,7 @@
 5.	[Developer guide](developerguide.md)
  * Providers (existing and extending)
  * Setting the dev environment
+ * [Configuration](configuration.md)
  * Service
  * Clients
  * Test 
