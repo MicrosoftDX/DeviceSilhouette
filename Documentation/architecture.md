@@ -1,8 +1,8 @@
 # Architecture
 
 
+![Architecture](images/silhouette_architecture_sep2016.gif?raw=true)
 
-# TODO: ADD DIAGRAM HERE
 
 ## Main Components:
 
