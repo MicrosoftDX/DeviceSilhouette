@@ -22,7 +22,7 @@ The Device Silhouette solution is comprised from the following components:
 6. Storage Provider Service (Stateless)
 
 
-**Device State Managment Service REST API** enables external applications to communicate 
+**Device State Managment Service REST API** enables external applications to communicate with the Device State Repository. Using the Device State Management Service an external application can get the latest state or send command to a device to change its states.
 
 The **State Processor Service** main functionality is to receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Service REST API, it also receives requests from devices through the Device Communication Provider endpoints. Then it execute the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
 
@@ -32,8 +32,8 @@ The **Feddback service** responsible for check messages delivery status from IoT
 
 The **Device Communication Provider** is an interface to enable the communication between the Cloud and the Device. It's purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
 
+** Storage Provider Service (Stateless) ** persists all the messages to along term persistancy storage. Implemented as an interface that can be extended to any desired storage. In this current repro there is a provider implemented for Azure Blob Storage. 
 
-** Storage Provider Service (Stateless) **
 
 
 
