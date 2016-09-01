@@ -34,7 +34,7 @@ Create the following Azure resources and take a note of their connection strings
 
 All configurations in this repro are driven by environment variables. 
 Detailed explanation about this approach can be found in the [Configuration](configuration.md) section.
-Create a 
+Create MyConfig.ps1 script that sets the variables like in this example and save it:
 
 
 ```posh
