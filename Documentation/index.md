@@ -26,16 +26,16 @@
  * Clients
  * Test 
  * Sample app
-6.	Deploy to production
+6.	[Deploy to production](deployment.md)
  * IoT Hub
  * Blob Storage
  * Azure AD
  * Service fabric
-7.	Security
+7.	[Security](security.md)
  * Devices security
  * Service Fabric Security
  * REST API Authentication and Authorization
-8.	Related services
+8.	[Related services](relatedservices.md)
  * Azure IoT Hub
  * Azure Service Fabric
  * Azure Blob Storage
