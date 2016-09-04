@@ -32,7 +32,6 @@ $env:Repository_MinMessagesToKeep=3
 
 ### Deploy through PowerShell:
 Follow the instrction in [Deploy and remove applications using PowerShell](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-remove-applications/).
-
 Make sure to run the MyCloudConfig.ps1 script before runnigng the Deploy-FabricApplication.ps1 script.
 
 
