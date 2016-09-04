@@ -12,10 +12,10 @@ The Silhouette holds information about all state messages sent and received to/f
 ## Documentation Index
 
 2.	[Overview](Documentation/overview.md)
- * Introduction - What is Device Silhouette? 
- * Features 
- * Benefits
- * Scenarios
+ * [Introduction - What is Device Silhouette?] (Documentation/overview.md#introduction---what-is-device-silhouette)
+ * [Features](Documentation/overview.md#features)
+ * [Benefits](Documentation/overview.md#benefits)
+ * [Scenarios](Documentation/overview.md#scenarios)
 3.	[How it works?](Documentation/howitworks.md)
  * [Silhouette Message](Documentation/silhouettemessage.md)
  * Messaging endpoints and lifecycle
