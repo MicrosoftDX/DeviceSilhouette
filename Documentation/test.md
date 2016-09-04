@@ -21,7 +21,7 @@ $env:Silhouette_IotHubConnectionString="HostName=yourhub.azure-devices.net;Share
 
 To set the environment variables run MyTestConfig.PS1 from Package Manager Console before running the test.
 
-Note: If test fails due to missing connection string, close and reopen Visual Studio, immedietly run MyTestConfig.PS1 and then try again to run the test.
+Note: If test fails due to missing connection string, close and reopen Visual Studio, immediately run MyTestConfig.PS1 and then try again to run the test.
 
 ### API endpoint
 
@@ -38,7 +38,7 @@ Devices names to create:
 
 Make sure the StatemanagmentService is running locally in port 80.
 
-In Visual Studio, open Test Explorer. If you can't find it open it from the Test menue: Test\Windows\Test explorer.
+In Visual Studio, open Test Explorer. If you can't find it open it from the Test menu: Test\Windows\Test explorer.
 There you will see a list of the existing test, to run or debug a test right click the test and run it.
 
 ![test](images/test.PNG)
@@ -54,4 +54,4 @@ There you will see a list of the existing test, to run or debug a test right cli
 This is a very simple web test.
 It calls the GET /v0.1/devices/{deviceId}/messages operation for a registered device name device1.
 To test make sure the service is running on http://localhost:80 and the sample_client_simple.js is running with device1.
-The test verify the expected http return code: 200 and a valid JSON in the response body.
+The test verifies the expected http return code: 200 and a valid JSON in the response body.
