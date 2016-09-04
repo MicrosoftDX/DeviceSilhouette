@@ -7,14 +7,14 @@ Follow the instructions [here](devenvironment.md)
 
 ## Providers
 
-This repository uses the "Providers" concept in order to enable developers to use the Device Silhouette with different existing technologies. For example, for messaging broker, there are a few posible technologies like IoTHub, Kafka etc.
+This repository uses the "Providers" concept in order to enable developers to use the Device Silhouette with different existing technologies. For example, for messaging broker, there are a few possible technologies like IoTHub, Kafka etc.
 Provider is an interface that a developer can implement for his desired technology.
 
 ### Existing providers and implementations in this repro:
 
 #### Communication Providers
 
-The communication providers is a group of interfaces that enable the usage of a specific messaging broker.
+The communication providers are a group of interfaces that enable the usage of a specific messaging broker.
 It includes the following interfaces:
 
 ```
@@ -42,9 +42,9 @@ It includes the following interfaces:
 
 This repository includes implementation for IoTHub.
 
-#### Persistancy Providers
+#### Persistency Providers
 
-The persistancy provider consist of an interface to enable the usage of a specific storage for long term persistancy:
+The Persistency provider consists of an interface to enable the usage of a specific storage for long term Persistency:
 
 ```
     public interface IHistoryStorage
