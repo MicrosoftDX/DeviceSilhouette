@@ -35,10 +35,6 @@ The Silhouette holds information about all state messages sent and received to/f
  * Test 
  * Sample app
 6.	[Deploy to production](Documentation/deployment.md)
- * IoT Hub
- * Blob Storage
- * Azure AD
- * Service fabric
 7.	[Security](Documentation/security.md)
  * Devices security
  * Service Fabric Security
