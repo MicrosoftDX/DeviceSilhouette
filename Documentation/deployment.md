@@ -31,7 +31,8 @@ $env:Repository_MinMessagesToKeep=3
 2. Deploy by the instructions in [Publish an application to a remote cluster by using Visual Studio](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-publish-app-remote-cluster/)
 
 ### Deploy through PowerShell:
-Follow the instrction in [Deploy and remove applications using PowerShell](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-remove-applications/)
+Follow the instrction in [Deploy and remove applications using PowerShell](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-remove-applications/).
+
 Make sure to run the MyCloudConfig.ps1 script before runnigng the Deploy-FabricApplication.ps1 script.
 
 
