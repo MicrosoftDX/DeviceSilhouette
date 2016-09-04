@@ -41,8 +41,7 @@ Make sure the StatemanagmentService is running locally in port 80.
 In Visual Studio, open Test Explorer. If you can't find it open it from the Test menue: Test\Windows\Test explorer.
 There you will see a list of the existing test, to run or debug a test right click the test and run it.
 
-
-
+![test](images/test.PNG)
 
 
 
