@@ -47,3 +47,11 @@ There you will see a list of the existing test, to run or debug a test right cli
 
 
 ## Silhouette.LoadTest
+
+
+## Silhouette.SimpleWebTest
+
+This is a very simple web test.
+It calls the GET /v0.1/devices/{deviceId}/messages operation for a registered device name device1.
+To test make sure the service is running on http://localhost:80 and the sample_client_simple.js is running with device1.
+The test verify the expected http return code: 200 and a valid JSON in the response body.
