@@ -8,9 +8,3 @@ The code for the sample app is under SampleApp/SampleApp.sln
 The sample app includes:
 
 
-
-
-
-
-
-k
