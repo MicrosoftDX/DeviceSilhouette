@@ -37,11 +37,17 @@ The sample app comprised from two UWP apps:
 3. Open SampleApp/SampleApp.sln. Check to see that both LightAppDevice and HomeLightMobile are configured as Startup project.
         ![startup](images/startup.PNG)
 4. Press Start
+
 5. In the LightDeviceApp window enter the IoTHub connection string for the device named *DemoAppLightBulb* and press "Start Simulation".
+
         ![constring](images/constring.PNG)
+        
 6. At this point you should see in both windows the device state, you will see how the state in both windows in synced.
+
         ![LightDeviceApp](images/LightDeviceApp.PNG)
+        
         ![HomeLightsMobile](images/HomeLightsMobile.PNG)
+        
 7. Now on the LightDeviceApp you can press the "Start Sensor" button and you will see the state changes after a minute.
 
 
