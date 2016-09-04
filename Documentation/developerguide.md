@@ -18,7 +18,7 @@ The communication providers is a group of interfaces that enable the usage of a 
 It includes the following interfaces:
 
 ```
-public interface IMessageReceiver
+    public interface IMessageReceiver
     {
         // read messages from the communication provider endpoint
         Task RunAsync(CancellationToken cancellationToken);
