@@ -5,7 +5,7 @@ The test projects are located under SilhouetteTests folder. There you can find t
 
 ## Silhouette.EndToEndTests
 
-### installation
+### Installation
 
 Make sure [Spec Flow](https://visualstudiogallery.msdn.microsoft.com/c74211e7-cb6e-4dfa-855d-df0ad4a37dd6 ) is installed on your test machine.
 
@@ -21,6 +21,8 @@ $env:Silhouette_DeviceIotHubConnectionString="HostName=yourhub.azure-devices.net
 ```
 
 To set the environment variables run MyTestConfig.PS1 from Package Manager Console before running the test.
+
+Note: If test fails due to missing connection string, close and reopen Visual Studio, immedietly run MyTestConfig.PS1 and then try again to run the test.
 
 ### API endpoint
 
