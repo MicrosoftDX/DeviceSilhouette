@@ -21,11 +21,11 @@ Detailed explanation about messages lifecycle in Silhouette see [Messages Flow](
 
 ## Web API 
 
-External applications should interact with the Silhoutte through the [REST API.](RESTAPI.md)
-The [REST API.](RESTAPI.md) provides the functionality to retreive information about the the most current state of the device and to send commands to the device.
+External applications should interact with the Silhouette through the [REST API.](RESTAPI.md)
+The [REST API.](RESTAPI.md) provides the functionality to retrieve information about the most current state of the device and to send commands to the device.
 
 
-## Messages purging and persistancy 
+## Messages purging and persistency 
 
 
 For long term access, and to allow analytics, messages are being output to external storage. Currently to blob storage, but it can be extended to a different storage type.
