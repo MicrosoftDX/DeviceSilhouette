@@ -1,6 +1,6 @@
 # Setting the development environment
 
-### 1. Installations
+## Installations
 
 **Must have** components in order to run the service and the client:
 
@@ -19,14 +19,14 @@ Additional **recomended tools**:
 2. [Azure IoT Hub Device Explorer](https://github.com/Azure/azure-iot-sdks/blob/master/tools/DeviceExplorer/doc/how_to_use_device_explorer.md)
 
 
-### 2. Create Requiered Azure Services:
+## Create Requiered Azure Services:
 
 Create the following Azure resources and take a note of their connection strings:
 
 1. Azure IoTHub 
 2. Azure Storage Account (We will use Blob only)
 
-### 3. Create Configuration File
+## Create Configuration File
 
 
 All configurations in this repro are driven by environment variables. 
@@ -43,7 +43,7 @@ $env:Repository_MessagesTimerInterval=1
 $env:Repository_MinMessagesToKeep=3
 ```
 
-### 4. Running the service
+## Running the service
 
 1. If you have not done yet, clone this repository to your development machine.
 2. Run Visual Studio as Administartor and open Services/StateManagementService/StateManagementService.sln
@@ -56,7 +56,7 @@ $env:Repository_MinMessagesToKeep=3
 
 ![swaggerUI](images/swaggerUI1.PNG)
 
-### 5. Running the node.js sample app
+## Running the node.js sample app
 
 1. The node.js client is located under Client/node/sample_client_simple.js
 2. Make sure requiered node packages are installed:
@@ -153,7 +153,7 @@ This should be the IoTHub connection string for device with ID "device1".
   When running succesfully the output will look like this:
   ![sample_client_simple.js](images/sample_client_simple.PNG)
   
-### Test
+## Test
 
 To test the service and the client together, while both are running go to: http://localhost/swagger/ui/index#!/DeviceMessage/DeviceMessage_GetMessages and set deviceID to device1:
 
