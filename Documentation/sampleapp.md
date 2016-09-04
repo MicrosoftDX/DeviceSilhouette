@@ -13,6 +13,8 @@ The state of the device can be one of the two posible states values:
 "values": {
         "status": "off"
       }
+```
+```
       
 "values": {
         "status": "on"
