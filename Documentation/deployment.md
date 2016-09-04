@@ -1,6 +1,6 @@
 # Deploy to production
 
-## Create requiered resorces in Azure
+## Create required resources in Azure
 
 In order to deploy Device Silhouette to production, you will have to create the resources in the list below. Follow the links provided and create those resources.
 Make sure to create all resources in the same location.
@@ -25,7 +25,7 @@ $env:Repository_MinMessagesToKeep=3
 
 ## Set the service port
 
-1. Make a decesion about the port you want the service to be avilabe.
+1. 1.	Make a decision about the port you want the service to be available.
 2. Make sure this port is configured correctly on the Load balancer load balancing rules, and it is enable on the VNET/ Network Security group.
 3. Set the service in StateManagementServiceWebAPI\PackageRoot\ServiceManifest.xml
 
@@ -37,8 +37,8 @@ $env:Repository_MinMessagesToKeep=3
 2. Deploy by the instructions in [Publish an application to a remote cluster by using Visual Studio](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-publish-app-remote-cluster/)
 
 ### Deploy through PowerShell:
-Follow the instrction in [Deploy and remove applications using PowerShell](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-remove-applications/).
-Make sure to run the MyCloudConfig.ps1 script before runnigng the Deploy-FabricApplication.ps1 script.
+Follow the instruction in [Deploy and remove applications using PowerShell](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-remove-applications/).
+Make sure to run the MyCloudConfig.ps1 script before running the Deploy-FabricApplication.ps1 script.
 
 
 
