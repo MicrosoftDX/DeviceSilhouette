@@ -24,8 +24,8 @@ The Silhouette holds information about all state messages sent and received to/f
  * [REST API](Documentation/RESTAPI.md) 
  * Example scenarios: [Home lightning](Documentation/lightsSampleScenario.md), [Oven maintenance](Documentation/ovenscenario.md)
 4.	[Architecture](Documentation/architecture.md)
- * General architecture
- * Service Fabric Services
+ * [Main components](Documentation/architecture.md#main-components)
+ * [Service Fabric Services](Documentation/architecture.md#service-fabric-microservices)
 5.	[Developer guide](Documentation/developerguide.md)
  * [Set the development environment](Documentation/devenvironment.md)
  * [Configuration](Documentation/configuration.md)
