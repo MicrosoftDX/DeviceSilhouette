@@ -17,7 +17,6 @@ Create MyTestConfig.PS1 configuration file as in this example:
 
 ```posh
 $env:Silhouette_IotHubConnectionString="HostName=yourhub.azure-devices.net;SharedAccessKeyName=hubowner;SharedAccessKey=JHMBDjasb12masbdk1289askbsd9SjfHkJSFjqwhfqq="
-$env:Silhouette_DeviceIotHubConnectionString="HostName=yourhub.azure-devices.net;DeviceId=e2eDevice1;SharedAccessKey=JHMBDjasb12masbdk1289askbsd9SjfHkJSFjqwhfqq="
 ```
 
 To set the environment variables run MyTestConfig.PS1 from Package Manager Console before running the test.
