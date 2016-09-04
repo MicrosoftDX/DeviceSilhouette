@@ -7,6 +7,10 @@ The test projects are located under SilhouetteTests folder. There you can find t
 
 ### Configuration
 
+In this project the configuration is driven by environment variables, same as in other projects in this repository and documented in the [configuration](configuration.md) section.
+
+
+
 
 
 
