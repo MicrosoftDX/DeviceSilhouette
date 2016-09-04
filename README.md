@@ -27,7 +27,7 @@ The Silhouette holds information about all state messages sent and received to/f
  * General architecture
  * Service Fabric Services
 5.	[Developer guide](Documentation/developerguide.md)
- * Setting the dev environment
+ * [Set the development environment](Documentation/devenvironment.md)
  * [Configuration](Documentation/configuration.md)
  * Providers (existing and extending)
  * Service
