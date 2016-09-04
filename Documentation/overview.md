@@ -23,7 +23,7 @@ For example, when sending a command to change the device state, the message will
 
 - Reliability. There are many IoT scenarios where the connection between the devices and the cloud isn't stable. In the situations you still want to know the latest state of your device, or even update the state of your device in a reliable way. The update will be postponed until the connection with your device is available again. 
 - Performance will be increased because you don't have to "query or ask" the device.
-- Service sacalability.
+- Service scalability.
 - For the developer, the service will hide all the complexity of dealing with publish/subscribe of messages, etc. in the context of a request/response type of pattern. Once the service is deployed, all he needs to do is interact with a REST API to access his devices and he doesn’t have to care about the details of the underlying messaging.
 
 
