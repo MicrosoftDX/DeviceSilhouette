@@ -23,7 +23,11 @@ $env:Repository_MessagesTimerInterval=1
 $env:Repository_MinMessagesToKeep=3
 ```
 
+## Deploy to service fabric
 
+
+If you are deploying through Visual Studio then run the MyCloudConfig.ps1 script in the Package Manager Console before running the Publish.
+If you are deploying from PowerShell then simply run the MyCloudConfig.ps1 script before runnigng the Deploy-FabricApplication.ps1 script.
 
 
 
