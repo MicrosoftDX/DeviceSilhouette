@@ -27,7 +27,21 @@ Note: If test fails due to missing connection string, close and reopen Visual St
 
 This project expects the services to be running locally on port 80.
 
-### 
+### Create devices in IoT Hub for test
+
+Create two devices in IoTHub for test, you can create the devices using Device Explorer.
+Devices names to create:
+1. e2eDevice1
+2. e2eDevice2
+
+### Run the tests
+
+Make sure the StatemanagmentService is running locally in port 80.
+
+In Visual Studio, open Test Explorer. If you can't find it open it from the Test menue: Test\Windows\Test explorer.
+There you will see a list of the existing test, to run or debug a test right click the test and run it.
+
+
 
 
 
