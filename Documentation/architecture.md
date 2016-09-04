@@ -16,19 +16,19 @@ The Device Silhouette solution is comprised from the following components:
 
   This is the service side, runs in the cloud, comprised from a few microservices, listed below.
   
-3. **Long term persiatancy storage**
+3. **Long term persistency storage**
 
-  The storage where messages are being persistage for long term and analytics. Implemented as an iterface so it can be extended to suppot any desired storage. Currently implemented in this repro for Azure blob storage.
+  The storage where messages are being persisted for long term and analytics. Implemented as an interface so it can be extended to support any desired storage. Currently implemented in this repro for Azure blob storage.
 
 ## Service Fabric microservices:
 
-1. **Device State Managment Service REST API (Stateless)**
+1. **Device State Management Service REST API (Stateless)**
 
   Enables external applications to communicate with the Device State Repository. Using the Device State Management Service an external application can get the latest state or send command to a device to change its states.
   
 2. **State Processor Service (Stateless)**
 
-  Receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Service REST API, it also receives requests from devices through the Device Communication Provider endpoints. Then it execute the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
+  Receive state get/set requests and process those requests. All operations are Asynchronous. The State Processor Service receives requests from external applications through the Device State Management Service REST API, it also receives requests from devices through the Device Communication Provider endpoints. Then it executes the requests by communicating directly with the State Repository Service. The communication with the device is done through Device Communication Provider.
   
 2. **Device State Repository (stateful Actor based)**
 
