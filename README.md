@@ -32,7 +32,7 @@ The Silhouette holds information about all state messages sent and received to/f
  * Providers (existing and extending)
  * Service
  * Clients
- * Test 
+ * [Test](Documentation/test.md) 
  * Sample app
 6.	[Deploy to production](Documentation/deployment.md)
 7.	[Security](Documentation/security.md)
