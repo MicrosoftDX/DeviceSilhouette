@@ -25,7 +25,9 @@ $env:Repository_MinMessagesToKeep=3
 
 ## Set the service port
 
-You can chnage the service port by setting the endpoint in StateManagementServiceWebAPI\PackageRoot\ServiceManifest.xml
+Make a decesion about the port you want the service to be avilabe.
+Make sure this port is configured correctly on the Load balancer load balancing rules, and it is enable on the VNET/ Network Security group.
+Set the service in StateManagementServiceWebAPI\PackageRoot\ServiceManifest.xml
 
 ## Deploy to service fabric
 
