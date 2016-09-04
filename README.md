@@ -18,9 +18,9 @@ The Silhouette holds information about all state messages sent and received to/f
  * [Scenarios](Documentation/overview.md#scenarios)
 3.	[How it works?](Documentation/howitworks.md)
  * [Silhouette Message](Documentation/silhouettemessage.md)
- * Messaging endpoints and lifecycle
+ * [Messaging endpoints and lifecycle](Documentation/howitworks.md#messaging-endpoints-and-lifecycle)
  * [Messages flow](Documentation/messagesflow.md)
- * Messages purging and persistancy 
+ * [Messages purging and persistancy](Documentation/howitworks.md#messages-purging-and-persistancy)
  * [REST API](Documentation/RESTAPI.md) 
  * Example scenarios: [Home lightning](Documentation/lightsSampleScenario.md), [Oven maintenance](Documentation/ovenscenario.md)
 4.	[Architecture](Documentation/architecture.md)
