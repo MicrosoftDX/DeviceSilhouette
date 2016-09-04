@@ -23,6 +23,10 @@ $env:Repository_MessagesTimerInterval=1
 $env:Repository_MinMessagesToKeep=3
 ```
 
+## Set the service port
+
+You can chnage the service port by setting the endpoint in StateManagementServiceWebAPI\PackageRoot\ServiceManifest.xml
+
 ## Deploy to service fabric
 
 ### Deploy through Visual Studio:
