@@ -3,7 +3,7 @@
 
 The Silhouette holds a sequence of received messages. A message can be received from external applications through the REST API or from a device through the message broker. 
 
-This page defines the message properties and scehma.
+This page defines the message properties and schema.
  
 
 In general, the message is comprised by:
