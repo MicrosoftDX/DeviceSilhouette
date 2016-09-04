@@ -29,8 +29,7 @@ The Silhouette holds information about all state messages sent and received to/f
 5.	[Developer guide](Documentation/developerguide.md)
  * [Set the development environment](Documentation/devenvironment.md)
  * [Configuration](Documentation/configuration.md)
- * Providers
- * Service
+ * [Providers](Documentation/developerguide.md#providers)
  * Clients
  * [Test](Documentation/test.md) 
  * [Sample app](Documentation/sampleapp.md)
