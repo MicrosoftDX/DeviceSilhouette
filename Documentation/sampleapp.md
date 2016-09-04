@@ -36,7 +36,9 @@ The sample app comprised from two UWP apps:
 2. Create a device in your IoTHub named *DemoAppLightBulb*.
 3. Open SampleApp/SampleApp.sln. Check to see that both LightAppDevice and HomeLightMobile are configured as Startup project.
         ![startup](images/startup.PNG)
-4. xvdsv
+4. Press Start
+5. In the LightDeviceApp window enter the IoTHub connection string for the device named *DemoAppLightBulb* and press "Start Simulation".
+6. 
 
 
 
