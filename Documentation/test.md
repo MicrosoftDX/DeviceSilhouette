@@ -7,7 +7,7 @@ The test projects are located under SilhouetteTests folder. There you can find t
 
 ### installation
 
-If you havent 
+Make sure [Spec Flow](https://visualstudiogallery.msdn.microsoft.com/c74211e7-cb6e-4dfa-855d-df0ad4a37dd6 ) is installed on your test machine.
 
 ### Configuration
 
