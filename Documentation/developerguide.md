@@ -57,7 +57,7 @@ The persistancy provider consist of an interface to enable the usage of a specif
 This repository includes implementation for Azure Blob Storage.
 
 
-## Service
+
 ## Clients
 ## Test 
 ## Sample app
