@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateManagmentServiceWebApiTest", "StateManagmentServiceWebApiTest\StateManagmentServiceWebApiTest.csproj", "{3E086E75-73A4-4D96-98C4-9F9D2154CEB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silhouette.SimpleWebTest", "StateManagmentServiceWebApiTest\Silhouette.SimpleWebTest.csproj", "{3E086E75-73A4-4D96-98C4-9F9D2154CEB6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60B88CEC-83FC-48C6-AF5E-036CCBFF7803}"
 	ProjectSection(SolutionItems) = preProject
