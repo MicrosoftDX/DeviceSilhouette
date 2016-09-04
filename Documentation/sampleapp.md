@@ -35,6 +35,8 @@ The sample app comprised from two UWP apps:
 2. Run the StateManagmentService is running locally on port *9013*.
 2. Create a device in your IoTHub named *DemoAppLightBulb*.
 3. Open SampleApp/SampleApp.sln. Check to see that both LightAppDevice and HomeLightMobile are configured as Startup project.
+        ![startup](images/startup.PNG)
+4. xvdsv
 
 
 
