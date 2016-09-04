@@ -30,7 +30,7 @@ The [REST API.](RESTAPI.md) provides the functionality to retreive information a
 
 For long term access, and to allow analytics, messages are being output to external storage. Currently to blob storage, but it can be extended to a different storage type.
 
-In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted. The message retention period and the number of maximum messages to retain are configurabe.
+In addition to persistency, the Silhouette state needs to be purged periodically otherwise the performance of the system will be impacted. The message retention period and the number of maximum messages to retain are configurable.
 
 
 
