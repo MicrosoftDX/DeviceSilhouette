@@ -17,6 +17,7 @@ Provider is an interface that a developer can implement for his desired technolo
 The communication providers is a group of interfaces that enable the usage of a specific messaging broker.
 It includes the following interfaces:
 
+```
 public interface IMessageReceiver
     {
         // read messages from the communication provider endpoint
@@ -37,6 +38,8 @@ public interface IMessageReceiver
         // process feedbacks from C2D messages
         Task ReceviceFeedbackAsync(CancellationToken cancellationToken);
     }
+```
+
 
 #### Persistancy Providers
 
