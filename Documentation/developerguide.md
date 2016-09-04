@@ -40,6 +40,7 @@ It includes the following interfaces:
     }
 ```
 
+This repository includes implementation for IoTHub.
 
 #### Persistancy Providers
 
