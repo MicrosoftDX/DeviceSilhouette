@@ -32,19 +32,19 @@ The Device Silhouette solution is comprised from the following components:
   
 2. **Device State Repository (stateful Actor based)**
 
-  Holds the Silhouette itself. Its a statful Actor based service that saves the list of the last messages sent to/from the device. 
+  Holds the Silhouette itself. It's a statful Actor based service that saves the list of the last messages sent to/from the device. 
 
 4. **Feedback Service (Stateless)**
 
-  Responsible for check messages delivery status from IoT Hub, meaning for messages sent to the device it will look for aknoledgment/non-aknoledgment and update the Device State Repository with the latest message delivery status.
+  Responsible for check messages delivery status from IoT Hub, meaning for messages sent to the device it will look for acknowledgment/non-acknowledgment and update the Device State Repository with the latest message delivery status.
   
 5. **Device Communication Provider (Stateless)**
   
-  Interface to enable the communication between the Cloud and the Device. It's purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
+  Interface to enable the communication between the Cloud and the Device. Its purpose is to enable Silhouette customers to choose the device communication technology from the variety of existing market messaging technologies, such as IoT Hub, Event Hubs or Kafka. Since each of the technologies supports different communication protocols, it also means the customer is able to choose the communication protocol by choosing a messaging technology that supports the desired protocol.
 
 6. **Storage Provider Service (Stateless)**
 
-  Persists all the messages to along term persistancy storage. Implemented as an interface that can be extended to any desired storage. In this current repro there is a provider implemented for Azure Blob Storage. 
+  Persists all the messages to a long term persistency storage. Implemented as an interface that can be extended to any desired storage. In this current repro there is a provider implemented for Azure Blob Storage. 
 
 
 
