@@ -44,7 +44,17 @@ This repository includes implementation for IoTHub.
 
 #### Persistancy Providers
 
+The persistancy provider consist of an interface to enable the usage of a specific storage for long term persistancy:
 
+```
+    public interface IHistoryStorage
+    {
+        Task StoreStateMessageAsync(DeviceMessage stateMessage);
+
+        Task StoreStateMessagesAsync(List<DeviceMessage> stateMessages);
+    }
+```
+This repository includes implementation for Azure Blob Storage.
 
 
 ## Service
