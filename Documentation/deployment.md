@@ -11,6 +11,17 @@ Make sure to create all resources in the same location.
 
 ## Create configuration file
 
+Create MyCloudConfig.ps1 configuration file for StateManagementService, same as you created for running locally, this time with the connection strings and properties for production.
+
+```posh
+$env:Silhouette_IotHubConnectionString="HostName=yourhub.azure-devices.net;SharedAccessKeyName=hubowner;SharedAccessKey=JHMBDjasb12masbdk1289askbsd9SjfHkJSFjqwhfqq="
+$env:Silhouette_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
+$env:Persistent_StorageConnectionString="DefaultEndpointsProtocol=https;AccountName=yourstorage;AccountKey=JkafnSADl34lNSADgd09ldsmnMASlfvmsvds9sd23dmvdsv/9dsv/sdfkjqwndssdljkvds9kjKJHhfds9Jjha=="
+$env:Repository_MessagesRetentionMilliseconds = 120000
+$env:Repository_MessagesTimerInterval=1
+$env:Repository_MinMessagesToKeep=3
+```
+
 
 
 
