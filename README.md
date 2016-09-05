@@ -21,7 +21,7 @@ The Silhouette holds information about all state messages sent and received to/f
  * [Messaging endpoints and lifecycle](Documentation/howitworks.md#messaging-endpoints-and-lifecycle)
  * [Messages flow](Documentation/messagesflow.md)
  * [Messages purging and persistency](Documentation/howitworks.md#messages-purging-and-persistancy)
- * [REST API](Documentation/RESTAPI.md) 
+ * [REST API](Documentation/RESTAPI.md)
  * Example scenarios: [Home lightning](Documentation/lightsSampleScenario.md), [Oven maintenance](Documentation/ovenscenario.md)
 4.	[Architecture](Documentation/architecture.md)
  * [Main components](Documentation/architecture.md#main-components)
@@ -31,12 +31,12 @@ The Silhouette holds information about all state messages sent and received to/f
  * [Configuration](Documentation/configuration.md)
  * [Providers](Documentation/developerguide.md#providers)
  * Clients
- * [Test](Documentation/test.md) 
+ * [Test](Documentation/test.md)
  * [Sample app](Documentation/sampleapp.md)
 6.	[Deploy to production](Documentation/deployment.md)
 7.	[Security](Documentation/security.md)
  * Devices security
- * Service Fabric Security
+ * [Service Fabric Security](Documentation/servicefabricsecurity.md)
  * REST API Authentication and Authorization
 8.	[Related services](Documentation/relatedservices.md)
  * Azure IoT Hub
