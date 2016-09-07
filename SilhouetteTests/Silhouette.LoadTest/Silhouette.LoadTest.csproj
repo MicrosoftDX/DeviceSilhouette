@@ -60,7 +60,7 @@
     <Compile Include="SilhouetteDeviceLoadTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="LoadTest1.loadtest">
+    <None Include="LoadTestGeneral.loadtest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestStateUpdated.json">
