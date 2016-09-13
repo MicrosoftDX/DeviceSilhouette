@@ -203,6 +203,7 @@ namespace DeviceRichState
         {
             if (MessageType != MessageType.Report)
             {
+                CommonUtils.SilhouetteEventSource.Current.LogException($"Can only call {nameof(ReportMessageSubType)} when MessageType is {nameof(MessageType.Report)}");
                 throw new InvalidOperationException($"Can only call {nameof(ReportMessageSubType)} when MessageType is {nameof(MessageType.Report)}");
             }
             return EnumUtils.ConstrainedParse<ReportMessageSubType>(MessageSubType);
@@ -211,6 +212,7 @@ namespace DeviceRichState
         {
             if (MessageType != MessageType.Inquiry)
             {
+                CommonUtils.SilhouetteEventSource.Current.LogException($"Can only call {nameof(InquiryMessageSubType)} when MessageType is {nameof(MessageType.Inquiry)}");
                 throw new InvalidOperationException($"Can only call {nameof(InquiryMessageSubType)} when MessageType is {nameof(MessageType.Inquiry)}");
             }
             return EnumUtils.ConstrainedParse<InquiryMessageSubType>(MessageSubType);
@@ -219,6 +221,7 @@ namespace DeviceRichState
         {
             if (MessageType != MessageType.CommandRequest)
             {
+                CommonUtils.SilhouetteEventSource.Current.LogException($"Can only call {nameof(CommandRequestMessageSubType)} when MessageType is {nameof(MessageType.CommandRequest)}");
                 throw new InvalidOperationException($"Can only call {nameof(CommandRequestMessageSubType)} when MessageType is {nameof(MessageType.CommandRequest)}");
             }
             return EnumUtils.ConstrainedParse<CommandRequestMessageSubType>(MessageSubType);
@@ -227,6 +230,7 @@ namespace DeviceRichState
         {
             if (MessageType != MessageType.CommandResponse)
             {
+                CommonUtils.SilhouetteEventSource.Current.LogException($"Can only call {nameof(CommandResponseMessageSubType)} when MessageType is {nameof(MessageType.CommandResponse)}");
                 throw new InvalidOperationException($"Can only call {nameof(CommandResponseMessageSubType)} when MessageType is {nameof(MessageType.CommandResponse)}");
             }
             return EnumUtils.ConstrainedParse<CommandResponseMessageSubType>(MessageSubType);

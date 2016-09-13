@@ -1,28 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="DeviceRichState.DeviceState">
-    <Position X="0.5" Y="0.75" Width="2" />
+  <Class Name="DeviceRichState.DeviceMessage">
+    <Position X="0.5" Y="0.5" Width="5" />
     <TypeIdentifier>
-      <HashCode>MAAAAEAABACEIAAAAAACIAAAAAAAAAAAEAAgCAAEAAA=</HashCode>
-      <FileName>DeviceState.cs</FileName>
+      <HashCode>MAAAAEAABACEAEAAAAAiIAAEIAoASAAAFAAgCAgAAiA=</HashCode>
+      <FileName>DeviceMessage.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="MessageType" />
-      <Property Name="MessageStatus" />
-    </ShowAsAssociation>
   </Class>
-  <Enum Name="DeviceRichState.Types">
-    <Position X="4.25" Y="2.25" Width="1.5" />
+  <Enum Name="DeviceRichState.MessageType">
+    <Position X="6.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
-      <FileName>DeviceState.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAQAAAAAEAAAAAAAAAABAA=</HashCode>
+      <FileName>DeviceMessage.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="DeviceRichState.Status">
-    <Position X="4.25" Y="3.5" Width="1.5" />
+  <Enum Name="DeviceRichState.CommandRequestMessageSubType">
+    <Position X="9" Y="2.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAQBAAAAICAAAAAAAABAAAAAAAABAAAAAAAAABA=</HashCode>
-      <FileName>DeviceState.cs</FileName>
+      <HashCode>AAAABAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>DeviceMessage.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeviceRichState.CommandResponseMessageSubType">
+    <Position X="9" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAARAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>DeviceMessage.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeviceRichState.ReportMessageSubType">
+    <Position X="9" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>DeviceMessage.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeviceRichState.InquiryMessageSubType">
+    <Position X="9" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DeviceMessage.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />
