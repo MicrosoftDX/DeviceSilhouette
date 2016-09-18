@@ -47,11 +47,7 @@ state machine and solve conflicts.
  * Devices security
  * [Service Fabric Security](Documentation/servicefabricsecurity.md)
  * REST API Authentication and Authorization
-8.	[Related services](Documentation/relatedservices.md)
- * Azure IoT Hub
- * Azure Service Fabric
- * Azure Blob Storage
- * Azure Active Directory
+
 
 
 ## Reporting issues and feedback
