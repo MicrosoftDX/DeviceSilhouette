@@ -40,19 +40,13 @@ state machine and solve conflicts.
  * [Set the development environment](Documentation/devenvironment.md)
  * [Configuration](Documentation/configuration.md)
  * [Providers](Documentation/developerguide.md#providers)
- * Clients
  * [Test](Documentation/test.md)
- * [Sample app](Documentation/sampleapp.md)
 6.	[Deploy to production](Documentation/deployment.md)
 7.	[Security](Documentation/security.md)
- * Devices security
- * [Service Fabric Security](Documentation/servicefabricsecurity.md)
- * REST API Authentication and Authorization
-8.	[Related services](Documentation/relatedservices.md)
- * Azure IoT Hub
- * Azure Service Fabric
- * Azure Blob Storage
- * Azure Active Directory
+ * [Devices security](Documentation/security.md#device-security)
+ * [Service Fabric Security](Documentation/security.md#service-fabric-security)
+ * [REST API Authentication and Authorization](Documentation/security.md#rest-api-authentication-and-authorization)
+
 
 
 ## Reporting issues and feedback
