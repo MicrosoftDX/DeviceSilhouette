@@ -45,8 +45,8 @@ state machine and solve conflicts.
 6.	[Deploy to production](Documentation/deployment.md)
 7.	[Security](Documentation/security.md)
  * [Devices security](Documentation/security.md#device-security)
- * [Service Fabric Security](Documentation/servicefabricsecurity.md)
- * [REST API Authentication and Authorization]
+ * [Service Fabric Security](Documentation/security.md#service-fabric-security)
+ * [REST API Authentication and Authorization](Documentation/security.md#rest-api-authentication-and-authorization)
 
 
 
