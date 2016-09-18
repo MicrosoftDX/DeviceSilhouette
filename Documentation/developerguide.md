@@ -41,6 +41,7 @@ It includes the following interfaces:
 ```
 
 This repository includes implementation for IoTHub.
+It also includes recommendation how to implement provider for Kafka in [here](CommunicationProviderArchitecture.md)
 
 #### Persistency Providers
 
@@ -57,8 +58,9 @@ The Persistency provider consists of an interface to enable the usage of a speci
 This repository includes implementation for Azure Blob Storage.
 
 
-
-## Clients
 ## Test 
-## Sample app
+
+This repository contains Visual Studio test projects for functionality and load tests. The test projects are located under SilhouetteTests folder. There you can find the SilhouetteTests.sln with all projects.
+for details see [here](test.md)
+
 
