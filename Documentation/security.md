@@ -25,3 +25,6 @@ To enable users access to the service fabric explorer,
 
 ## REST API Authentication and Authorization
 
+We recommend to secure your REST API with Azure Active directory as described in
+[How to protect a Web API backend with Azure Active Directory and API Management](https://azure.microsoft.com/en-us/documentation/articles/api-management-howto-protect-backend-with-aad/ )
+
