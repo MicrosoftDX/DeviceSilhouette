@@ -41,6 +41,7 @@ It includes the following interfaces:
 ```
 
 This repository includes implementation for IoTHub.
+It also includes recommendation how to implement provider for Kafka in [here](CommunicationProviderArchitecture.md)
 
 #### Persistency Providers
 
