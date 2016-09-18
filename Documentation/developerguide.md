@@ -58,8 +58,6 @@ The Persistency provider consists of an interface to enable the usage of a speci
 This repository includes implementation for Azure Blob Storage.
 
 
-
-## Clients
 ## Test 
-## Sample app
+
 
