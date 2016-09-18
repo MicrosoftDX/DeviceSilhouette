@@ -40,7 +40,6 @@ state machine and solve conflicts.
  * [Set the development environment](Documentation/devenvironment.md)
  * [Configuration](Documentation/configuration.md)
  * [Providers](Documentation/developerguide.md#providers)
- * Clients
  * [Test](Documentation/test.md)
 6.	[Deploy to production](Documentation/deployment.md)
 7.	[Security](Documentation/security.md)
