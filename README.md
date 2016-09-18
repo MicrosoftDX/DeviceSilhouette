@@ -42,7 +42,6 @@ state machine and solve conflicts.
  * [Providers](Documentation/developerguide.md#providers)
  * Clients
  * [Test](Documentation/test.md)
- * [Sample app](Documentation/sampleapp.md)
 6.	[Deploy to production](Documentation/deployment.md)
 7.	[Security](Documentation/security.md)
  * Devices security
