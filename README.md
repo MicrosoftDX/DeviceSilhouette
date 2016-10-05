@@ -67,4 +67,4 @@ or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any addi
 
 ## License
 
-MIT
+Device Silhouette is licensed under the MIT License.
