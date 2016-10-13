@@ -1,4 +1,6 @@
-﻿Feature: End-to-end message flows
+﻿# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+Feature: End-to-end message flows
 	Ensure the basic cloud-to-device and device-to-cloud functionality is working
 
 # TODO - Some of the tests below have a wait to allow time for messages to be processes
