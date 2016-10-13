@@ -1,4 +1,6 @@
-﻿using DotNetClient;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+using DotNetClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System;
@@ -267,3 +269,4 @@ namespace Silhouette.EndToEndTests.Steps
         }
     }
 }
+

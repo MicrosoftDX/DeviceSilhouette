@@ -1,4 +1,6 @@
-﻿using CommonUtils;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+using CommonUtils;
 using DeviceRichState;
 using Microsoft.ServiceBus.Messaging;
 using System;
@@ -111,3 +113,4 @@ namespace CommunicationProviders.IoTHub
         }
     }
 }
+
