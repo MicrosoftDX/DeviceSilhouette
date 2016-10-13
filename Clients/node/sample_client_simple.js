@@ -1,3 +1,5 @@
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 var silhouetteClient = require('./silhouette-client');
 
 var my_state = {
@@ -73,3 +75,4 @@ function doWork()
   // TODO: we can use the native client to do other stuff
   // silhouette.client.on('someEvent', doSomething)
 }
+
