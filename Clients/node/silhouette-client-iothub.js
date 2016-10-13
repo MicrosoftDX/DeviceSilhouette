@@ -1,3 +1,5 @@
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 const EventEmitter = require('events');
 const util = require('util');
 
@@ -146,3 +148,4 @@ function create(config)
 }
 
 module.exports.create = create;
+

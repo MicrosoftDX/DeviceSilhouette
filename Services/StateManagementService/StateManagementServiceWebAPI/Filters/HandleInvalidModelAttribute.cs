@@ -1,4 +1,6 @@
-﻿using StateManagementServiceWebAPI.Models;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+using StateManagementServiceWebAPI.Models;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -57,3 +59,4 @@ namespace StateManagementServiceWebAPI.Filters
         }
     }
 }
+

@@ -1,3 +1,5 @@
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 /*
 ** Create a Silhouette client using the specified transport
 ** mqtt
@@ -18,3 +20,4 @@ function create(transport, config)
 }
 
 module.exports.create = create;
+

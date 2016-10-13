@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.Devices.Client;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+using Microsoft.Azure.Devices.Client;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,3 +39,4 @@ namespace Silhouette.DeviceSimulator
         internal Message Message { get; set; }
     }
 }
+
