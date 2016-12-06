@@ -17,9 +17,6 @@
     <Parameter Name="Repository_MinMessagesToKeep" DefaultValue="" />
   </Parameters>
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="InteractiveActorPkg" ServiceManifestVersion="1.0.0" />
-  </ServiceManifestImport>
-  <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="StorageProviderServicePkg" ServiceManifestVersion="1.0.0" />
     <!--<ConfigOverrides />-->
     <ConfigOverrides>
