@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProjectGuid>{1CC2622F-E205-4686-94B0-383DBB28353C}</ProjectGuid>
+    <ProjectGuid>{C149D7E7-4583-4476-BFD2-4CAD40AF2539}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InteractiveActor.Interfaces</RootNamespace>

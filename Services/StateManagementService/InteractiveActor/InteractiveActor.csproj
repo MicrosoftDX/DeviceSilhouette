@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProjectGuid>{55A32402-E52D-4051-B8BE-785328E64DD9}</ProjectGuid>
+    <ProjectGuid>{A474580A-0C13-4DBA-AE34-A08F2CD62F9B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InteractiveActor</RootNamespace>
@@ -90,7 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InteractiveActor.Interfaces\InteractiveActor.Interfaces.csproj">
-      <Project>{1CC2622F-E205-4686-94B0-383DBB28353C}</Project>
+      <Project>{C149D7E7-4583-4476-BFD2-4CAD40AF2539}</Project>
       <Name>InteractiveActor.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
