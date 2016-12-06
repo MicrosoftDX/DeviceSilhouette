@@ -27,7 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CommunicationProviderService\CommunicationProviderService.csproj" />
     <ProjectReference Include="..\DeviceRepository\DeviceRepository.csproj" />
-    <ProjectReference Include="..\InteractiveActor\InteractiveActor.csproj" />
     <ProjectReference Include="..\IoTHubFeedbackService\IoTHubFeedbackService.csproj" />
     <ProjectReference Include="..\StateManagementServiceWebAPI\StateManagementServiceWebAPI.csproj" />
     <ProjectReference Include="..\StateProcessorService\StateProcessorService.csproj" />
