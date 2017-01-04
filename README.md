@@ -1,5 +1,13 @@
 # Device Silhouette
 
+##Disclaimer 
+
+Device Silhouette is a reference pattern for using
+Azure IoT Hub in conjunction with Service Fabric. For typical needs of storing
+device state information (metadata, configuration, conditions, etc.) we
+recommend using the [device twin](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins), a first-class capability of
+Azure IoT Hub.
+
 ##About
 
 Device Silhouette is an open source framework developed by TED GE EMEA team in Microsoft.
