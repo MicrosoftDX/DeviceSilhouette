@@ -8,6 +8,12 @@ You only have to implement two callback (get/update state from cloud to device) 
 
 The state itself is just a JavaScript object, e.g. a JSON object.
 
+### Requiered node models: 
+Make sure the requiered node models are installed:
+```
+npm install azure-iot-device
+npm install azure-iot-device-http
+```
 
 ### Important Note - update node module:
 Node.JS SDK have not yet implemented system properties properly in the SDK. Below is a workaround in order to be able to access the MessageType.
