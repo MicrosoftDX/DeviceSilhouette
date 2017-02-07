@@ -39,7 +39,8 @@ namespace DeviceRepository
         // timer used for persisting and perging messages
         private IActorTimer _messagesTimer;        
 
-        public DeviceRepositoryActor(long messagesRetentionMilliseconds, int messagesTimerInterval, int minMessagesToKeep)
+        public DeviceRepositoryActor(long messagesRetentionMilliseconds, int messagesTimerInterval, int minMessagesToKeep, ActorService actorService, ActorId actorId)
+            : base(actorService, actorId)
         {
             _messagesRetentionMilliseconds = messagesRetentionMilliseconds;
             _messagesTimerInterval = messagesTimerInterval;

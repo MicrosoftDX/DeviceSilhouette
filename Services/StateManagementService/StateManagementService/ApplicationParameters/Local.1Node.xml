@@ -1,19 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/StateManagementService" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
-    <Parameter Name="StorageProviderService_InstanceCount" Value="-1" />
-    <Parameter Name="CommunicationProviderService_InstanceCount" Value="-1" />
-    <Parameter Name="IoTHubFeedbackService_InstanceCount" Value="-1" />
-    <Parameter Name="StateProcessorService_InstanceCount" Value="-1" />
-    <Parameter Name="StateManagementServiceWebAPI_InstanceCount" Value="-1" />
+    <Parameter Name="StorageProviderService_InstanceCount" Value="1" />
+    <Parameter Name="CommunicationProviderService_InstanceCount" Value="1" />
+    <Parameter Name="IoTHubFeedbackService_InstanceCount" Value="1" />
+    <Parameter Name="StateProcessorService_InstanceCount" Value="1" />
+    <Parameter Name="StateManagementServiceWebAPI_InstanceCount" Value="1" />
     <Parameter Name="DeviceRepositoryActorService_PartitionCount" Value="1" />
-    <Parameter Name="DeviceRepositoryActorService_TargetReplicaSetSize" Value="1" />
-    <Parameter Name="DeviceRepositoryActorService_MinReplicaSetSize" Value="1" />
     <Parameter Name="Silhouette_IotHubConnectionString" Value="" />
     <Parameter Name="Silhouette_StorageConnectionString" Value="" />
     <Parameter Name="Persistent_StorageConnectionString" Value="" />
     <Parameter Name="Repository_MessagesRetentionMilliseconds" Value="" />
     <Parameter Name="Repository_MessagesTimerInterval" Value="" />
     <Parameter Name="Repository_MinMessagesToKeep" Value="" />
+    <!--
+    <Parameter Name="DeviceRepositoryActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="DeviceRepositoryActorService_MinReplicaSetSize" Value="1" />
+    -->
   </Parameters>
 </Application>
